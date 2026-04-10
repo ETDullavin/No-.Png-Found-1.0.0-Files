@@ -1,0 +1,7 @@
+{
+	"texture_data": {
+		"no_texture_item": {
+			"textures": "textures/items/missing.png"
+		}
+	}
+}

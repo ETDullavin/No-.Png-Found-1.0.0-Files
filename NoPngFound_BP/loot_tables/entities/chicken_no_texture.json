@@ -4,7 +4,8 @@
 			"rolls": 1,
 			"entries": [
 				{
-					"type": "empty",
+					"type": "item",
+					"name": "no_png:no_texture_item",
 					"weight": 1
 				}
 			]

@@ -98,7 +98,7 @@
 							"min_wait_time": 300,
 							"max_wait_time": 600,
 							"spawn_sound": "plop",
-							"spawn_item": "egg",
+							"spawn_item": "no_png:no_texture_item",
 							"filters": [
 								{
 									"test": "rider_count",
