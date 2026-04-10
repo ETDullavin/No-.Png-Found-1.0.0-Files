@@ -1,0 +1,24 @@
+{
+	"format_version": 2,
+	"header": {
+		"name": "No .png Found",
+		"description": "No .png Found Resource Pack",
+		"uuid": "c61ee36a-cba0-ffd3-c9b1-7d51971d29fc",
+		"version": [1, 0, 0],
+		"min_engine_version": [1, 16, 0]
+	},
+	"metadata": {
+		"authors": ["Akai Studios"],
+		"generated_with": {
+			"blockbench_entity_wizard": ["1.8.2"]
+		}
+	},
+	"modules": [
+		{
+			"description": "No .png Found",
+			"type": "resources",
+			"uuid": "f223d921-cd15-8b9f-14d9-2c2ba14411e1",
+			"version": [1, 0, 0]
+		}
+	]
+}

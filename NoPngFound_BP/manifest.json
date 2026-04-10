@@ -1,0 +1,30 @@
+{
+	"format_version": 2,
+	"header": {
+		"name": "No .png Found",
+		"description": "No .png Found Behavior Pack",
+		"uuid": "5da89034-416a-8851-a81e-36b5ac422444",
+		"version": [1, 0, 0],
+		"min_engine_version": [1, 16, 0]
+	},
+	"metadata": {
+		"authors": ["Akai Studios"],
+		"generated_with": {
+			"blockbench_entity_wizard": ["1.8.2"]
+		}
+	},
+	"modules": [
+		{
+			"description": "Behavior",
+			"version": [1, 0, 0],
+			"uuid": "6ac791cf-768a-e51d-d8db-a8f3100bba58",
+			"type": "data"
+		}
+	],
+	"dependencies": [
+		{
+			"uuid": "c61ee36a-cba0-ffd3-c9b1-7d51971d29fc",
+			"version": [1, 0, 0]
+		}
+	]
+}
