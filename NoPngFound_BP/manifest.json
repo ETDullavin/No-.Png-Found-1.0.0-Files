@@ -4,35 +4,20 @@
 		"name": "No .png Found",
 		"description": "No .png Found Behavior Pack",
 		"uuid": "5da89034-416a-8851-a81e-36b5ac422444",
-		"version": [
-			1,
-			0,
-			0
-		],
-		"min_engine_version": [
-			1,
-			16,
-			0
-		]
+		"version": [1, 0, 0],
+		"min_engine_version": [1, 16, 0]
 	},
 	"metadata": {
-		"authors": [
-			"Akai Studios"
-		],
+		"authors": ["Akai Studios"],
 		"generated_with": {
-			"blockbench_entity_wizard": [
-				"1.8.2"
-			]
+			"blockbench_entity_wizard": ["1.8.2"],
+			"blockbench_block_wizard": ["1.6.1"]
 		}
 	},
 	"modules": [
 		{
 			"description": "Behavior",
-			"version": [
-				1,
-				0,
-				0
-			],
+			"version": [1, 0, 0],
 			"uuid": "6ac791cf-768a-e51d-d8db-a8f3100bba58",
 			"type": "data"
 		},
@@ -41,21 +26,13 @@
 			"language": "javascript",
 			"uuid": "42087e87-bb5f-4885-83a3-127799580c35",
 			"entry": "scripts/main.js",
-			"version": [
-				1,
-				0,
-				0
-			]
+			"version": [1, 0, 0]
 		}
 	],
 	"dependencies": [
 		{
 			"uuid": "c61ee36a-cba0-ffd3-c9b1-7d51971d29fc",
-			"version": [
-				1,
-				0,
-				0
-			]
+			"version": [1, 0, 0]
 		},
 		{
 			"module_name": "@minecraft/server",

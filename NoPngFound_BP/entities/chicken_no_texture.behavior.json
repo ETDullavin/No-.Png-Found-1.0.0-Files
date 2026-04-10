@@ -3,7 +3,6 @@
 	"minecraft:entity": {
 		"description": {
 			"identifier": "no_png:chicken_no_texture",
-			"runtime_identifier": "minecraft:chicken",
 			"spawn_category": "creature",
 			"is_spawnable": false,
 			"is_summonable": true,

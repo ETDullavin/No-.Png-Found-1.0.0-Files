@@ -1,30 +1,51 @@
-import { world } from "@minecraft/server";
+import { world, system } from "@minecraft/server"; // Added system to the import
 
 world.afterEvents.entitySpawn.subscribe((event) => {
     const chicken = event.entity;
 
-    // Check if it's your custom chicken
     if (chicken?.typeId === "no_png:chicken_no_texture") {
-        const { dimension, location } = chicken;
-        const entitySpawn = "elder_guardian";
+        if (Math.random() < 0.33) {
+            const { dimension, location } = chicken;
+            const entitySpawn = "no_png:dont_look_at_me";
 
-        // Generate random coordinates within a 50-block range
-        // Math.random() * 100 - 50 gives us a value between -50 and 50
-        const randomX = location.x + (Math.random() * 100 - 50);
-        const randomZ = location.z + (Math.random() * 100 - 50);
+            const randomX = location.x + (Math.random() * 100 - 50);
+            const randomZ = location.z + (Math.random() * 100 - 50);
 
-        // We keep the Y coordinate the same so it spawns at the same height
-        const spawnPos = { x: randomX, y: location.y, z: randomZ };
+            const spawnPos = { x: randomX, y: location.y, z: randomZ };
 
-        try {
-            // Summon the Elder Guardian
-            dimension.spawnEntity(entitySpawn, spawnPos);
-
-            // Testing message
-            world.sendMessage("§b[Test]§r A chicken spawned... and brought a large friend within 50 blocks.");
-        } catch (error) {
-            // This catches errors if the location is in an unloaded chunk
-            console.warn("Failed to spawn Elder Guardian: " + error);
+            try {
+                dimension.spawnEntity(entitySpawn, spawnPos);
+                // Testing message
+                world.sendMessage("§b[Test]§r A friend has arrived.");
+            } catch (error) {
+                console.warn("Failed to spawn entity: " + error);
+            }
         }
     }
 });
+
+system.runInterval(() => {
+    const dimension = world.getDimension("overworld");
+    const entities = dimension.getEntities({
+        type: "no_png:dont_look_at_me"
+    });
+
+    for (const entity of entities) {
+        const { x, y, z } = entity.location;
+
+        // Using Math.floor ensures we target the exact block grid coordinates
+        const blockBelow = dimension.getBlock({
+            x: Math.floor(x),
+            y: Math.floor(y) - 1,
+            z: Math.floor(z)
+        });
+
+        if (blockBelow && blockBelow.typeId !== "no_png:missingtexture_block") {
+            try {
+                blockBelow.setType("no_png:missingtexture_block");
+            } catch (e) {
+                // Catches errors if the block is in an unloaded chunk
+            }
+        }
+    }
+}, 5);

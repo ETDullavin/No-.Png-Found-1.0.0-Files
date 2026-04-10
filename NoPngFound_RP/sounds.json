@@ -1,6 +1,24 @@
 {
 	"entity_sounds": {
 		"entities": {
+			"no_png:dont_look_at_me": {
+				"events": {
+					"ambient": "mob.endermen.idle",
+					"death": "mob.endermen.death",
+					"hurt": "mob.endermen.hit",
+					"mad": "mob.endermen.scream",
+					"stare": {
+						"pitch": 1,
+						"sound": "mob.endermen.stare",
+						"volume": 1
+					}
+				},
+				"pitch": [
+					0.8,
+					1.2
+				],
+				"volume": 1
+			},
 			"no_png:chicken_no_texture": {
 				"events": {
 					"ambient": "mob.chicken.say",
@@ -13,7 +31,10 @@
 						"volume": 0.25
 					}
 				},
-				"pitch": [0.8, 1.2],
+				"pitch": [
+					0.8,
+					1.2
+				],
 				"volume": 1
 			}
 		}

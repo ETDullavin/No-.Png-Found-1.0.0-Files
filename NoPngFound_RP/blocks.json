@@ -1,0 +1,6 @@
+{
+	"format_version": "1.21.0",
+	"no_png:missingtexture_block": {
+		"sound": "stone"
+	}
+}
