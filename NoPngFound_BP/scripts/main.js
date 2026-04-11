@@ -1,25 +1,56 @@
 import { world, system } from "@minecraft/server"; // Added system to the import
 
+function isAreaAir(dimension, startPos, width, height, depth) {
+    for (let x = 0; x < width; x++) {
+        for (let y = 0; y < height; y++) {
+            for (let z = 0; z < depth; z++) {
+                const block = dimension.getBlock({
+                    x: Math.floor(startPos.x + x),
+                    y: Math.floor(startPos.y + y),
+                    z: Math.floor(startPos.z + z)
+                });
+                if (!block || block.typeId !== "minecraft:air") {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
 world.afterEvents.entitySpawn.subscribe((event) => {
     const chicken = event.entity;
 
     if (chicken?.typeId === "no_png:chicken_no_texture") {
-        if (Math.random() < 0.33) {
-            const { dimension, location } = chicken;
-            const entitySpawn = "no_png:dont_look_at_me";
 
-            const randomX = location.x + (Math.random() * 80 - 40);
-            const randomZ = location.z + (Math.random() * 80 - 40);
+        const { dimension, location } = chicken;
+        const entitySpawn = "no_png:dont_look_at_me";
 
-            const spawnPos = { x: randomX, y: location.y, z: randomZ };
+        let spawned = false;
+        let attempts = 0;
+        const maxAttempts = 10; // Prevent infinite loops
 
-            try {
-                dimension.spawnEntity(entitySpawn, spawnPos);
-                // Testing message
-                world.sendMessage("§b[Test]§r A friend has arrived.");
-            } catch (error) {
-                console.warn("Failed to spawn entity: " + error);
+        while (!spawned && attempts < maxAttempts) {
+            attempts++;
+
+            if (attempts <= 50) {
+
+                const randomX = location.x + (Math.random() * 80 - 40);
+                const randomZ = location.z + (Math.random() * 80 - 40);
+                const spawnPos = { x: randomX, y: location.y, z: randomZ };
+
+                // Check for a 3x2x1 pocket of air (3 wide, 2 high)
+                if (isAreaAir(dimension, spawnPos, 3, 2, 1)) {
+                    try {
+                        dimension.spawnEntity(entitySpawn, spawnPos);
+                        world.sendMessage("§b[Test]§r A friend has arrived after " + attempts + " attempts.");
+                        spawned = true;
+                    } catch (error) {
+                        console.warn("Failed to spawn entity: " + error);
+                    }
+                }
             }
+
         }
     }
 });
