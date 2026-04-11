@@ -3,14 +3,14 @@
 		"entities": {
 			"no_png:dont_look_at_me": {
 				"events": {
-					"ambient": "mob.endermen.idle",
-					"death": "mob.endermen.death",
-					"hurt": "mob.endermen.hit",
-					"mad": "mob.endermen.scream",
+					"ambient": "mob.chicken.say",
+					"death": "mob.chicken.hurt",
+					"hurt": "mob.dont_look.hit",
+					"mad": "mob.dont_look.hit",
 					"stare": {
 						"pitch": 1,
-						"sound": "mob.endermen.stare",
-						"volume": 1
+						"sound": "mob.dont_look.stare",
+						"volume": 100
 					}
 				},
 				"pitch": [
@@ -21,10 +21,6 @@
 			},
 			"no_png:chicken_no_texture": {
 				"events": {
-					"ambient": "mob.chicken.say",
-					"death": "mob.chicken.hurt",
-					"hurt": "mob.chicken.hurt",
-					"plop": "mob.chicken.plop",
 					"step": {
 						"pitch": 1,
 						"sound": "mob.chicken.step",

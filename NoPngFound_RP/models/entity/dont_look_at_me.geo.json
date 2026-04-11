@@ -5,8 +5,8 @@
 			"description": {
 				"identifier": "geometry.dont_look_at_me",
 				"texture_width": 64,
-				"texture_height": 32,
-				"visible_bounds_width": 2,
+				"texture_height": 64,
+				"visible_bounds_width": 3,
 				"visible_bounds_height": 4,
 				"visible_bounds_offset": [0, 2, 0]
 			},
@@ -16,34 +16,25 @@
 					"pivot": [0, 42, 0],
 					"reset": true,
 					"cubes": [
-						{"origin": [-4, 30, -2], "size": [8, 12, 4], "uv": [32, 16]}
+						{"origin": [-12, 0, 0], "size": [24, 49, 0], "uv": [0, 0]}
 					]
 				},
 				{
 					"name": "head",
 					"parent": "body",
-					"pivot": [0, 42, 0],
-					"cubes": [
-						{"origin": [-4, 42, -4], "size": [8, 8, 8], "uv": [0, 0]}
-					]
+					"pivot": [0, 42, 0]
 				},
 				{
 					"name": "hat",
 					"parent": "head",
 					"pivot": [0, 42, 0],
-					"reset": true,
-					"cubes": [
-						{"origin": [-4, 41.5, -4], "size": [8, 8, 8], "inflate": -0.5, "uv": [0, 16]}
-					]
+					"reset": true
 				},
 				{
 					"name": "rightArm",
 					"parent": "body",
 					"pivot": [-5, 40, 0],
-					"reset": true,
-					"cubes": [
-						{"origin": [-6, 12, -1], "size": [2, 30, 2], "uv": [56, 0]}
-					]
+					"reset": true
 				},
 				{
 					"name": "rightItem",
@@ -55,29 +46,20 @@
 					"parent": "body",
 					"pivot": [5, 40, 0],
 					"reset": true,
-					"mirror": true,
-					"cubes": [
-						{"origin": [4, 12, -1], "size": [2, 30, 2], "uv": [56, 0]}
-					]
+					"mirror": true
 				},
 				{
 					"name": "rightLeg",
 					"parent": "body",
 					"pivot": [-2, 30, 0],
-					"reset": true,
-					"cubes": [
-						{"origin": [-3, 0, -1], "size": [2, 30, 2], "uv": [56, 0]}
-					]
+					"reset": true
 				},
 				{
 					"name": "leftLeg",
 					"parent": "body",
 					"pivot": [2, 30, 0],
 					"reset": true,
-					"mirror": true,
-					"cubes": [
-						{"origin": [1, 0, -1], "size": [2, 30, 2], "uv": [56, 0]}
-					]
+					"mirror": true
 				}
 			]
 		}

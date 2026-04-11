@@ -8,8 +8,8 @@ world.afterEvents.entitySpawn.subscribe((event) => {
             const { dimension, location } = chicken;
             const entitySpawn = "no_png:dont_look_at_me";
 
-            const randomX = location.x + (Math.random() * 100 - 50);
-            const randomZ = location.z + (Math.random() * 100 - 50);
+            const randomX = location.x + (Math.random() * 80 - 40);
+            const randomZ = location.z + (Math.random() * 80 - 40);
 
             const spawnPos = { x: randomX, y: location.y, z: randomZ };
 
@@ -40,7 +40,7 @@ system.runInterval(() => {
             z: Math.floor(z)
         });
 
-        if (blockBelow && blockBelow.typeId !== "no_png:missingtexture_block") {
+        if (blockBelow && blockBelow.typeId !== "no_png:missingtexture_block" && blockBelow.typeId !== "minecraft:air") {
             try {
                 blockBelow.setType("no_png:missingtexture_block");
             } catch (e) {

@@ -1,0 +1,25 @@
+{
+    "format_version": "1.14.0",
+    "sound_definitions": {
+        "mob.dont_look.stare": {
+            "category": "mob",
+            "sounds": [
+                {
+                    "name": "sounds/dont_look_stare",
+                    "volume": 2.0,
+                    "attenuation_distance": 48
+                }
+            ]
+        },
+        "mob.dont_look.hit": {
+            "category": "mob",
+            "sounds": [
+                {
+                    "name": "sounds/dont_look_hit",
+                    "volume": 1.0,
+                    "attenuation_distance": 16
+                }
+            ]
+        }
+    }
+}
