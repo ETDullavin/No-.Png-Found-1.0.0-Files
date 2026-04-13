@@ -19,16 +19,18 @@ function isAreaAir(dimension, startPos, width, height, depth) {
 }
 
 world.afterEvents.entitySpawn.subscribe((event) => {
-    const chicken = event.entity;
+    const entity = event.entity;
 
-    if (chicken?.typeId === "no_png:chicken_no_texture") {
+    if (entity?.typeId === "no_png:chicken_no_texture" || entity?.typeId === "no_png:cow_no_texture") {
 
-        const { dimension, location } = chicken;
-        const entitySpawn = "no_png:dont_look_at_me";
+        const { dimension, location } = entity;
+        const entitySpawn = entity.typeId === "no_png:cow_no_texture"
+            ? "no_png:dont_look_at_me_cow"
+            : "no_png:dont_look_at_me";
 
         let spawned = false;
         let attempts = 0;
-        const maxAttempts = 10; // Prevent infinite loops
+        const maxAttempts = 25; // Prevent infinite loops
 
         while (!spawned && attempts < maxAttempts) {
             attempts++;
@@ -57,9 +59,9 @@ world.afterEvents.entitySpawn.subscribe((event) => {
 
 system.runInterval(() => {
     const dimension = world.getDimension("overworld");
-    const entities = dimension.getEntities({
-        type: "no_png:dont_look_at_me"
-    });
+    const entities = dimension.getEntities().filter(entity =>
+        entity.typeId === "no_png:dont_look_at_me" || entity.typeId === "no_png:dont_look_at_me_cow"
+    );
 
     for (const entity of entities) {
         const { x, y, z } = entity.location;

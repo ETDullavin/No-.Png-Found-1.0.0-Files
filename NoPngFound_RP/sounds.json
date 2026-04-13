@@ -1,10 +1,45 @@
 {
 	"entity_sounds": {
 		"entities": {
+			"no_png:cow_no_texture": {
+				"events": {
+					"step": {
+						"pitch": [
+							0.9,
+							1.1
+						],
+						"sound": "mob.cow.step",
+						"volume": 0.65
+					}
+				},
+				"pitch": [
+					0.8,
+					1.2
+				],
+				"volume": 1
+			},
 			"no_png:dont_look_at_me": {
 				"events": {
 					"ambient": "mob.chicken.say",
 					"death": "mob.chicken.hurt",
+					"hurt": "mob.dont_look.hit",
+					"mad": "mob.dont_look.hit",
+					"stare": {
+						"pitch": 1,
+						"sound": "mob.dont_look.stare",
+						"volume": 100
+					}
+				},
+				"pitch": [
+					0.8,
+					1.2
+				],
+				"volume": 1
+			},
+			"no_png:dont_look_at_me_cow": {
+				"events": {
+					"ambient": "mob.cow.say",
+					"death": "mob.cow.hurt",
 					"hurt": "mob.dont_look.hit",
 					"mad": "mob.dont_look.hit",
 					"stare": {

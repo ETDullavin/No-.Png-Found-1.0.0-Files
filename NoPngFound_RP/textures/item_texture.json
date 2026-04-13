@@ -1,5 +1,8 @@
 {
 	"texture_data": {
+		"no_texture_bucket": {
+			"textures": "textures/items/no_texture_bucket.png"
+		},
 		"no_texture_item": {
 			"textures": "textures/items/missing.png"
 		}
