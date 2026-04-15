@@ -181,7 +181,6 @@
 						"spawn_items": {
 							"table": "loot_tables/entities/sheep_shear_no_texture.json"
 						},
-						"play_sounds": "shear",
 						"interact_text": "action.interact.shear",
 						"on_interact": {
 							"filters": {
@@ -413,6 +412,12 @@
 						"minecraft:sheep_sheared",
 						"minecraft:rideable_sheared",
 						"minecraft:loot_sheared"
+					]
+				},
+				"queue_command": {
+					"command": [
+						"playsound mob.dont_look.hit @a ~ ~ ~",
+						"particle no_png:missing_particle ~ ~1 ~"
 					]
 				}
 			},

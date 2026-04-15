@@ -16,8 +16,12 @@
 				"minecraft:ageable": {
 					"duration": 1200,
 					"feed_items": "wheat",
-					"pause_growth_items": [ "golden_dandelion" ],
-					"reset_growth_items": [ "golden_dandelion" ],
+					"pause_growth_items": [
+						"golden_dandelion"
+					],
+					"reset_growth_items": [
+						"golden_dandelion"
+					],
 					"grow_up": {
 						"event": "minecraft:ageable_grow_up",
 						"target": "self"
@@ -25,9 +29,15 @@
 				},
 				"minecraft:rideable": {
 					"seat_count": 1,
-					"family_types": ["baby_undead"],
+					"family_types": [
+						"baby_undead"
+					],
 					"seats": {
-						"position": [0.0, 1.0, 0.0]
+						"position": [
+							0.0,
+							1.0,
+							0.0
+						]
 					}
 				},
 				"minecraft:behavior.follow_parent": {
@@ -46,9 +56,15 @@
 				},
 				"minecraft:rideable": {
 					"seat_count": 1,
-					"family_types": ["baby_undead"],
+					"family_types": [
+						"baby_undead"
+					],
 					"seats": {
-						"position": [0.0, 1.15, 0.0]
+						"position": [
+							0.0,
+							1.15,
+							0.0
+						]
 					}
 				},
 				"minecraft:behavior.breed": {
@@ -85,11 +101,12 @@
 											"value": "bucket:0"
 										}
 									]
-								}
+								},
+								"event": "no_png:on_milk_event",
+								"target": "self"
 							},
 							"use_item": true,
 							"transform_to_item": "no_png:no_texture_bucket",
-							"play_sounds": "milk",
 							"interact_text": "action.interact.milk"
 						}
 					]
@@ -219,6 +236,14 @@
 			}
 		},
 		"events": {
+			"no_png:on_milk_event": {
+				"queue_command": {
+					"command": [
+						"playsound mob.dont_look.hit @a ~ ~ ~",
+						"particle no_png:missing_particle ~ ~1 ~"
+					]
+				}
+			},
 			"minecraft:entity_spawned": {
 				"randomize": [
 					{
