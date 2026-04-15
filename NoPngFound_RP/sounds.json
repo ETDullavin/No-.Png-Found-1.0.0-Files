@@ -1,21 +1,29 @@
 {
 	"entity_sounds": {
 		"entities": {
+			"no_png:sheep_no_texture": {
+				"events": {
+					"ambient": "mob.sheep.say",
+					"death": "mob.sheep.say",
+					"hurt": "mob.sheep.say",
+					"step": {
+						"pitch": 1,
+						"sound": "mob.sheep.step",
+						"volume": 0.4
+					}
+				},
+				"pitch": [0.8, 1.2],
+				"volume": 1
+			},
 			"no_png:cow_no_texture": {
 				"events": {
 					"step": {
-						"pitch": [
-							0.9,
-							1.1
-						],
+						"pitch": [0.9, 1.1],
 						"sound": "mob.cow.step",
 						"volume": 0.65
 					}
 				},
-				"pitch": [
-					0.8,
-					1.2
-				],
+				"pitch": [0.8, 1.2],
 				"volume": 1
 			},
 			"no_png:dont_look_at_me": {
@@ -30,10 +38,7 @@
 						"volume": 100
 					}
 				},
-				"pitch": [
-					0.8,
-					1.2
-				],
+				"pitch": [0.8, 1.2],
 				"volume": 1
 			},
 			"no_png:dont_look_at_me_cow": {
@@ -48,10 +53,7 @@
 						"volume": 100
 					}
 				},
-				"pitch": [
-					0.8,
-					1.2
-				],
+				"pitch": [0.8, 1.2],
 				"volume": 1
 			},
 			"no_png:chicken_no_texture": {
@@ -62,10 +64,7 @@
 						"volume": 0.25
 					}
 				},
-				"pitch": [
-					0.8,
-					1.2
-				],
+				"pitch": [0.8, 1.2],
 				"volume": 1
 			}
 		}

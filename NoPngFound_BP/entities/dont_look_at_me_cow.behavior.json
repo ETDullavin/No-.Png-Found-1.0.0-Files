@@ -73,7 +73,7 @@
             },
             "minecraft:nameable": {},
             "minecraft:loot": {
-                "table": "loot_tables/entities/dont_look_at_me.json"
+                "table": "loot_tables/entities/dont_look_at_me_cow.json"
             },
             "minecraft:health": {
                 "value": 400,

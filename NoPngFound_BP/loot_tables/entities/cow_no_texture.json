@@ -1,18 +1,24 @@
 {
-	"pools": [
+	"rolls": 1,
+	"entries": [
 		{
-			"rolls": 1,
-			"entries": [
+			"type": "item",
+			"name": "no_png:no_texture_item",
+			"weight": 1,
+			"functions": [
 				{
-					"type": "item",
-					"name": "no_png:no_texture_item",
-					"weight": 1,
-					"functions": [
-						{
-							"function": "set_count",
-							"count": 1
-						}
-					]
+					"function": "set_count",
+					"count": {
+						"min": 1,
+						"max": 2
+					}
+				},
+				{
+					"function": "looting_enchant",
+					"count": {
+						"min": 0,
+						"max": 1
+					}
 				}
 			]
 		}

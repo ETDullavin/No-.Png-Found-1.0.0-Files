@@ -5,3 +5,4 @@ entity.no_png:dont_look_at_me_cow.name=§kwHY dId YOu sEe iT
 tile.no_png:missingtexture_block.name=§kMISSINGTEXTURE
 entity.no_png:cow_no_texture.name=§kCow
 item.no_png:no_texture_bucket=§kMilk§r Bucket
+entity.no_png:sheep_no_texture.name=§kSheep
