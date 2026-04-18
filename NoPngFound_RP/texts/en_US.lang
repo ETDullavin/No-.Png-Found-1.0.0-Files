@@ -7,3 +7,6 @@ tile.no_png:missingtexture_block.name=§kMISSINGTEXTURE
 entity.no_png:cow_no_texture.name=§kCow
 item.no_png:no_texture_bucket=§kMilk§r Bucket
 entity.no_png:sheep_no_texture.name=§kSheep
+entity.no_png:pig_no_texture.name=§kPig
+action.hint.exit.no_png:pig_no_texture=Tap sneak to dismount
+entity.no_png:dont_look_at_me_pig.name=§kYoU FoUNd mE

@@ -18,15 +18,22 @@ function isAreaAir(dimension, startPos, width, height, depth) {
     return true;
 }
 
+// Map the base entities to their "don't look at me" variants
+const entitySpawnMap = {
+    "no_png:chicken_no_texture": "no_png:dont_look_at_me",
+    "no_png:cow_no_texture": "no_png:dont_look_at_me_cow",
+    "no_png:pig_no_texture": "no_png:dont_look_at_me_pig",
+    "no_png:sheep_no_texture": "no_png:dont_look_at_me_sheep"
+};
+
 world.afterEvents.entitySpawn.subscribe((event) => {
     const entity = event.entity;
 
-    if (entity?.typeId === "no_png:chicken_no_texture" || entity?.typeId === "no_png:cow_no_texture") {
+    // Check if the spawned entity is in our map
+    if (entity?.typeId && entitySpawnMap[entity.typeId]) {
 
         const { dimension, location } = entity;
-        const entitySpawn = entity.typeId === "no_png:cow_no_texture"
-            ? "no_png:dont_look_at_me_cow"
-            : "no_png:dont_look_at_me";
+        const entitySpawn = entitySpawnMap[entity.typeId];
 
         let spawned = false;
         let attempts = 0;
@@ -45,6 +52,7 @@ world.afterEvents.entitySpawn.subscribe((event) => {
                 if (isAreaAir(dimension, spawnPos, 3, 2, 1)) {
                     try {
                         dimension.spawnEntity(entitySpawn, spawnPos);
+
                         world.sendMessage("§b[Test]§r A friend has arrived after " + attempts + " attempts.");
                         spawned = true;
                     } catch (error) {
@@ -52,15 +60,19 @@ world.afterEvents.entitySpawn.subscribe((event) => {
                     }
                 }
             }
-
         }
     }
 });
 
 system.runInterval(() => {
     const dimension = world.getDimension("overworld");
+
+    // Check for all four "don't look at me" variants
     const entities = dimension.getEntities().filter(entity =>
-        entity.typeId === "no_png:dont_look_at_me" || entity.typeId === "no_png:dont_look_at_me_cow"
+        entity.typeId === "no_png:dont_look_at_me" ||
+        entity.typeId === "no_png:dont_look_at_me_cow" ||
+        entity.typeId === "no_png:dont_look_at_me_pig" ||
+        entity.typeId === "no_png:dont_look_at_me_sheep"
     );
 
     for (const entity of entities) {

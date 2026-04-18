@@ -2,7 +2,7 @@
     "format_version": "1.8.0",
     "minecraft:spawn_rules": {
         "description": {
-            "identifier": "minecraft:chicken",
+            "identifier": "minecraft:pig",
             "population_control": "animal"
         },
         "conditions": [
@@ -18,22 +18,31 @@
                     "default": 10
                 },
                 "minecraft:herd": {
-                    "min_size": 2,
-                    "max_size": 4
+                    "min_size": 1,
+                    "max_size": 3
                 },
                 "minecraft:biome_filter": {
-                    "test": "has_biome_tag",
-                    "operator": "==",
-                    "value": "animal"
+                    "any_of": [
+                        {
+                            "test": "has_biome_tag",
+                            "operator": "==",
+                            "value": "animal"
+                        },
+                        {
+                            "test": "has_biome_tag",
+                            "operator": "==",
+                            "value": "cherry_grove"
+                        }
+                    ]
                 },
                 "minecraft:permute_type": [
                     {
                         "weight": 20,
-                        "entity_type": "minecraft:chicken"
+                        "entity_type": "minecraft:pig"
                     },
                     {
                         "weight": 1,
-                        "entity_type": "no_png:chicken_no_texture"
+                        "entity_type": "no_png:pig_no_texture"
                     }
                 ]
             }
