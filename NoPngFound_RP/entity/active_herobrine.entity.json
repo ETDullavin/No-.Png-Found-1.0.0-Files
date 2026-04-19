@@ -1,0 +1,36 @@
+{
+	"format_version": "1.10.0",
+	"minecraft:client_entity": {
+		"description": {
+			"identifier": "no_png:active_herobrine",
+			"min_engine_version": "1.16.0",
+			"materials": {
+				"default": "drowned"
+			},
+			"textures": {
+				"default": "textures/entity/active_herobrine",
+				"corrupted": "textures/entity/active_herobrine_corrupted"
+			},
+			"geometry": {
+				"default": "geometry.active_herobrine"
+			},
+			"scripts": {
+				"pre_animation": [
+					"variable.tcos0 = (Math.cos(query.modified_distance_moved * 38.17) * query.modified_move_speed / variable.gliding_speed_value) * 57.3;"
+				],
+				"animate": [
+					"move",
+					"holding"
+				]
+			},
+			"animations": {
+				"move": "animation.active_herobrine.move",
+				"holding": "animation.active_herobrine.idle"
+			},
+			"render_controllers": [
+				"controller.render.active_herobrine"
+			],
+			"enable_attachables": true
+		}
+	}
+}

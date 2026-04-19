@@ -1,0 +1,24 @@
+{
+    "format_version": "1.8.0",
+    "render_controllers": {
+        "controller.render.active_herobrine": {
+            "arrays": {
+                "textures": {
+                    "Array.Textures": [
+                        "texture.default",
+                        "texture.corrupted"
+                    ]
+                }
+            },
+            "geometry": "geometry.default",
+            "materials": [
+                {
+                    "*": "material.default"
+                }
+            ],
+            "textures": [
+                "Array.Textures[query.variant]"
+            ]
+        }
+    }
+}

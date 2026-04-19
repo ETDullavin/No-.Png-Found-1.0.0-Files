@@ -4,6 +4,9 @@
 	"padding": 8,
 	"num_mip_levels": 4,
 	"texture_data": {
+		"burnt_out_torch": {
+			"textures": "textures/blocks/burnt_out_torch"
+		},
 		"missingtexture_block": {
 			"textures": "textures/blocks/missingtexture_block"
 		}
