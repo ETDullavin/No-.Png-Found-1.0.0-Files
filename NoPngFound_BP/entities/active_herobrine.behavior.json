@@ -139,7 +139,7 @@
 			"no_png:start_talk": {
 				"queue_command": {
 					"command": [
-						"say You run to him. However, he is gone."
+						"tellraw @a {\"rawtext\":[{\"text\":\"You run to him. However, he is gone.\"}]}"
 					],
 					"target": "self"
 				},
@@ -152,7 +152,7 @@
 			"no_png:say_second_line": {
 				"queue_command": {
 					"command": [
-						"say §kNOONE§rtHerE Is no ONe tO sAvE yoU§kNOONE"
+						"tellraw @a {\"rawtext\":[{\"text\":\"§kNOONE§rtHerE Is no ONe tO sAvE yoU§kNOONE\"}]}"
 					],
 					"target": "self"
 				},
@@ -170,7 +170,7 @@
 			"no_png:say_third_line": {
 				"queue_command": {
 					"command": [
-						"say §kdont§rDon't§kfight§rfight§kUS§rUS§kUS"
+						"tellraw @a {\"rawtext\":[{\"text\":\"§kdont§rDon't§kfight§rfight§kUS§rUS§kUS\"}]}"
 					],
 					"target": "self"
 				},

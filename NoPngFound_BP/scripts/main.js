@@ -123,9 +123,19 @@ system.runInterval(() => {
             const herobineVariant = herobrine.getComponent("minecraft:variant")?.value || 0;
             const isHerobrineActive = herobineVariant === 1;
 
+            // Check if Herobrine is on a block adjacent to the player (on x or z axis)
+            const playerBlockX = Math.floor(player.location.x);
+            const playerBlockZ = Math.floor(player.location.z);
+            const herobrineBlockX = Math.floor(herobrine.location.x);
+            const herobrineBlockZ = Math.floor(herobrine.location.z);
+            const isAdjacentHorizontally = (
+                (Math.abs(playerBlockX - herobrineBlockX) === 1 && playerBlockZ === herobrineBlockZ) ||
+                (Math.abs(playerBlockZ - herobrineBlockZ) === 1 && playerBlockX === herobrineBlockX)
+            );
+
             // If player is more than 2 blocks higher and within horizontal range, jump and place block
-            // Only jump if player is NOT in creative mode AND Herobrine is in active state
-            if (heightDiff > 1 && horizontalDist < 10 && !playerInCreative && isHerobrineActive) {
+            // Only jump if player is NOT in creative mode AND Herobrine is in active state AND is adjacent to player
+            if (heightDiff > 1 && horizontalDist < 10 && !playerInCreative && isHerobrineActive && isAdjacentHorizontally) {
                 try {
                     // Jump first
                     herobrine.applyKnockback(0, 0, 0, 0.6);
