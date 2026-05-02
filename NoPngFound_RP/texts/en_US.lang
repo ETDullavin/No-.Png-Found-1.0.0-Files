@@ -12,3 +12,4 @@ action.hint.exit.no_png:pig_no_texture=Tap sneak to dismount
 entity.no_png:dont_look_at_me_pig.name=§kYoU FoUNd mE
 tile.no_png:burnt_out_torch.name=Burnt-out Redstone Torch
 entity.no_png:active_herobrine.name=§kHeroBrine
+entity.no_png:watching_herobrine.name=Herobrine

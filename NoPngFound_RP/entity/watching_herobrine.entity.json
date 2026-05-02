@@ -1,0 +1,20 @@
+{
+	"format_version": "1.10.0",
+	"minecraft:client_entity": {
+		"description": {
+			"identifier": "no_png:watching_herobrine",
+			"materials": {
+				"default": "drowned"
+			},
+			"textures": {
+				"default": "textures/entity/active_herobrine"
+			},
+			"geometry": {
+				"default": "geometry.active_herobrine"
+			},
+			"render_controllers": [
+				"controller.render.default"
+			]
+		}
+	}
+}

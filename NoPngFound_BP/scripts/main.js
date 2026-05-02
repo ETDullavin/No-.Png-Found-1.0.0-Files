@@ -1,5 +1,57 @@
 import { world, system } from "@minecraft/server";
 
+// Calculate a random time between 6000 and 12000 ticks
+
+const randomEvents = [
+    function spawnHerobrine() {
+        const players = world.getAllPlayers();
+        if (players.length > 0) {
+            const player = players[0];
+            const herobrinePos = {
+                x: player.location.x + (Math.random() * 100 - 50),
+                y: player.location.y + 25,
+                z: player.location.z + (Math.random() * 100 - 50)
+            };
+            player.dimension.spawnEntity("no_png:watching_herobrine", herobrinePos);
+            world.sendMessage("HEROBRINE SPAWNED!");
+        }
+    },
+    function placeGlitchedBlock() {
+        const players = world.getAllPlayers();
+        if (players.length > 0) {
+            const player = players[0];
+            const blockPos = { x: player.location.x + (Math.random() * 200 - 100), y: player.location.y + (Math.random() * 200 - 100), z: player.location.z + (Math.random() * 200 - 100) };
+            player.dimension.getBlock(blockPos)?.setType("no_png:missingtexture_block");
+            world.sendMessage("GLITCHED BLOCK SPAWNED!");
+        }
+    },
+    function playScarySound() {
+        const players = world.getAllPlayers();
+        for (const player of players) {
+            player.playSound("mob.dont_look.hit", player.location);
+        }
+        world.sendMessage("SOUND PLAYED!");
+    }
+];
+
+function eventDirector() {
+    world.sendMessage("Event started/reset!");
+    // Wait between 6000 and 12000 ticks (5-10 minutes)
+    const nextWait = Math.floor(Math.random() * 6001) + 6000;
+
+    system.runTimeout(() => {
+        // Pick and run a random event from our list
+        const index = Math.floor(Math.random() * randomEvents.length);
+        randomEvents[index]();
+
+        // Loop again to schedule the NEXT random event
+        eventDirector();
+    }, nextWait);
+}
+
+// Start the director when the script loads
+eventDirector();
+
 function isAreaAir(dimension, startPos, width, height, depth) {
     for (let x = 0; x < width; x++) {
         for (let y = 0; y < height; y++) {
