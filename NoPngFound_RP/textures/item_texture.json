@@ -5,6 +5,9 @@
 		},
 		"no_texture_item": {
 			"textures": "textures/items/missing.png"
+		},
+		"no_texture_disc": {
+			"textures": "textures/items/no_texture_disc.png"
 		}
 	}
 }

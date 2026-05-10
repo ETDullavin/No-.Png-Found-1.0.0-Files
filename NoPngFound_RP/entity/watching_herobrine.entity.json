@@ -4,13 +4,21 @@
 		"description": {
 			"identifier": "no_png:watching_herobrine",
 			"materials": {
-				"default": "drowned"
+				"default": "entity_alphatest"
 			},
 			"textures": {
 				"default": "textures/entity/active_herobrine"
 			},
 			"geometry": {
 				"default": "geometry.active_herobrine"
+			},
+			"animations": {
+				"look_at_target": "animation.common.look_at_target"
+			},
+			"scripts": {
+				"animate": [
+					"look_at_target"
+				]
 			},
 			"render_controllers": [
 				"controller.render.default"

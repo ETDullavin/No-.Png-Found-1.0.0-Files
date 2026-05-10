@@ -1,6 +1,94 @@
-import { world, system } from "@minecraft/server";
+import { world, system, ItemStack } from "@minecraft/server";
 
 // Calculate a random time between 6000 and 12000 ticks
+
+// List of blocks we want to track
+const interactiveBlocks = [
+    "minecraft:chest",
+    "minecraft:trapped_chest",
+    "minecraft:copper_chest",
+    "minecraft:exposed_copper_chest",
+    "minecraft:weathered_copper_chest",
+    "minecraft:oxidized_copper_chest",
+    "minecraft:waxed_copper_chest",
+    "minecraft:waxed_exposed_copper_chest",
+    "minecraft:waxed_weathered_copper_chest",
+    "minecraft:waxed_oxidized_copper_chest",
+    "minecraft:barrel",
+    "minecraft:furnace",
+    "minecraft:blast_furnace",
+    "minecraft:smoker",
+    "minecraft:crafting_table",
+    "minecraft:ender_chest",
+    "minecraft:brewing_stand",
+    "minecraft:hopper",
+    "minecraft:dispenser",
+    "minecraft:dropper"
+];
+
+world.afterEvents.playerInteractWithBlock.subscribe((event) => {
+    const { player, block } = event;
+    const blockId = block.typeId;
+    const { dimension, location } = block; // Define these at the top so both checks can see them
+
+    // Handle Utility Blocks (Chest, Furnace, etc.)
+    if (interactiveBlocks.includes(blockId)) {
+        // Keep your 1.25% random chance for these blocks
+        if (Math.random() < 0.0125) {
+            try {
+                const { x, y, z } = location;
+                dimension.runCommand(`setblock ${x} ${y} ${z} air [] destroy`);
+
+                system.runTimeout(() => {
+                    const targetBlock = dimension.getBlock(location);
+                    if (targetBlock) {
+                        targetBlock.setType("no_png:missingtexture_block");
+                    }
+                }, 2);
+
+                player.playSound("mob.dont_look.hit", player.location);
+                world.sendMessage(`§4[ERROR]§r ${player.name} corrupted a ${blockId.split(":")[1].toUpperCase()}`);
+            } catch (error) {
+                console.warn("Failed to break and glitch block: " + error);
+            }
+        }
+    }
+    // Handle Jukebox specifically (100% chance)
+    else if (blockId === "minecraft:jukebox") {
+        // We need to define equipment and mainHandItem here
+        const equipment = player.getComponent("minecraft:equippable");
+        const mainHandItem = equipment?.getEquipment("Mainhand");
+
+        if (mainHandItem?.typeId === "no_png:no_texture_disc") {
+            try {
+                // Change the block to the corrupted version
+                block.setType("no_png:missingtexture_block");
+
+                // Spawn the particle effect
+                dimension.spawnParticle("no_png:missing_particle", {
+                    x: location.x,
+                    y: location.y,
+                    z: location.z
+                });
+
+                // Play the scary sound
+                player.playSound("mob.dont_look.hit", player.location);
+
+                // Alert the world
+                world.sendMessage(`§4[ERROR]§r ${player.name} inserted a corrupted frequency.`);
+            } catch (error) {
+                console.warn("Failed to glitch jukebox: " + error);
+            }
+        } else if (mainHandItem?.typeId === "minecraft:music_disc_11" || mainHandItem?.typeId === "minecraft:music_disc_13") {
+            // Handle the 11 disc case
+            dimension.spawnParticle("no_png:missing_particle", {
+                x: location.x,
+                y: location.y,
+                z: location.z
+            });
+        }
+    }
+});
 
 const randomEvents = [
     function spawnHerobrine() {
@@ -31,14 +119,108 @@ const randomEvents = [
             player.playSound("mob.dont_look.hit", player.location);
         }
         world.sendMessage("SOUND PLAYED!");
+    },
+    function placeCross() {
+        const players = world.getAllPlayers();
+        if (players.length > 0) {
+            const player = players[0];
+            const originBlockPos = { x: player.location.x + (Math.random() * 200 - 100), y: player.location.y + (Math.random() * 200 - 100), z: player.location.z + (Math.random() * 200 - 100) };
+            const topBlockPos = { x: originBlockPos.x, y: originBlockPos.y + 1, z: originBlockPos.z };
+            const sideLeftBlockPos = { x: originBlockPos.x - 1, y: originBlockPos.y, z: originBlockPos.z };
+            const sideRightBlockPos = { x: originBlockPos.x + 1, y: originBlockPos.y, z: originBlockPos.z };
+            const downBlockPos = { x: originBlockPos.x, y: originBlockPos.y - 1, z: originBlockPos.z };
+            const bottomBlockPos = { x: originBlockPos.x, y: originBlockPos.y - 2, z: originBlockPos.z };
+            player.dimension.getBlock(originBlockPos)?.setType("no_png:missingtexture_block");
+            player.dimension.getBlock(topBlockPos)?.setType("no_png:missingtexture_block");
+            player.dimension.getBlock(sideLeftBlockPos)?.setType("no_png:missingtexture_block");
+            player.dimension.getBlock(sideRightBlockPos)?.setType("no_png:missingtexture_block");
+            player.dimension.getBlock(downBlockPos)?.setType("no_png:missingtexture_block");
+            player.dimension.getBlock(bottomBlockPos)?.setType("no_png:missingtexture_block");
+            world.sendMessage("GLITCHED CROSS SPAWNED!");
+        }
+    },
+    function spawnFountainItem() {
+        const players = world.getAllPlayers();
+        if (players.length > 0) {
+            const player = players[0];
+            const dimension = player.dimension;
+
+            // Determine total items to spawn (between 16 and 128)
+            const totalItems = Math.floor(Math.random() * (64 - 16 + 1)) + 16;
+            let itemsSpawned = 0;
+
+            world.sendMessage("A FOUNTAIN OF ITEMS HAS APPEARED!");
+
+            // Run an interval every 2 ticks (0.1 seconds)
+            const fountainInterval = system.runInterval(() => {
+                if (itemsSpawned >= totalItems) {
+                    system.clearRun(fountainInterval);
+                    return;
+                }
+
+                const spawnPos = {
+                    x: player.location.x + (Math.random() * 4 - 2), // Slight random spread
+                    y: player.location.y + 1.5,
+                    z: player.location.z + (Math.random() * 4 - 2)
+                };
+
+                const itemStack = new ItemStack("no_png:no_texture_item", 1);
+                dimension.spawnItem(itemStack, spawnPos);
+
+                itemsSpawned++;
+            }, 0.1); // 2 ticks = 0.1 seconds
+        }
+    },
+    function spawnSingleItem() {
+        const players = world.getAllPlayers();
+        if (players.length > 0) {
+            const player = players[0];
+            const dimension = player.dimension;
+
+            // Determine total items to spawn (between 16 and 128)
+            const totalItems = 1;
+            let itemsSpawned = 0;
+            const itemChoices = [
+                "no_png:no_texture_item",
+                "no_png:no_texture_disc",
+                "minecraft:music_disc_11",
+                "minecraft:music_disc_13",
+                "no_png:burnt_out_torch"
+            ];
+
+            world.sendMessage("A SINGLE ITEM HAS BEEN GIVEN!");
+
+            // Run an interval every 2 ticks (0.1 seconds)
+
+            if (itemsSpawned >= totalItems) {
+                system.clearRun(fountainInterval);
+                return;
+            }
+
+            const spawnPos = {
+                x: player.location.x, // Slight random spread
+                y: player.location.y,
+                z: player.location.z
+            };
+
+            const randomIndex = Math.floor(Math.random() * itemChoices.length);
+            const selectedItem = itemChoices[randomIndex];
+
+            // Create the stack with the SINGLE string
+            const itemStack = new ItemStack(selectedItem, 1);
+            dimension.spawnItem(itemStack, spawnPos);
+
+            itemsSpawned++;
+            // 2 ticks = 0.1 seconds
+        }
     }
 ];
 
 function eventDirector() {
     world.sendMessage("Event started/reset!");
     // Wait between 6000 and 12000 ticks (5-10 minutes)
+    // Math.floor(Math.random() * 6001) + 6000;
     const nextWait = Math.floor(Math.random() * 6001) + 6000;
-
     system.runTimeout(() => {
         // Pick and run a random event from our list
         const index = Math.floor(Math.random() * randomEvents.length);

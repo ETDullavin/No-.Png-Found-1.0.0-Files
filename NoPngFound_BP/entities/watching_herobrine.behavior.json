@@ -17,6 +17,11 @@
 				"has_gravity": false,
 				"has_collision": true
 			},
+			"minecraft:behavior.look_at_player": {
+				"priority": 1,
+				"look_distance": 128.0,
+				"probability": 1.0
+			},
 			"minecraft:damage_sensor": {
 				"triggers": [
 					{
@@ -33,22 +38,13 @@
 					}
 				]
 			},
-			"minecraft:lookat": {
-				"search_radius": 128,
-				"set_target": true,
-				"filters": {
-					"all_of": [
-						{
-							"subject": "other",
-							"test": "is_family",
-							"value": "player"
-						}
-					]
+			"minecraft:looked_at": {
+				"search_radius": 128.0,
+				"find_players_only": true,
+				"looked_at_event": {
+					"event": "no_png:on_seen",
+					"target": "self"
 				}
-			},
-			"minecraft:on_target_acquired": {
-				"event": "no_png:on_seen",
-				"target": "self"
 			},
 			"minecraft:pushable": {
 				"is_pushable": false
