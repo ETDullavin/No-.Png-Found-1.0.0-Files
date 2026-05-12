@@ -1,8 +1,9 @@
 import { world, system, ItemStack } from "@minecraft/server";
 
-// Calculate a random time between 6000 and 12000 ticks
+// --- CONSTANTS ---
+const MIN_Y = -64;
+const MAX_Y = 319;
 
-// List of blocks we want to track
 const interactiveBlocks = [
     "minecraft:chest",
     "minecraft:trapped_chest",
@@ -26,14 +27,17 @@ const interactiveBlocks = [
     "minecraft:dropper"
 ];
 
+// Helper to check if Y is within valid world bounds
+function isYValid(y) {
+    return y >= MIN_Y && y <= MAX_Y;
+}
+
 world.afterEvents.playerInteractWithBlock.subscribe((event) => {
     const { player, block } = event;
     const blockId = block.typeId;
-    const { dimension, location } = block; // Define these at the top so both checks can see them
+    const { dimension, location } = block;
 
-    // Handle Utility Blocks (Chest, Furnace, etc.)
     if (interactiveBlocks.includes(blockId)) {
-        // Keep your 1.25% random chance for these blocks
         if (Math.random() < 0.0125) {
             try {
                 const { x, y, z } = location;
@@ -41,7 +45,8 @@ world.afterEvents.playerInteractWithBlock.subscribe((event) => {
 
                 system.runTimeout(() => {
                     const targetBlock = dimension.getBlock(location);
-                    if (targetBlock) {
+                    // Check height before setting
+                    if (targetBlock && isYValid(location.y)) {
                         targetBlock.setType("no_png:missingtexture_block");
                     }
                 }, 2);
@@ -53,34 +58,28 @@ world.afterEvents.playerInteractWithBlock.subscribe((event) => {
             }
         }
     }
-    // Handle Jukebox specifically (100% chance)
     else if (blockId === "minecraft:jukebox") {
-        // We need to define equipment and mainHandItem here
         const equipment = player.getComponent("minecraft:equippable");
         const mainHandItem = equipment?.getEquipment("Mainhand");
 
         if (mainHandItem?.typeId === "no_png:no_texture_disc") {
             try {
-                // Change the block to the corrupted version
                 block.setType("no_png:missingtexture_block");
-
-                // Spawn the particle effect
                 dimension.spawnParticle("no_png:missing_particle", {
                     x: location.x,
                     y: location.y,
                     z: location.z
                 });
-
-                // Play the scary sound
                 player.playSound("mob.dont_look.hit", player.location);
-
-                // Alert the world
-                world.sendMessage(`§4[ERROR]§r ${player.name} inserted a corrupted frequency.`);
+                if (Math.random() > 0.01) {
+                    world.sendMessage(`§k${player.name}§r${player.name}§k${player.name}§r . . . you aren't allowed to hear that . . .`);
+                } else {
+                    world.sendMessage(`§k${player.name}§r${player.name}§k${player.name}§r . . . you aren't allowed to hear what HE has to say . . . . . .`);
+                }
             } catch (error) {
                 console.warn("Failed to glitch jukebox: " + error);
             }
         } else if (mainHandItem?.typeId === "minecraft:music_disc_11" || mainHandItem?.typeId === "minecraft:music_disc_13") {
-            // Handle the 11 disc case
             dimension.spawnParticle("no_png:missing_particle", {
                 x: location.x,
                 y: location.y,
@@ -97,7 +96,7 @@ const randomEvents = [
             const player = players[0];
             const herobrinePos = {
                 x: player.location.x + (Math.random() * 100 - 50),
-                y: player.location.y + 25,
+                y: Math.min(MAX_Y, player.location.y + 25), // Cap at world height
                 z: player.location.z + (Math.random() * 100 - 50)
             };
             player.dimension.spawnEntity("no_png:watching_herobrine", herobrinePos);
@@ -108,10 +107,77 @@ const randomEvents = [
         const players = world.getAllPlayers();
         if (players.length > 0) {
             const player = players[0];
-            const blockPos = { x: player.location.x + (Math.random() * 200 - 100), y: player.location.y + (Math.random() * 200 - 100), z: player.location.z + (Math.random() * 200 - 100) };
-            player.dimension.getBlock(blockPos)?.setType("no_png:missingtexture_block");
-            world.sendMessage("GLITCHED BLOCK SPAWNED!");
+            const blockPos = {
+                x: player.location.x + (Math.random() * 200 - 100),
+                y: Math.floor(player.location.y + (Math.random() * 100 - 50)),
+                z: player.location.z + (Math.random() * 200 - 100)
+            };
+            const glitchBlock = player.dimension.getBlock(blockPos);
+
+            if (!isYValid(blockPos.y) || !isYValid(blockPos.y + 6)) return;
+
+            if (glitchBlock.typeId !== "minecraft:air" || glitchBlock.typeId === "no_png:missingtexture_block") {
+                if (glitchBlock.typeId !== "minecraft:grass_block") {
+                    glitchBlock.setType("no_png:missingtexture_block");
+                } else {
+                    for (let trunkY = blockPos.y + 1; trunkY <= blockPos.y + 6; trunkY++) {
+                        player.dimension.getBlock({ x: blockPos.x, y: trunkY, z: blockPos.z })?.setType("no_png:missingtexture_block");
+
+                        if (trunkY === blockPos.y + 6) {
+                            // --- Lower Foliage Layers ---
+                            for (let leafX = -2; leafX <= 2; leafX++) {
+                                for (let leafZ = -2; leafZ <= 2; leafZ++) {
+                                    for (let leafY = trunkY - 3; leafY <= trunkY - 2; leafY++) {
+                                        if (!isYValid(leafY)) continue;
+
+                                        // Corner check: Absolute value of both X and Z are 2
+                                        const isCorner = Math.abs(leafX) === 2 && Math.abs(leafZ) === 2;
+
+                                        if (isCorner) {
+                                            // 40% chance to spawn if it's a corner
+                                            if (Math.random() < 0.4) {
+                                                player.dimension.getBlock({ x: blockPos.x + leafX, y: leafY, z: blockPos.z + leafZ })?.setType("no_png:missingtexture_block");
+                                            }
+                                        } else {
+                                            // Not a corner, always spawn
+                                            player.dimension.getBlock({ x: blockPos.x + leafX, y: leafY, z: blockPos.z + leafZ })?.setType("no_png:missingtexture_block");
+                                        }
+
+                                        // --- Upper Foliage Layers ---
+                                        if (leafX === 2 && leafY === trunkY - 2 && leafZ === 2) {
+                                            for (let leafX2 = -1; leafX2 <= 1; leafX2++) {
+                                                for (let leafZ2 = -1; leafZ2 <= 1; leafZ2++) {
+                                                    for (let leafY2 = trunkY - 1; leafY2 <= trunkY; leafY2++) {
+                                                        if (!isYValid(leafY2)) continue;
+
+                                                        // Corner check for top layer: Absolute value is 1
+                                                        const isTopCorner = Math.abs(leafX2) === 1 && Math.abs(leafZ2) === 1;
+
+                                                        if (isTopCorner) {
+                                                            // 33% chance to spawn top corners
+                                                            if (Math.random() < 0.33) {
+                                                                player.dimension.getBlock({ x: blockPos.x + leafX2, y: leafY2, z: blockPos.z + leafZ2 })?.setType("no_png:missingtexture_block");
+                                                            }
+                                                        } else {
+                                                            player.dimension.getBlock({ x: blockPos.x + leafX2, y: leafY2, z: blockPos.z + leafZ2 })?.setType("no_png:missingtexture_block");
+                                                        }
+
+                                                        if (leafX2 === 1 && leafY2 === trunkY && leafZ2 === 1) {
+                                                            world.sendMessage("GLITCHED TREE SPAWNED!");
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
+
     },
     function playScarySound() {
         const players = world.getAllPlayers();
@@ -124,12 +190,21 @@ const randomEvents = [
         const players = world.getAllPlayers();
         if (players.length > 0) {
             const player = players[0];
-            const originBlockPos = { x: player.location.x + (Math.random() * 200 - 100), y: player.location.y + (Math.random() * 200 - 100), z: player.location.z + (Math.random() * 200 - 100) };
+            const originBlockPos = {
+                x: player.location.x + (Math.random() * 200 - 100),
+                y: Math.floor(player.location.y + (Math.random() * 200 - 100)),
+                z: player.location.z + (Math.random() * 200 - 100)
+            };
+
+            // CHECK: Verify the cross height range (y-2 to y+1)
+            if (!isYValid(originBlockPos.y - 2) || !isYValid(originBlockPos.y + 1)) return;
+
             const topBlockPos = { x: originBlockPos.x, y: originBlockPos.y + 1, z: originBlockPos.z };
             const sideLeftBlockPos = { x: originBlockPos.x - 1, y: originBlockPos.y, z: originBlockPos.z };
             const sideRightBlockPos = { x: originBlockPos.x + 1, y: originBlockPos.y, z: originBlockPos.z };
             const downBlockPos = { x: originBlockPos.x, y: originBlockPos.y - 1, z: originBlockPos.z };
             const bottomBlockPos = { x: originBlockPos.x, y: originBlockPos.y - 2, z: originBlockPos.z };
+
             player.dimension.getBlock(originBlockPos)?.setType("no_png:missingtexture_block");
             player.dimension.getBlock(topBlockPos)?.setType("no_png:missingtexture_block");
             player.dimension.getBlock(sideLeftBlockPos)?.setType("no_png:missingtexture_block");
@@ -144,14 +219,11 @@ const randomEvents = [
         if (players.length > 0) {
             const player = players[0];
             const dimension = player.dimension;
-
-            // Determine total items to spawn (between 16 and 128)
             const totalItems = Math.floor(Math.random() * (64 - 16 + 1)) + 16;
             let itemsSpawned = 0;
 
             world.sendMessage("A FOUNTAIN OF ITEMS HAS APPEARED!");
 
-            // Run an interval every 2 ticks (0.1 seconds)
             const fountainInterval = system.runInterval(() => {
                 if (itemsSpawned >= totalItems) {
                     system.clearRun(fountainInterval);
@@ -159,16 +231,15 @@ const randomEvents = [
                 }
 
                 const spawnPos = {
-                    x: player.location.x + (Math.random() * 4 - 2), // Slight random spread
+                    x: player.location.x + (Math.random() * 4 - 2),
                     y: player.location.y + 1.5,
                     z: player.location.z + (Math.random() * 4 - 2)
                 };
 
                 const itemStack = new ItemStack("no_png:no_texture_item", 1);
                 dimension.spawnItem(itemStack, spawnPos);
-
                 itemsSpawned++;
-            }, 0.1); // 2 ticks = 0.1 seconds
+            }, 1);
         }
     },
     function spawnSingleItem() {
@@ -176,10 +247,6 @@ const randomEvents = [
         if (players.length > 0) {
             const player = players[0];
             const dimension = player.dimension;
-
-            // Determine total items to spawn (between 16 and 128)
-            const totalItems = 1;
-            let itemsSpawned = 0;
             const itemChoices = [
                 "no_png:no_texture_item",
                 "no_png:no_texture_disc",
@@ -189,58 +256,37 @@ const randomEvents = [
             ];
 
             world.sendMessage("A SINGLE ITEM HAS BEEN GIVEN!");
-
-            // Run an interval every 2 ticks (0.1 seconds)
-
-            if (itemsSpawned >= totalItems) {
-                system.clearRun(fountainInterval);
-                return;
-            }
-
-            const spawnPos = {
-                x: player.location.x, // Slight random spread
-                y: player.location.y,
-                z: player.location.z
-            };
-
+            const spawnPos = { x: player.location.x, y: player.location.y, z: player.location.z };
             const randomIndex = Math.floor(Math.random() * itemChoices.length);
             const selectedItem = itemChoices[randomIndex];
-
-            // Create the stack with the SINGLE string
             const itemStack = new ItemStack(selectedItem, 1);
             dimension.spawnItem(itemStack, spawnPos);
-
-            itemsSpawned++;
-            // 2 ticks = 0.1 seconds
         }
     }
 ];
 
 function eventDirector() {
     world.sendMessage("Event started/reset!");
-    // Wait between 6000 and 12000 ticks (5-10 minutes)
-    // Math.floor(Math.random() * 6001) + 6000;
-    const nextWait = Math.floor(Math.random() * 6001) + 6000;
+    const nextWait = Math.floor(Math.random() * 100) + 100;
     system.runTimeout(() => {
-        // Pick and run a random event from our list
         const index = Math.floor(Math.random() * randomEvents.length);
         randomEvents[index]();
-
-        // Loop again to schedule the NEXT random event
         eventDirector();
     }, nextWait);
 }
 
-// Start the director when the script loads
 eventDirector();
 
 function isAreaAir(dimension, startPos, width, height, depth) {
     for (let x = 0; x < width; x++) {
         for (let y = 0; y < height; y++) {
             for (let z = 0; z < depth; z++) {
+                const checkY = Math.floor(startPos.y + y);
+                if (!isYValid(checkY)) return false; // Fail air check if out of bounds
+
                 const block = dimension.getBlock({
                     x: Math.floor(startPos.x + x),
-                    y: Math.floor(startPos.y + y),
+                    y: checkY,
                     z: Math.floor(startPos.z + z)
                 });
                 if (!block || block.typeId !== "minecraft:air") {
@@ -252,7 +298,6 @@ function isAreaAir(dimension, startPos, width, height, depth) {
     return true;
 }
 
-// Map the base entities to their "don't look at me" variants
 const entitySpawnMap = {
     "no_png:chicken_no_texture": "no_png:dont_look_at_me",
     "no_png:cow_no_texture": "no_png:dont_look_at_me_cow",
@@ -262,36 +307,26 @@ const entitySpawnMap = {
 
 world.afterEvents.entitySpawn.subscribe((event) => {
     const entity = event.entity;
-
-    // Check if the spawned entity is in our map
     if (entity?.typeId && entitySpawnMap[entity.typeId]) {
-
         const { dimension, location } = entity;
         const entitySpawn = entitySpawnMap[entity.typeId];
-
         let spawned = false;
         let attempts = 0;
-        const maxAttempts = 25; // Prevent infinite loops
+        const maxAttempts = 25;
 
         while (!spawned && attempts < maxAttempts) {
             attempts++;
+            const randomX = location.x + (Math.random() * 80 - 40);
+            const randomZ = location.z + (Math.random() * 80 - 40);
+            const spawnPos = { x: randomX, y: location.y, z: randomZ };
 
-            if (attempts <= 50) {
-
-                const randomX = location.x + (Math.random() * 80 - 40);
-                const randomZ = location.z + (Math.random() * 80 - 40);
-                const spawnPos = { x: randomX, y: location.y, z: randomZ };
-
-                // Check for a 3x2x1 pocket of air (3 wide, 2 high)
-                if (isAreaAir(dimension, spawnPos, 3, 2, 1)) {
-                    try {
-                        dimension.spawnEntity(entitySpawn, spawnPos);
-
-                        world.sendMessage("§b[Test]§r A friend has arrived after " + attempts + " attempts.");
-                        spawned = true;
-                    } catch (error) {
-                        console.warn("Failed to spawn entity: " + error);
-                    }
+            if (isAreaAir(dimension, spawnPos, 3, 2, 1)) {
+                try {
+                    dimension.spawnEntity(entitySpawn, spawnPos);
+                    world.sendMessage("§b[Test]§r A friend has arrived after " + attempts + " attempts.");
+                    spawned = true;
+                } catch (error) {
+                    console.warn("Failed to spawn entity: " + error);
                 }
             }
         }
@@ -300,8 +335,6 @@ world.afterEvents.entitySpawn.subscribe((event) => {
 
 system.runInterval(() => {
     const dimension = world.getDimension("overworld");
-
-    // Check for all four "don't look at me" variants
     const entities = dimension.getEntities().filter(entity =>
         entity.typeId === "no_png:dont_look_at_me" ||
         entity.typeId === "no_png:dont_look_at_me_cow" ||
@@ -311,25 +344,19 @@ system.runInterval(() => {
 
     for (const entity of entities) {
         const { x, y, z } = entity.location;
+        const targetY = Math.floor(y) - 1;
 
-        // Using Math.floor ensures we target the exact block grid coordinates
-        const blockBelow = dimension.getBlock({
-            x: Math.floor(x),
-            y: Math.floor(y) - 1,
-            z: Math.floor(z)
-        });
-
-        if (blockBelow && blockBelow.typeId !== "no_png:missingtexture_block" && blockBelow.typeId !== "minecraft:air") {
-            try {
-                blockBelow.setType("no_png:missingtexture_block");
-            } catch (e) {
-                // Catches errors if the block is in an unloaded chunk
+        if (isYValid(targetY)) {
+            const blockBelow = dimension.getBlock({ x: Math.floor(x), y: targetY, z: Math.floor(z) });
+            if (blockBelow && blockBelow.typeId !== "no_png:missingtexture_block" && blockBelow.typeId !== "minecraft:air") {
+                try {
+                    blockBelow.setType("no_png:missingtexture_block");
+                } catch (e) { }
             }
         }
     }
 }, 5);
 
-// Handle Herobrine block placement and jumping when can't reach player
 system.runInterval(() => {
     const dimension = world.getDimension("overworld");
     const herobrine = dimension.getEntities().find(entity => entity.typeId === "no_png:active_herobrine");
@@ -341,7 +368,7 @@ system.runInterval(() => {
                 Math.pow(player.location.y - herobrine.location.y, 2) +
                 Math.pow(player.location.z - herobrine.location.z, 2)
             );
-            return dist < 64; // Within attack range
+            return dist < 64;
         });
 
         if (targetPlayers.length > 0) {
@@ -352,12 +379,10 @@ system.runInterval(() => {
                 Math.pow(player.location.z - herobrine.location.z, 2)
             );
 
-            // Check if player is in creative mode and if Herobrine is in active state
             const playerInCreative = player.getGameMode() === "creative";
             const herobineVariant = herobrine.getComponent("minecraft:variant")?.value || 0;
             const isHerobrineActive = herobineVariant === 1;
 
-            // Check if Herobrine is on a block adjacent to the player (on x or z axis)
             const playerBlockX = Math.floor(player.location.x);
             const playerBlockZ = Math.floor(player.location.z);
             const herobrineBlockX = Math.floor(herobrine.location.x);
@@ -367,37 +392,30 @@ system.runInterval(() => {
                 (Math.abs(playerBlockZ - herobrineBlockZ) === 1 && playerBlockX === herobrineBlockX)
             );
 
-            // If player is more than 2 blocks higher and within horizontal range, jump and place block
-            // Only jump if player is NOT in creative mode AND Herobrine is in active state AND is adjacent to player
             if (heightDiff > 1 && horizontalDist < 10 && !playerInCreative && isHerobrineActive && isAdjacentHorizontally) {
                 try {
-                    // Jump first
                     herobrine.applyKnockback(0, 0, 0, 0.6);
-
-                    // Then place block under original position
-                    const blockBelow = dimension.getBlock({
+                    const blockPos = {
                         x: Math.floor(herobrine.location.x),
                         y: Math.floor(herobrine.location.y),
                         z: Math.floor(herobrine.location.z)
-                    });
+                    };
 
-                    if (blockBelow && blockBelow.typeId === "minecraft:air") {
-                        system.runTimeout(() => {
-                            blockBelow.setType("no_png:missingtexture_block");
-                        }, 5);
-
+                    // CHECK: Ensure Herobrine doesn't place a block outside valid Y range
+                    if (isYValid(blockPos.y)) {
+                        const blockBelow = dimension.getBlock(blockPos);
+                        if (blockBelow && blockBelow.typeId === "minecraft:air") {
+                            system.runTimeout(() => {
+                                blockBelow.setType("no_png:missingtexture_block");
+                            }, 5);
+                        }
                     }
-                } catch (e) {
-                    // Catches errors if the block is in an unloaded chunk
-                }
+                } catch (e) { }
             }
         }
     }
 }, 10);
 
-// --- UPDATED CODE BELOW ---
-
-// Triggers whenever a player uses an item on a block
 world.afterEvents.itemUseOn.subscribe((event) => {
     const item = event.itemStack;
     const block = event.block;
@@ -408,142 +426,69 @@ world.afterEvents.itemUseOn.subscribe((event) => {
         block?.typeId === "minecraft:netherrack"
     ) {
         const mossyPos = { x: block.location.x, y: block.location.y - 1, z: block.location.z };
-        const blockBelow = block.dimension.getBlock(mossyPos);
+        if (!isYValid(mossyPos.y)) return; // Bound check
 
+        const blockBelow = block.dimension.getBlock(mossyPos);
         if (blockBelow?.typeId === "minecraft:mossy_cobblestone") {
             let allGold = true;
-
-            // 1. GOLD RING CHECK
             for (let offsetX = -1; offsetX <= 1; offsetX++) {
                 for (let offsetZ = -1; offsetZ <= 1; offsetZ++) {
                     if (offsetX === 0 && offsetZ === 0) continue;
-                    const blockGold = block.dimension.getBlock({
-                        x: mossyPos.x + offsetX,
-                        y: mossyPos.y,
-                        z: mossyPos.z + offsetZ
-                    });
-                    if (blockGold?.typeId !== "minecraft:gold_block") {
-                        allGold = false;
-                        break;
-                    }
+                    const blockGold = block.dimension.getBlock({ x: mossyPos.x + offsetX, y: mossyPos.y, z: mossyPos.z + offsetZ });
+                    if (blockGold?.typeId !== "minecraft:gold_block") { allGold = false; break; }
                 }
                 if (!allGold) break;
             }
 
             if (allGold) {
                 let allRed = true;
-
-                // 2. REDSTONE TORCH CHECK (Cross Shape)
                 for (let redX = -1; redX <= 1; redX++) {
                     for (let redZ = -1; redZ <= 1; redZ++) {
                         if (Math.abs(redX) === Math.abs(redZ)) continue;
-
-                        // FIXED: Added .location here
-                        const blockRed = block.dimension.getBlock({
-                            x: block.location.x + redX,
-                            y: block.location.y,
-                            z: block.location.z + redZ
-                        });
-
-                        if (blockRed?.typeId !== "minecraft:redstone_torch") {
-                            allRed = false;
-                            break;
-                        }
+                        const blockRed = block.dimension.getBlock({ x: block.location.x + redX, y: block.location.y, z: block.location.z + redZ });
+                        if (blockRed?.typeId !== "minecraft:redstone_torch") { allRed = false; break; }
                     }
                     if (!allRed) break;
                 }
 
                 if (allRed) {
                     let allAir = true;
-
-                    // 3. AIR CHECK (Diagonal Corners)
                     for (let airX = -1; airX <= 1; airX++) {
                         for (let airZ = -1; airZ <= 1; airZ++) {
-                            // This logic targets the 4 corners
                             if (airX === 0 || airZ === 0) continue;
-
-                            // FIXED: Added .location here
-                            const blockAir = block.dimension.getBlock({
-                                x: block.location.x + airX,
-                                y: block.location.y,
-                                z: block.location.z + airZ
-                            });
-
-                            if (blockAir?.typeId !== "minecraft:air") {
-                                allAir = false;
-                                break;
-                            }
+                            const blockAir = block.dimension.getBlock({ x: block.location.x + airX, y: block.location.y, z: block.location.z + airZ });
+                            if (blockAir?.typeId !== "minecraft:air") { allAir = false; break; }
                         }
                         if (!allAir) break;
                     }
 
                     if (allAir) {
-                        // 1. Trigger the environmental effects
-                        block.dimension.spawnEntity("minecraft:lightning_bolt", {
-                            x: block.location.x + 0.5,
-                            y: block.location.y + 1,
-                            z: block.location.z + 0.5
-                        });
-
-                        block.dimension.spawnEntity("no_png:active_herobrine", {
-                            x: block.location.x + 0.5,
-                            y: block.location.y + 2,
-                            z: block.location.z + 0.5
-                        });
-
-                        // Play the hit sound from dont_look_at_me
-                        block.dimension.playSound("mob.dont_look.hit", {
-                            x: block.location.x + 0.5,
-                            y: block.location.y + 2,
-                            z: block.location.z + 0.5
-                        });
-
-                        // 2. Change the center block
+                        block.dimension.spawnEntity("minecraft:lightning_bolt", { x: block.location.x + 0.5, y: block.location.y + 1, z: block.location.z + 0.5 });
+                        block.dimension.spawnEntity("no_png:active_herobrine", { x: block.location.x + 0.5, y: block.location.y + 2, z: block.location.z + 0.5 });
+                        block.dimension.playSound("mob.dont_look.hit", { x: block.location.x + 0.5, y: block.location.y + 2, z: block.location.z + 0.5 });
                         block.setType("no_png:missingtexture_block");
 
-                        // 3. Turn the redstone torches into unlit ones
                         for (let x = -1; x <= 1; x++) {
                             for (let z = -1; z <= 1; z++) {
-                                // This uses the same cross-shape logic from your check
                                 if (Math.abs(x) === Math.abs(z)) continue;
-
-                                const torchBlock = block.dimension.getBlock({
-                                    x: block.location.x + x,
-                                    y: block.location.y,
-                                    z: block.location.z + z
-                                });
-
-                                // Replace the lit torch with the unlit version
+                                const torchBlock = block.dimension.getBlock({ x: block.location.x + x, y: block.location.y, z: block.location.z + z });
                                 torchBlock?.setType("minecraft:unlit_redstone_torch");
                                 system.runTimeout(() => {
-                                    // After 5 seconds, turn it back to a lit torch
                                     torchBlock?.setType("no_png:burnt_out_torch");
-                                }, 5);
+                                }, 100); // 5 seconds = 100 ticks
                             }
                         }
 
-
-                        // 1. GOLD RING CHECK
                         for (let offsetX = -1; offsetX <= 1; offsetX++) {
                             for (let offsetZ = -1; offsetZ <= 1; offsetZ++) {
-
-                                const missingRandomTime = 5 + Math.floor(Math.random() * 15); // Random time between 5 and 15 seconds
-
-
-                                const blockGold = block.dimension.getBlock({
-                                    x: mossyPos.x + offsetX,
-                                    y: mossyPos.y,
-                                    z: mossyPos.z + offsetZ
-                                });
-
+                                const missingRandomTime = 100 + Math.floor(Math.random() * 200);
+                                const blockGold = block.dimension.getBlock({ x: mossyPos.x + offsetX, y: mossyPos.y, z: mossyPos.z + offsetZ });
                                 if (Math.random() < 0.5) {
                                     system.runTimeout(() => {
-                                        // After 5 seconds, turn it back to a lit torch
                                         blockGold?.setType("no_png:missingtexture_block");
                                     }, missingRandomTime);
                                 }
                             }
-
                         }
                     }
                 }
