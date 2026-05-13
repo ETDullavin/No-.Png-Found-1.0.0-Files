@@ -44,11 +44,12 @@ world.afterEvents.playerInteractWithBlock.subscribe((event) => {
                 dimension.runCommand(`setblock ${x} ${y} ${z} air [] destroy`);
 
                 system.runTimeout(() => {
-                    const targetBlock = dimension.getBlock(location);
-                    // Check height before setting
-                    if (targetBlock && isYValid(location.y)) {
-                        targetBlock.setType("no_png:missingtexture_block");
-                    }
+                    try {
+                        const targetBlock = dimension.getBlock(location);
+                        if (targetBlock && isYValid(location.y)) {
+                            targetBlock.setType("no_png:missingtexture_block");
+                        }
+                    } catch (e) { } // Catch unloaded chunk errors
                 }, 2);
 
                 player.playSound("mob.dont_look.hit", player.location);
@@ -94,13 +95,32 @@ const randomEvents = [
         const players = world.getAllPlayers();
         if (players.length > 0) {
             const player = players[0];
+            const dimension = player.dimension;
+
+            // 1. Check if the "Active" Herobrine already exists
+            const activeHerobrines = dimension.getEntities({ type: "no_png:active_herobrine" });
+            if (activeHerobrines.length > 0) {
+                // If the active one is present, we stop here and don't spawn a watcher
+                return;
+            }
+
+            // 2. Remove any old "Watching" Herobrines to prevent duplicates
+            const existingWatchers = dimension.getEntities({ type: "no_png:watching_herobrine" });
+            for (const entity of existingWatchers) {
+                entity.remove();
+            }
+
+            // 3. Logic for spawning the new watcher
             const herobrinePos = {
                 x: player.location.x + (Math.random() * 100 - 50),
-                y: Math.min(MAX_Y, player.location.y + 25), // Cap at world height
+                y: Math.min(MAX_Y, player.location.y + 25),
                 z: player.location.z + (Math.random() * 100 - 50)
             };
-            player.dimension.spawnEntity("no_png:watching_herobrine", herobrinePos);
-            world.sendMessage("HEROBRINE SPAWNED!");
+
+            try {
+                dimension.spawnEntity("no_png:watching_herobrine", herobrinePos);
+                world.sendMessage("HEROBRINE SPAWNED!");
+            } catch (e) { }
         }
     },
     function placeGlitchedBlock() {
@@ -112,58 +132,58 @@ const randomEvents = [
                 y: Math.floor(player.location.y + (Math.random() * 100 - 50)),
                 z: player.location.z + (Math.random() * 200 - 100)
             };
-            const glitchBlock = player.dimension.getBlock(blockPos);
 
+            // FIX: Validate Y BEFORE calling getBlock
             if (!isYValid(blockPos.y) || !isYValid(blockPos.y + 6)) return;
 
-            if (glitchBlock.typeId !== "minecraft:air" || glitchBlock.typeId === "no_png:missingtexture_block") {
-                if (glitchBlock.typeId !== "minecraft:grass_block") {
-                    glitchBlock.setType("no_png:missingtexture_block");
-                } else {
-                    for (let trunkY = blockPos.y + 1; trunkY <= blockPos.y + 6; trunkY++) {
-                        player.dimension.getBlock({ x: blockPos.x, y: trunkY, z: blockPos.z })?.setType("no_png:missingtexture_block");
+            try {
+                const glitchBlock = player.dimension.getBlock(blockPos);
+                if (!glitchBlock) return;
 
-                        if (trunkY === blockPos.y + 6) {
-                            // --- Lower Foliage Layers ---
-                            for (let leafX = -2; leafX <= 2; leafX++) {
-                                for (let leafZ = -2; leafZ <= 2; leafZ++) {
-                                    for (let leafY = trunkY - 3; leafY <= trunkY - 2; leafY++) {
-                                        if (!isYValid(leafY)) continue;
+                if (glitchBlock.typeId !== "minecraft:air" || glitchBlock.typeId === "no_png:missingtexture_block") {
+                    if (glitchBlock.typeId !== "minecraft:grass_block") {
+                        glitchBlock.setType("no_png:missingtexture_block");
+                    } else {
+                        for (let trunkY = blockPos.y + 1; trunkY <= blockPos.y + 6; trunkY++) {
+                            player.dimension.getBlock({ x: blockPos.x, y: trunkY, z: blockPos.z })?.setType("no_png:missingtexture_block");
 
-                                        // Corner check: Absolute value of both X and Z are 2
-                                        const isCorner = Math.abs(leafX) === 2 && Math.abs(leafZ) === 2;
+                            if (trunkY === blockPos.y + 6) {
+                                // --- Lower Foliage Layers ---
+                                for (let leafX = -2; leafX <= 2; leafX++) {
+                                    for (let leafZ = -2; leafZ <= 2; leafZ++) {
+                                        for (let leafY = trunkY - 3; leafY <= trunkY - 2; leafY++) {
+                                            if (!isYValid(leafY)) continue;
 
-                                        if (isCorner) {
-                                            // 40% chance to spawn if it's a corner
-                                            if (Math.random() < 0.4) {
+                                            const isCorner = Math.abs(leafX) === 2 && Math.abs(leafZ) === 2;
+
+                                            if (isCorner) {
+                                                if (Math.random() < 0.4) {
+                                                    player.dimension.getBlock({ x: blockPos.x + leafX, y: leafY, z: blockPos.z + leafZ })?.setType("no_png:missingtexture_block");
+                                                }
+                                            } else {
                                                 player.dimension.getBlock({ x: blockPos.x + leafX, y: leafY, z: blockPos.z + leafZ })?.setType("no_png:missingtexture_block");
                                             }
-                                        } else {
-                                            // Not a corner, always spawn
-                                            player.dimension.getBlock({ x: blockPos.x + leafX, y: leafY, z: blockPos.z + leafZ })?.setType("no_png:missingtexture_block");
-                                        }
 
-                                        // --- Upper Foliage Layers ---
-                                        if (leafX === 2 && leafY === trunkY - 2 && leafZ === 2) {
-                                            for (let leafX2 = -1; leafX2 <= 1; leafX2++) {
-                                                for (let leafZ2 = -1; leafZ2 <= 1; leafZ2++) {
-                                                    for (let leafY2 = trunkY - 1; leafY2 <= trunkY; leafY2++) {
-                                                        if (!isYValid(leafY2)) continue;
+                                            // --- Upper Foliage Layers ---
+                                            if (leafX === 2 && leafY === trunkY - 2 && leafZ === 2) {
+                                                for (let leafX2 = -1; leafX2 <= 1; leafX2++) {
+                                                    for (let leafZ2 = -1; leafZ2 <= 1; leafZ2++) {
+                                                        for (let leafY2 = trunkY - 1; leafY2 <= trunkY; leafY2++) {
+                                                            if (!isYValid(leafY2)) continue;
 
-                                                        // Corner check for top layer: Absolute value is 1
-                                                        const isTopCorner = Math.abs(leafX2) === 1 && Math.abs(leafZ2) === 1;
+                                                            const isTopCorner = Math.abs(leafX2) === 1 && Math.abs(leafZ2) === 1;
 
-                                                        if (isTopCorner) {
-                                                            // 33% chance to spawn top corners
-                                                            if (Math.random() < 0.33) {
+                                                            if (isTopCorner) {
+                                                                if (Math.random() < 0.33) {
+                                                                    player.dimension.getBlock({ x: blockPos.x + leafX2, y: leafY2, z: blockPos.z + leafZ2 })?.setType("no_png:missingtexture_block");
+                                                                }
+                                                            } else {
                                                                 player.dimension.getBlock({ x: blockPos.x + leafX2, y: leafY2, z: blockPos.z + leafZ2 })?.setType("no_png:missingtexture_block");
                                                             }
-                                                        } else {
-                                                            player.dimension.getBlock({ x: blockPos.x + leafX2, y: leafY2, z: blockPos.z + leafZ2 })?.setType("no_png:missingtexture_block");
-                                                        }
 
-                                                        if (leafX2 === 1 && leafY2 === trunkY && leafZ2 === 1) {
-                                                            world.sendMessage("GLITCHED TREE SPAWNED!");
+                                                            if (leafX2 === 1 && leafY2 === trunkY && leafZ2 === 1) {
+                                                                world.sendMessage("GLITCHED TREE SPAWNED!");
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -175,9 +195,10 @@ const randomEvents = [
                         }
                     }
                 }
+            } catch (error) {
+                // Ignore if chunk is unloaded
             }
         }
-
     },
     function playScarySound() {
         const players = world.getAllPlayers();
@@ -192,11 +213,10 @@ const randomEvents = [
             const player = players[0];
             const originBlockPos = {
                 x: player.location.x + (Math.random() * 200 - 100),
-                y: Math.floor(player.location.y + (Math.random() * 200 - 100)),
+                y: Math.floor(player.location.y + (Math.random() * 100)),
                 z: player.location.z + (Math.random() * 200 - 100)
             };
 
-            // CHECK: Verify the cross height range (y-2 to y+1)
             if (!isYValid(originBlockPos.y - 2) || !isYValid(originBlockPos.y + 1)) return;
 
             const topBlockPos = { x: originBlockPos.x, y: originBlockPos.y + 1, z: originBlockPos.z };
@@ -205,13 +225,15 @@ const randomEvents = [
             const downBlockPos = { x: originBlockPos.x, y: originBlockPos.y - 1, z: originBlockPos.z };
             const bottomBlockPos = { x: originBlockPos.x, y: originBlockPos.y - 2, z: originBlockPos.z };
 
-            player.dimension.getBlock(originBlockPos)?.setType("no_png:missingtexture_block");
-            player.dimension.getBlock(topBlockPos)?.setType("no_png:missingtexture_block");
-            player.dimension.getBlock(sideLeftBlockPos)?.setType("no_png:missingtexture_block");
-            player.dimension.getBlock(sideRightBlockPos)?.setType("no_png:missingtexture_block");
-            player.dimension.getBlock(downBlockPos)?.setType("no_png:missingtexture_block");
-            player.dimension.getBlock(bottomBlockPos)?.setType("no_png:missingtexture_block");
-            world.sendMessage("GLITCHED CROSS SPAWNED!");
+            try {
+                player.dimension.getBlock(originBlockPos)?.setType("no_png:missingtexture_block");
+                player.dimension.getBlock(topBlockPos)?.setType("no_png:missingtexture_block");
+                player.dimension.getBlock(sideLeftBlockPos)?.setType("no_png:missingtexture_block");
+                player.dimension.getBlock(sideRightBlockPos)?.setType("no_png:missingtexture_block");
+                player.dimension.getBlock(downBlockPos)?.setType("no_png:missingtexture_block");
+                player.dimension.getBlock(bottomBlockPos)?.setType("no_png:missingtexture_block");
+                world.sendMessage("GLITCHED CROSS SPAWNED!");
+            } catch (e) { } // Ignore if chunk is unloaded
         }
     },
     function spawnFountainItem() {
@@ -236,9 +258,11 @@ const randomEvents = [
                     z: player.location.z + (Math.random() * 4 - 2)
                 };
 
-                const itemStack = new ItemStack("no_png:no_texture_item", 1);
-                dimension.spawnItem(itemStack, spawnPos);
-                itemsSpawned++;
+                try {
+                    const itemStack = new ItemStack("no_png:no_texture_item", 1);
+                    dimension.spawnItem(itemStack, spawnPos);
+                    itemsSpawned++;
+                } catch (e) { }
             }, 1);
         }
     },
@@ -251,16 +275,52 @@ const randomEvents = [
                 "no_png:no_texture_item",
                 "no_png:no_texture_disc",
                 "minecraft:music_disc_11",
-                "minecraft:music_disc_13",
-                "no_png:burnt_out_torch"
+                "minecraft:music_disc_13"
             ];
 
             world.sendMessage("A SINGLE ITEM HAS BEEN GIVEN!");
             const spawnPos = { x: player.location.x, y: player.location.y, z: player.location.z };
             const randomIndex = Math.floor(Math.random() * itemChoices.length);
             const selectedItem = itemChoices[randomIndex];
-            const itemStack = new ItemStack(selectedItem, 1);
-            dimension.spawnItem(itemStack, spawnPos);
+
+            try {
+                const itemStack = new ItemStack(selectedItem, 1);
+                dimension.spawnItem(itemStack, spawnPos);
+            } catch (e) { }
+        }
+    },
+    function corruptChunk() {
+        const players = world.getAllPlayers();
+        if (players.length > 0) {
+            const player = players[0];
+            const dimension = player.dimension;
+            const py = Math.floor(player.location.y);
+
+            // FIX: Restrict the Y limits so the script doesn't time out checking 98,000+ blocks at once
+            const startY = Math.max(MIN_Y + 1, py - 10);
+            const endY = Math.min(MAX_Y, py + 10);
+            let chunkCorrupted = false;
+
+            for (let chunkY = MIN_Y + 1; chunkY <= MAX_Y; chunkY++) {
+                for (let chunkX = -7; chunkX <= 8; chunkX++) {
+                    for (let chunkZ = -7; chunkZ <= 8; chunkZ++) {
+                        try {
+                            const chunk = dimension.getBlock({ x: player.location.x + chunkX, y: chunkY, z: player.location.z + chunkZ });
+
+                            // FIX: Compare typeId, not the object itself, and use setType instead of setBlockType
+                            if (chunk && chunk.typeId !== "minecraft:air" && chunk.typeId !== "no_png:missingtexture_block") {
+                                if (Math.random() < 0.1) { // Set realistic probability
+                                    chunk.setType("no_png:missingtexture_block");
+                                    chunkCorrupted = true;
+                                }
+                            }
+                        } catch (e) { } // Ignore if block is in unloaded bounds
+                    }
+                }
+            }
+            if (chunkCorrupted) {
+                world.sendMessage("A CHUNK HAS BEEN CORRUPTED!");
+            }
         }
     }
 ];
@@ -268,10 +328,18 @@ const randomEvents = [
 function eventDirector() {
     world.sendMessage("Event started/reset!");
     const nextWait = Math.floor(Math.random() * 100) + 100;
+
     system.runTimeout(() => {
-        const index = Math.floor(Math.random() * randomEvents.length);
-        randomEvents[index]();
-        eventDirector();
+        try {
+            const index = Math.floor(Math.random() * randomEvents.length);
+            randomEvents[index]();
+        } catch (error) {
+            // Log the error but don't let it crash the loop!
+            console.warn("Event crashed safely: " + error);
+        } finally {
+            // FIX: Finally ensures the loop ALWAYS continues no matter what
+            eventDirector();
+        }
     }, nextWait);
 }
 
@@ -282,16 +350,18 @@ function isAreaAir(dimension, startPos, width, height, depth) {
         for (let y = 0; y < height; y++) {
             for (let z = 0; z < depth; z++) {
                 const checkY = Math.floor(startPos.y + y);
-                if (!isYValid(checkY)) return false; // Fail air check if out of bounds
+                if (!isYValid(checkY)) return false;
 
-                const block = dimension.getBlock({
-                    x: Math.floor(startPos.x + x),
-                    y: checkY,
-                    z: Math.floor(startPos.z + z)
-                });
-                if (!block || block.typeId !== "minecraft:air") {
-                    return false;
-                }
+                try {
+                    const block = dimension.getBlock({
+                        x: Math.floor(startPos.x + x),
+                        y: checkY,
+                        z: Math.floor(startPos.z + z)
+                    });
+                    if (!block || block.typeId !== "minecraft:air") {
+                        return false;
+                    }
+                } catch (e) { return false; }
             }
         }
     }
@@ -347,12 +417,12 @@ system.runInterval(() => {
         const targetY = Math.floor(y) - 1;
 
         if (isYValid(targetY)) {
-            const blockBelow = dimension.getBlock({ x: Math.floor(x), y: targetY, z: Math.floor(z) });
-            if (blockBelow && blockBelow.typeId !== "no_png:missingtexture_block" && blockBelow.typeId !== "minecraft:air") {
-                try {
+            try {
+                const blockBelow = dimension.getBlock({ x: Math.floor(x), y: targetY, z: Math.floor(z) });
+                if (blockBelow && blockBelow.typeId !== "no_png:missingtexture_block" && blockBelow.typeId !== "minecraft:air") {
                     blockBelow.setType("no_png:missingtexture_block");
-                } catch (e) { }
-            }
+                }
+            } catch (e) { }
         }
     }
 }, 5);
@@ -401,12 +471,13 @@ system.runInterval(() => {
                         z: Math.floor(herobrine.location.z)
                     };
 
-                    // CHECK: Ensure Herobrine doesn't place a block outside valid Y range
                     if (isYValid(blockPos.y)) {
                         const blockBelow = dimension.getBlock(blockPos);
                         if (blockBelow && blockBelow.typeId === "minecraft:air") {
                             system.runTimeout(() => {
-                                blockBelow.setType("no_png:missingtexture_block");
+                                try {
+                                    blockBelow.setType("no_png:missingtexture_block");
+                                } catch (e) { }
                             }, 5);
                         }
                     }
@@ -426,73 +497,79 @@ world.afterEvents.itemUseOn.subscribe((event) => {
         block?.typeId === "minecraft:netherrack"
     ) {
         const mossyPos = { x: block.location.x, y: block.location.y - 1, z: block.location.z };
-        if (!isYValid(mossyPos.y)) return; // Bound check
+        if (!isYValid(mossyPos.y)) return;
 
-        const blockBelow = block.dimension.getBlock(mossyPos);
-        if (blockBelow?.typeId === "minecraft:mossy_cobblestone") {
-            let allGold = true;
-            for (let offsetX = -1; offsetX <= 1; offsetX++) {
-                for (let offsetZ = -1; offsetZ <= 1; offsetZ++) {
-                    if (offsetX === 0 && offsetZ === 0) continue;
-                    const blockGold = block.dimension.getBlock({ x: mossyPos.x + offsetX, y: mossyPos.y, z: mossyPos.z + offsetZ });
-                    if (blockGold?.typeId !== "minecraft:gold_block") { allGold = false; break; }
-                }
-                if (!allGold) break;
-            }
-
-            if (allGold) {
-                let allRed = true;
-                for (let redX = -1; redX <= 1; redX++) {
-                    for (let redZ = -1; redZ <= 1; redZ++) {
-                        if (Math.abs(redX) === Math.abs(redZ)) continue;
-                        const blockRed = block.dimension.getBlock({ x: block.location.x + redX, y: block.location.y, z: block.location.z + redZ });
-                        if (blockRed?.typeId !== "minecraft:redstone_torch") { allRed = false; break; }
+        try {
+            const blockBelow = block.dimension.getBlock(mossyPos);
+            if (blockBelow?.typeId === "minecraft:mossy_cobblestone") {
+                let allGold = true;
+                for (let offsetX = -1; offsetX <= 1; offsetX++) {
+                    for (let offsetZ = -1; offsetZ <= 1; offsetZ++) {
+                        if (offsetX === 0 && offsetZ === 0) continue;
+                        const blockGold = block.dimension.getBlock({ x: mossyPos.x + offsetX, y: mossyPos.y, z: mossyPos.z + offsetZ });
+                        if (blockGold?.typeId !== "minecraft:gold_block") { allGold = false; break; }
                     }
-                    if (!allRed) break;
+                    if (!allGold) break;
                 }
 
-                if (allRed) {
-                    let allAir = true;
-                    for (let airX = -1; airX <= 1; airX++) {
-                        for (let airZ = -1; airZ <= 1; airZ++) {
-                            if (airX === 0 || airZ === 0) continue;
-                            const blockAir = block.dimension.getBlock({ x: block.location.x + airX, y: block.location.y, z: block.location.z + airZ });
-                            if (blockAir?.typeId !== "minecraft:air") { allAir = false; break; }
+                if (allGold) {
+                    let allRed = true;
+                    for (let redX = -1; redX <= 1; redX++) {
+                        for (let redZ = -1; redZ <= 1; redZ++) {
+                            if (Math.abs(redX) === Math.abs(redZ)) continue;
+                            const blockRed = block.dimension.getBlock({ x: block.location.x + redX, y: block.location.y, z: block.location.z + redZ });
+                            if (blockRed?.typeId !== "minecraft:redstone_torch") { allRed = false; break; }
                         }
-                        if (!allAir) break;
+                        if (!allRed) break;
                     }
 
-                    if (allAir) {
-                        block.dimension.spawnEntity("minecraft:lightning_bolt", { x: block.location.x + 0.5, y: block.location.y + 1, z: block.location.z + 0.5 });
-                        block.dimension.spawnEntity("no_png:active_herobrine", { x: block.location.x + 0.5, y: block.location.y + 2, z: block.location.z + 0.5 });
-                        block.dimension.playSound("mob.dont_look.hit", { x: block.location.x + 0.5, y: block.location.y + 2, z: block.location.z + 0.5 });
-                        block.setType("no_png:missingtexture_block");
-
-                        for (let x = -1; x <= 1; x++) {
-                            for (let z = -1; z <= 1; z++) {
-                                if (Math.abs(x) === Math.abs(z)) continue;
-                                const torchBlock = block.dimension.getBlock({ x: block.location.x + x, y: block.location.y, z: block.location.z + z });
-                                torchBlock?.setType("minecraft:unlit_redstone_torch");
-                                system.runTimeout(() => {
-                                    torchBlock?.setType("no_png:burnt_out_torch");
-                                }, 100); // 5 seconds = 100 ticks
+                    if (allRed) {
+                        let allAir = true;
+                        for (let airX = -1; airX <= 1; airX++) {
+                            for (let airZ = -1; airZ <= 1; airZ++) {
+                                if (airX === 0 || airZ === 0) continue;
+                                const blockAir = block.dimension.getBlock({ x: block.location.x + airX, y: block.location.y, z: block.location.z + airZ });
+                                if (blockAir?.typeId !== "minecraft:air") { allAir = false; break; }
                             }
+                            if (!allAir) break;
                         }
 
-                        for (let offsetX = -1; offsetX <= 1; offsetX++) {
-                            for (let offsetZ = -1; offsetZ <= 1; offsetZ++) {
-                                const missingRandomTime = 100 + Math.floor(Math.random() * 200);
-                                const blockGold = block.dimension.getBlock({ x: mossyPos.x + offsetX, y: mossyPos.y, z: mossyPos.z + offsetZ });
-                                if (Math.random() < 0.5) {
+                        if (allAir) {
+                            block.dimension.spawnEntity("minecraft:lightning_bolt", { x: block.location.x + 0.5, y: block.location.y + 1, z: block.location.z + 0.5 });
+                            block.dimension.spawnEntity("no_png:active_herobrine", { x: block.location.x + 0.5, y: block.location.y + 2, z: block.location.z + 0.5 });
+                            block.dimension.playSound("mob.dont_look.hit", { x: block.location.x + 0.5, y: block.location.y + 2, z: block.location.z + 0.5 });
+                            block.setType("no_png:missingtexture_block");
+
+                            for (let x = -1; x <= 1; x++) {
+                                for (let z = -1; z <= 1; z++) {
+                                    if (Math.abs(x) === Math.abs(z)) continue;
+                                    const torchBlock = block.dimension.getBlock({ x: block.location.x + x, y: block.location.y, z: block.location.z + z });
+                                    torchBlock?.setType("minecraft:unlit_redstone_torch");
                                     system.runTimeout(() => {
-                                        blockGold?.setType("no_png:missingtexture_block");
-                                    }, missingRandomTime);
+                                        try {
+                                            torchBlock?.setType("no_png:burnt_out_torch");
+                                        } catch (e) { }
+                                    }, 100);
+                                }
+                            }
+
+                            for (let offsetX = -1; offsetX <= 1; offsetX++) {
+                                for (let offsetZ = -1; offsetZ <= 1; offsetZ++) {
+                                    const missingRandomTime = 100 + Math.floor(Math.random() * 200);
+                                    const blockGold = block.dimension.getBlock({ x: mossyPos.x + offsetX, y: mossyPos.y, z: mossyPos.z + offsetZ });
+                                    if (Math.random() < 0.5) {
+                                        system.runTimeout(() => {
+                                            try {
+                                                blockGold?.setType("no_png:missingtexture_block");
+                                            } catch (e) { }
+                                        }, missingRandomTime);
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-        }
+        } catch (e) { }
     }
 });

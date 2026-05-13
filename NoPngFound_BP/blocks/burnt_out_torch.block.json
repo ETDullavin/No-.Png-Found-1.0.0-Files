@@ -2,10 +2,7 @@
 	"format_version": "1.21.100",
 	"minecraft:block": {
 		"description": {
-			"identifier": "no_png:burnt_out_torch",
-			"menu_category": {
-				"category": "items"
-			}
+			"identifier": "no_png:burnt_out_torch"
 		},
 		"components": {
 			"minecraft:collision_box": false,
