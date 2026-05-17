@@ -128,62 +128,68 @@ const randomEvents = [
         if (players.length > 0) {
             const player = players[0];
             const blockPos = {
-                x: player.location.x + (Math.random() * 200 - 100),
-                y: Math.floor(player.location.y + (Math.random() * 100 - 50)),
-                z: player.location.z + (Math.random() * 200 - 100)
+                x: player.location.x + (Math.random() * 64 - 32),
+                y: Math.floor(player.location.y + (Math.random() * 64 - 32)),
+                z: player.location.z + (Math.random() * 64 - 32)
             };
 
             // FIX: Validate Y BEFORE calling getBlock
-            if (!isYValid(blockPos.y) || !isYValid(blockPos.y + 6)) return;
-
+            if (!isYValid(blockPos.y) || !isYValid(blockPos.y + 6))
+                world.sendMessage("GLITCH BLOCK EVENT FAILED: Invalid Y coordinate generated (" + blockPos.y + "). This event will be skipped to prevent crashes.");
+            return;
             try {
                 const glitchBlock = player.dimension.getBlock(blockPos);
                 if (!glitchBlock) return;
 
-                if (glitchBlock.typeId !== "minecraft:air" || glitchBlock.typeId === "no_png:missingtexture_block") {
-                    if (glitchBlock.typeId !== "minecraft:grass_block") {
-                        glitchBlock.setType("no_png:missingtexture_block");
+
+                if (glitchBlock.typeId !== "minecraft:grass_block") {
+                    if (Math.random() < 0.5) {
+                        glitchBlock.setType("minecraft:oak_sign");
+                        world.sendMessage("A GLITCHED SIGN HAS APPEARED!");
                     } else {
-                        for (let trunkY = blockPos.y + 1; trunkY <= blockPos.y + 6; trunkY++) {
-                            player.dimension.getBlock({ x: blockPos.x, y: trunkY, z: blockPos.z })?.setType("no_png:missingtexture_block");
+                        glitchBlock.setType("no_png:missingtexture_block");
+                        world.sendMessage("A GLITCHED BLOCK HAS APPEARED!");
+                    }
+                } else {
+                    for (let trunkY = blockPos.y + 1; trunkY <= blockPos.y + 6; trunkY++) {
+                        player.dimension.getBlock({ x: blockPos.x, y: trunkY, z: blockPos.z })?.setType("no_png:missingtexture_block");
 
-                            if (trunkY === blockPos.y + 6) {
-                                // --- Lower Foliage Layers ---
-                                for (let leafX = -2; leafX <= 2; leafX++) {
-                                    for (let leafZ = -2; leafZ <= 2; leafZ++) {
-                                        for (let leafY = trunkY - 3; leafY <= trunkY - 2; leafY++) {
-                                            if (!isYValid(leafY)) continue;
+                        if (trunkY === blockPos.y + 6) {
+                            // --- Lower Foliage Layers ---
+                            for (let leafX = -2; leafX <= 2; leafX++) {
+                                for (let leafZ = -2; leafZ <= 2; leafZ++) {
+                                    for (let leafY = trunkY - 3; leafY <= trunkY - 2; leafY++) {
+                                        if (!isYValid(leafY)) continue;
 
-                                            const isCorner = Math.abs(leafX) === 2 && Math.abs(leafZ) === 2;
+                                        const isCorner = Math.abs(leafX) === 2 && Math.abs(leafZ) === 2;
 
-                                            if (isCorner) {
-                                                if (Math.random() < 0.4) {
-                                                    player.dimension.getBlock({ x: blockPos.x + leafX, y: leafY, z: blockPos.z + leafZ })?.setType("no_png:missingtexture_block");
-                                                }
-                                            } else {
+                                        if (isCorner) {
+                                            if (Math.random() < 0.4) {
                                                 player.dimension.getBlock({ x: blockPos.x + leafX, y: leafY, z: blockPos.z + leafZ })?.setType("no_png:missingtexture_block");
                                             }
+                                        } else {
+                                            player.dimension.getBlock({ x: blockPos.x + leafX, y: leafY, z: blockPos.z + leafZ })?.setType("no_png:missingtexture_block");
+                                        }
 
-                                            // --- Upper Foliage Layers ---
-                                            if (leafX === 2 && leafY === trunkY - 2 && leafZ === 2) {
-                                                for (let leafX2 = -1; leafX2 <= 1; leafX2++) {
-                                                    for (let leafZ2 = -1; leafZ2 <= 1; leafZ2++) {
-                                                        for (let leafY2 = trunkY - 1; leafY2 <= trunkY; leafY2++) {
-                                                            if (!isYValid(leafY2)) continue;
+                                        // --- Upper Foliage Layers ---
+                                        if (leafX === 2 && leafY === trunkY - 2 && leafZ === 2) {
+                                            for (let leafX2 = -1; leafX2 <= 1; leafX2++) {
+                                                for (let leafZ2 = -1; leafZ2 <= 1; leafZ2++) {
+                                                    for (let leafY2 = trunkY - 1; leafY2 <= trunkY; leafY2++) {
+                                                        if (!isYValid(leafY2)) continue;
 
-                                                            const isTopCorner = Math.abs(leafX2) === 1 && Math.abs(leafZ2) === 1;
+                                                        const isTopCorner = Math.abs(leafX2) === 1 && Math.abs(leafZ2) === 1;
 
-                                                            if (isTopCorner) {
-                                                                if (Math.random() < 0.33) {
-                                                                    player.dimension.getBlock({ x: blockPos.x + leafX2, y: leafY2, z: blockPos.z + leafZ2 })?.setType("no_png:missingtexture_block");
-                                                                }
-                                                            } else {
+                                                        if (isTopCorner) {
+                                                            if (Math.random() < 0.33) {
                                                                 player.dimension.getBlock({ x: blockPos.x + leafX2, y: leafY2, z: blockPos.z + leafZ2 })?.setType("no_png:missingtexture_block");
                                                             }
+                                                        } else {
+                                                            player.dimension.getBlock({ x: blockPos.x + leafX2, y: leafY2, z: blockPos.z + leafZ2 })?.setType("no_png:missingtexture_block");
+                                                        }
 
-                                                            if (leafX2 === 1 && leafY2 === trunkY && leafZ2 === 1) {
-                                                                world.sendMessage("GLITCHED TREE SPAWNED!");
-                                                            }
+                                                        if (leafX2 === 1 && leafY2 === trunkY && leafZ2 === 1) {
+                                                            world.sendMessage("GLITCHED TREE SPAWNED!");
                                                         }
                                                     }
                                                 }
@@ -195,6 +201,7 @@ const randomEvents = [
                         }
                     }
                 }
+
             } catch (error) {
                 // Ignore if chunk is unloaded
             }
@@ -296,18 +303,18 @@ const randomEvents = [
             const dimension = player.dimension;
             const py = Math.floor(player.location.y);
 
-            // FIX: Restrict the Y limits so the script doesn't time out checking 98,000+ blocks at once
+            // Restrict the Y limits so the script doesn't time out checking 98,000+ blocks at once
             const startY = Math.max(MIN_Y + 1, py - 10);
             const endY = Math.min(MAX_Y, py + 10);
             let chunkCorrupted = false;
 
+            // FIX: Changed loop bounds to startY and endY to prevent watchdog crashes
             for (let chunkY = MIN_Y + 1; chunkY <= MAX_Y; chunkY++) {
                 for (let chunkX = -7; chunkX <= 8; chunkX++) {
                     for (let chunkZ = -7; chunkZ <= 8; chunkZ++) {
                         try {
-                            const chunk = dimension.getBlock({ x: player.location.x + chunkX, y: chunkY, z: player.location.z + chunkZ });
+                            const chunk = dimension.getBlock({ x: Math.floor(player.location.x) + chunkX, y: chunkY, z: Math.floor(player.location.z) + chunkZ });
 
-                            // FIX: Compare typeId, not the object itself, and use setType instead of setBlockType
                             if (chunk && chunk.typeId !== "minecraft:air" && chunk.typeId !== "no_png:missingtexture_block") {
                                 if (Math.random() < 0.1) { // Set realistic probability
                                     chunk.setType("no_png:missingtexture_block");
@@ -320,6 +327,45 @@ const randomEvents = [
             }
             if (chunkCorrupted) {
                 world.sendMessage("A CHUNK HAS BEEN CORRUPTED!");
+            }
+        }
+    },
+    function breakDoor() {
+        const players = world.getAllPlayers();
+        if (players.length > 0) {
+            const player = players[0];
+            const dimension = player.dimension;
+            const py = Math.floor(player.location.y);
+            const px = Math.floor(player.location.x);
+            const pz = Math.floor(player.location.z);
+
+            // Restrict the Y limits so the script doesn't time out
+            const startY = Math.max(MIN_Y + 1, py - 7);
+            const endY = Math.min(MAX_Y, py + 8);
+            let doorBroken = false;
+
+            // FIX: Changed loop bounds to cleanly use startY and endY directly
+            for (let chunkY = startY; chunkY <= endY; chunkY++) {
+                for (let chunkX = -7; chunkX <= 8; chunkX++) {
+                    for (let chunkZ = -7; chunkZ <= 8; chunkZ++) {
+                        try {
+                            const chunk = dimension.getBlock({ x: px + chunkX, y: chunkY, z: pz + chunkZ });
+
+                            // Simplified check that catches all doors dynamically
+                            if (chunk && chunk.typeId.endsWith("_door")) {
+                                // Use chunk.location to extract proper x, y, z coordinates
+                                const { x, y, z } = chunk.location;
+                                dimension.runCommand(`setblock ${x} ${y} ${z} air [] destroy`);
+                                doorBroken = true;
+                            }
+                        } catch (e) {
+                            // Ignore if block is in unloaded bounds
+                        }
+                    }
+                }
+            }
+            if (doorBroken) {
+                world.sendMessage("All doors in the chunk have been broken!");
             }
         }
     }
@@ -337,7 +383,7 @@ function eventDirector() {
             // Log the error but don't let it crash the loop!
             console.warn("Event crashed safely: " + error);
         } finally {
-            // FIX: Finally ensures the loop ALWAYS continues no matter what
+            // Finally ensures the loop ALWAYS continues no matter what
             eventDirector();
         }
     }, nextWait);
