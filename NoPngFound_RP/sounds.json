@@ -1,17 +1,26 @@
 {
 	"entity_sounds": {
 		"entities": {
+			"no_png:player_entity": {
+				"events": {
+					"death": "mob.dont_look.hit",
+					"hurt": "game.player.hurt"
+				},
+				"pitch": [
+					0.8,
+					1.2
+				],
+				"volume": 1
+			},
 			"no_png:active_herobrine": {
 				"events": {
-					"ambient": "mob.drowned.say",
-					"ambient.in.water": "mob.drowned.say_water",
-					"death": "mob.drowned.death",
-					"death.in.water": "mob.drowned.death_water",
-					"hurt": "mob.drowned.hurt",
-					"hurt.in.water": "mob.drowned.hurt_water",
-					"step": "mob.drowned.step"
+					"death": "mob.dont_look.hit",
+					"hurt": "game.player.hurt"
 				},
-				"pitch": [0.8, 1.2],
+				"pitch": [
+					0.8,
+					1.2
+				],
 				"volume": 1
 			},
 			"no_png:pig_no_texture": {
@@ -22,7 +31,10 @@
 						"volume": 0.2
 					}
 				},
-				"pitch": [0.8, 1.2],
+				"pitch": [
+					0.8,
+					1.2
+				],
 				"volume": 1
 			},
 			"no_png:sheep_no_texture": {
@@ -33,18 +45,27 @@
 						"volume": 0.4
 					}
 				},
-				"pitch": [0.8, 1.2],
+				"pitch": [
+					0.8,
+					1.2
+				],
 				"volume": 1
 			},
 			"no_png:cow_no_texture": {
 				"events": {
 					"step": {
-						"pitch": [0.9, 1.1],
+						"pitch": [
+							0.9,
+							1.1
+						],
 						"sound": "mob.cow.step",
 						"volume": 0.65
 					}
 				},
-				"pitch": [0.8, 1.2],
+				"pitch": [
+					0.8,
+					1.2
+				],
 				"volume": 1
 			},
 			"no_png:dont_look_at_me": {
@@ -59,7 +80,10 @@
 						"volume": 100
 					}
 				},
-				"pitch": [0.8, 1.2],
+				"pitch": [
+					0.8,
+					1.2
+				],
 				"volume": 1
 			},
 			"no_png:dont_look_at_me_pig": {
@@ -78,7 +102,10 @@
 						"volume": 100
 					}
 				},
-				"pitch": [0.8, 1.2],
+				"pitch": [
+					0.8,
+					1.2
+				],
 				"volume": 1
 			},
 			"no_png:dont_look_at_me_cow": {
@@ -93,7 +120,10 @@
 						"volume": 100
 					}
 				},
-				"pitch": [0.8, 1.2],
+				"pitch": [
+					0.8,
+					1.2
+				],
 				"volume": 1
 			},
 			"no_png:dont_look_at_me_sheep": {
@@ -108,7 +138,10 @@
 						"volume": 100
 					}
 				},
-				"pitch": [0.8, 1.2],
+				"pitch": [
+					0.8,
+					1.2
+				],
 				"volume": 1
 			},
 			"no_png:chicken_no_texture": {
@@ -119,7 +152,10 @@
 						"volume": 0.25
 					}
 				},
-				"pitch": [0.8, 1.2],
+				"pitch": [
+					0.8,
+					1.2
+				],
 				"volume": 1
 			}
 		}

@@ -100,7 +100,6 @@ const randomEvents = [
             // 1. Check if the "Active" Herobrine already exists
             const activeHerobrines = dimension.getEntities({ type: "no_png:active_herobrine" });
             if (activeHerobrines.length > 0) {
-                // If the active one is present, we stop here and don't spawn a watcher
                 return;
             }
 
@@ -133,14 +132,15 @@ const randomEvents = [
                 z: player.location.z + (Math.random() * 64 - 32)
             };
 
-            // FIX: Validate Y BEFORE calling getBlock
-            if (!isYValid(blockPos.y) || !isYValid(blockPos.y + 6))
+            // FIXED: Wrapped the logic in curly brackets so 'return' doesn't execute unconditionally
+            if (!isYValid(blockPos.y) || !isYValid(blockPos.y + 6)) {
                 world.sendMessage("GLITCH BLOCK EVENT FAILED: Invalid Y coordinate generated (" + blockPos.y + "). This event will be skipped to prevent crashes.");
-            return;
+                return;
+            }
+
             try {
                 const glitchBlock = player.dimension.getBlock(blockPos);
                 if (!glitchBlock) return;
-
 
                 if (glitchBlock.typeId !== "minecraft:grass_block") {
                     if (Math.random() < 0.5) {
@@ -201,7 +201,6 @@ const randomEvents = [
                         }
                     }
                 }
-
             } catch (error) {
                 // Ignore if chunk is unloaded
             }
@@ -308,8 +307,8 @@ const randomEvents = [
             const endY = Math.min(MAX_Y, py + 10);
             let chunkCorrupted = false;
 
-            // FIX: Changed loop bounds to startY and endY to prevent watchdog crashes
-            for (let chunkY = MIN_Y + 1; chunkY <= MAX_Y; chunkY++) {
+            // FIXED: Swapped out MIN_Y/MAX_Y loop limits for your optimized startY/endY constraints
+            for (let chunkY = startY; chunkY <= endY; chunkY++) {
                 for (let chunkX = -7; chunkX <= 8; chunkX++) {
                     for (let chunkZ = -7; chunkZ <= 8; chunkZ++) {
                         try {
@@ -344,7 +343,6 @@ const randomEvents = [
             const endY = Math.min(MAX_Y, py + 8);
             let doorBroken = false;
 
-            // FIX: Changed loop bounds to cleanly use startY and endY directly
             for (let chunkY = startY; chunkY <= endY; chunkY++) {
                 for (let chunkX = -7; chunkX <= 8; chunkX++) {
                     for (let chunkZ = -7; chunkZ <= 8; chunkZ++) {
@@ -353,14 +351,11 @@ const randomEvents = [
 
                             // Simplified check that catches all doors dynamically
                             if (chunk && chunk.typeId.endsWith("_door")) {
-                                // Use chunk.location to extract proper x, y, z coordinates
                                 const { x, y, z } = chunk.location;
                                 dimension.runCommand(`setblock ${x} ${y} ${z} air [] destroy`);
                                 doorBroken = true;
                             }
-                        } catch (e) {
-                            // Ignore if block is in unloaded bounds
-                        }
+                        } catch (e) { }
                     }
                 }
             }
@@ -380,10 +375,8 @@ function eventDirector() {
             const index = Math.floor(Math.random() * randomEvents.length);
             randomEvents[index]();
         } catch (error) {
-            // Log the error but don't let it crash the loop!
             console.warn("Event crashed safely: " + error);
         } finally {
-            // Finally ensures the loop ALWAYS continues no matter what
             eventDirector();
         }
     }, nextWait);

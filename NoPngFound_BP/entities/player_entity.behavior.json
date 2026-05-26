@@ -1,0 +1,336 @@
+{
+	"format_version": "1.16.100",
+	"minecraft:entity": {
+		"description": {
+			"identifier": "no_png:player_entity",
+			"is_spawnable": false,
+			"is_summonable": true,
+			"is_experimental": false
+		},
+		"component_groups": {
+			"no_png:despawn_event": {
+				"minecraft:instant_despawn": {}
+			},
+			"no_png:timer_1": {
+				"minecraft:timer": {
+					"looping": false,
+					"time": 120.0,
+					"time_down_event": {
+						"event": "no_png:play_msg_1",
+						"target": "self"
+					}
+				}
+			},
+			"no_png:timer_2": {
+				"minecraft:timer": {
+					"looping": false,
+					"time": 120.0,
+					"time_down_event": {
+						"event": "no_png:play_msg_2",
+						"target": "self"
+					}
+				}
+			},
+			"no_png:timer_3": {
+				"minecraft:timer": {
+					"looping": false,
+					"time": 120.0,
+					"time_down_event": {
+						"event": "no_png:play_msg_3",
+						"target": "self"
+					}
+				}
+			},
+			"no_png:timer_4": {
+				"minecraft:timer": {
+					"looping": false,
+					"time": 120.0,
+					"time_down_event": {
+						"event": "no_png:play_msg_4",
+						"target": "self"
+					}
+				}
+			},
+			"no_png:timer_5": {
+				"minecraft:timer": {
+					"looping": false,
+					"time": 120.0,
+					"time_down_event": {
+						"event": "no_png:play_msg_5_despawn",
+						"target": "self"
+					}
+				}
+			}
+		},
+		"components": {
+			"minecraft:health": {
+				"value": 20,
+				"max": 20
+			},
+			"minecraft:on_death": {
+				"event": "no_png:spawn_zombie"
+			},
+			"minecraft:physics": {
+				"has_gravity": true,
+				"has_collision": true
+			},
+			"minecraft:pushable": {
+				"is_pushable": false
+			},
+			"minecraft:push_through": {
+				"value": 1
+			},
+			"minecraft:movement": {
+				"value": 0.25
+			},
+			"minecraft:movement.basic": {},
+			"minecraft:jump.static": {},
+			"minecraft:navigation.walk": {
+				"avoid_water": true
+			},
+			"minecraft:behavior.random_stroll": {
+				"priority": 3,
+				"speed_multiplier": 0.8
+			},
+			"minecraft:loot": {
+				"table": "loot_tables/entities/player_entity.json"
+			}
+		},
+		"events": {
+			"minecraft:entity_spawned": {
+				"queue_command": {
+					"command": [
+						"tellraw @a {\"rawtext\":[{\"text\":\"§eD3rh3nter3 joined the game\"}]}"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"no_png:timer_1"
+					]
+				}
+			},
+			"no_png:spawn_zombie": {
+				"queue_command": {
+					"command": [
+						"summon zombie ~ ~ ~",
+						"kill @s"
+					]
+				}
+			},
+			"no_png:play_msg_1": {
+				"remove": {
+					"component_groups": [
+						"no_png:timer_1"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"no_png:timer_2"
+					]
+				},
+				"queue_command": {
+					"command": [
+						"event entity @s no_png:chat_pool"
+					]
+				}
+			},
+			"no_png:play_msg_2": {
+				"remove": {
+					"component_groups": [
+						"no_png:timer_2"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"no_png:timer_3"
+					]
+				},
+				"queue_command": {
+					"command": [
+						"event entity @s no_png:chat_pool"
+					]
+				}
+			},
+			"no_png:play_msg_3": {
+				"remove": {
+					"component_groups": [
+						"no_png:timer_3"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"no_png:timer_4"
+					]
+				},
+				"queue_command": {
+					"command": [
+						"event entity @s no_png:chat_pool"
+					]
+				}
+			},
+			"no_png:play_msg_4": {
+				"remove": {
+					"component_groups": [
+						"no_png:timer_4"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"no_png:timer_5"
+					]
+				},
+				"queue_command": {
+					"command": [
+						"event entity @s no_png:chat_pool"
+					]
+				}
+			},
+			"no_png:play_msg_5_despawn": {
+				"remove": {
+					"component_groups": [
+						"no_png:timer_5"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"no_png:despawn_event"
+					]
+				},
+				"queue_command": {
+					"command": [
+						"event entity @s no_png:chat_pool",
+						"tellraw @a {\"rawtext\":[{\"text\":\"§eD3rh3nter3 left the game\"}]}"
+					]
+				}
+			},
+			"no_png:chat_pool": {
+				"sequence": [
+					{
+						"randomize": [
+							{
+								"weight": 10,
+								"queue_command": {
+									"command": [
+										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> Don't look for it...\"}]}"
+									]
+								}
+							},
+							{
+								"weight": 10,
+								"queue_command": {
+									"command": [
+										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> Hello..?\"}]}"
+									]
+								}
+							},
+							{
+								"weight": 10,
+								"queue_command": {
+									"command": [
+										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> What are you doing here?\"}]}"
+									]
+								}
+							},
+							{
+								"weight": 10,
+								"queue_command": {
+									"command": [
+										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> I searched...and I found...\"}]}"
+									]
+								}
+							},
+							{
+								"weight": 1,
+								"queue_command": {
+									"command": [
+										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> Don't look for me...\"}]}"
+									]
+								}
+							},
+							{
+								"weight": 1,
+								"queue_command": {
+									"command": [
+										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> The one who watches...\"}]}"
+									]
+								}
+							},
+							{
+								"weight": 1,
+								"queue_command": {
+									"command": [
+										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> ...is a lie.\"}]}"
+									]
+								}
+							},
+							{
+								"weight": 1,
+								"queue_command": {
+									"command": [
+										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> It stops me...\"}]}"
+									]
+								}
+							},
+							{
+								"weight": 1,
+								"queue_command": {
+									"command": [
+										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> Help me...\"}]}"
+									]
+								}
+							},
+							{
+								"weight": 1,
+								"queue_command": {
+									"command": [
+										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> Are you still there?\"}]}"
+									]
+								}
+							},
+							{
+								"weight": 1,
+								"queue_command": {
+									"command": [
+										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> I may hop off soon\"}]}"
+									]
+								}
+							},
+							{
+								"weight": 1,
+								"queue_command": {
+									"command": [
+										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> Don't dig too deep...\"}]}"
+									]
+								}
+							},
+							{
+								"weight": 0.5,
+								"queue_command": {
+									"command": [
+										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> hey guys, welcome back to the channel\"}]}"
+									]
+								}
+							},
+							{
+								"weight": 0.1,
+								"queue_command": {
+									"command": [
+										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> It'S tRyINg tO tAkE oVEr..!\"}]}"
+									]
+								}
+							},
+							{
+								"weight": 0.1,
+								"queue_command": {
+									"command": [
+										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> 01000110 01101001 01101100 01100101 00100000 01100011 01101111 01110010 01110010 01110101 01110000 01110100 01100101 01100100 00001010\"}]}"
+									]
+								}
+							}
+						]
+					}
+				]
+			}
+		}
+	}
+}
