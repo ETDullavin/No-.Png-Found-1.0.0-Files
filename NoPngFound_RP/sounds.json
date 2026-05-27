@@ -3,7 +3,7 @@
 		"entities": {
 			"no_png:player_entity": {
 				"events": {
-					"death": "mob.dont_look.hit",
+					"death": "game.player.hurt",
 					"hurt": "game.player.hurt"
 				},
 				"pitch": [

@@ -67,6 +67,10 @@
 				"value": 20,
 				"max": 20
 			},
+			"minecraft:nameable": {
+				"always_show": true,
+				"allow_name_tag_renaming": false
+			},
 			"minecraft:on_death": {
 				"event": "no_png:spawn_zombie"
 			},
@@ -75,7 +79,7 @@
 				"has_collision": true
 			},
 			"minecraft:pushable": {
-				"is_pushable": false
+				"is_pushable": true
 			},
 			"minecraft:push_through": {
 				"value": 1
@@ -110,12 +114,30 @@
 				}
 			},
 			"no_png:spawn_zombie": {
-				"queue_command": {
-					"command": [
-						"summon zombie ~ ~ ~",
-						"kill @s"
-					]
-				}
+				"sequence": [
+					{
+						"randomize": [
+							{
+								"weight": 1,
+								"queue_command": {
+									"command": [
+										"tellraw @a {\"rawtext\":[{\"text\":\"§d§kSTOP§r§0DoN'T§r §dsPeAK§r §0To§r §dhiM!§r§0§kSTOP§r\"}]}",
+										"summon zombie ~ ~ ~",
+										"playsound mob.dont_look.hit @a ~ ~ ~ 1 1"
+									]
+								}
+							},
+							{
+								"weight": 4,
+								"queue_command": {
+									"command": [
+										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> Why would you do this?\"}]}"
+									]
+								}
+							}
+						]
+					}
+				]
 			},
 			"no_png:play_msg_1": {
 				"remove": {

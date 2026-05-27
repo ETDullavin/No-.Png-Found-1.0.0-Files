@@ -94,13 +94,14 @@ const randomEvents = [
     function spawnHerobrine() {
         const players = world.getAllPlayers();
         if (players.length > 0) {
-            const player = players[0];
+            const randomIndex = Math.floor(Math.random() * players.length);
+            const player = players[randomIndex];
             const dimension = player.dimension;
 
             // 1. Check if the "Active" Herobrine already exists
             const activeHerobrines = dimension.getEntities({ type: "no_png:active_herobrine" });
             if (activeHerobrines.length > 0) {
-                return;
+                return false; // Returns false to trigger an instant reroll
             }
 
             // 2. Remove any old "Watching" Herobrines to prevent duplicates
@@ -125,14 +126,14 @@ const randomEvents = [
     function placeGlitchedBlock() {
         const players = world.getAllPlayers();
         if (players.length > 0) {
-            const player = players[0];
+            const randomIndex = Math.floor(Math.random() * players.length);
+            const player = players[randomIndex];
             const blockPos = {
                 x: player.location.x + (Math.random() * 64 - 32),
                 y: Math.floor(player.location.y + (Math.random() * 64 - 32)),
                 z: player.location.z + (Math.random() * 64 - 32)
             };
 
-            // FIXED: Wrapped the logic in curly brackets so 'return' doesn't execute unconditionally
             if (!isYValid(blockPos.y) || !isYValid(blockPos.y + 6)) {
                 world.sendMessage("GLITCH BLOCK EVENT FAILED: Invalid Y coordinate generated (" + blockPos.y + "). This event will be skipped to prevent crashes.");
                 return;
@@ -207,6 +208,7 @@ const randomEvents = [
         }
     },
     function playScarySound() {
+        // Kept as a global event so all players hear it
         const players = world.getAllPlayers();
         for (const player of players) {
             player.playSound("mob.dont_look.hit", player.location);
@@ -216,7 +218,8 @@ const randomEvents = [
     function placeCross() {
         const players = world.getAllPlayers();
         if (players.length > 0) {
-            const player = players[0];
+            const randomIndex = Math.floor(Math.random() * players.length);
+            const player = players[randomIndex];
             const originBlockPos = {
                 x: player.location.x + (Math.random() * 200 - 100),
                 y: Math.floor(player.location.y + (Math.random() * 100)),
@@ -245,7 +248,8 @@ const randomEvents = [
     function spawnFountainItem() {
         const players = world.getAllPlayers();
         if (players.length > 0) {
-            const player = players[0];
+            const randomIndex = Math.floor(Math.random() * players.length);
+            const player = players[randomIndex];
             const dimension = player.dimension;
             const totalItems = Math.floor(Math.random() * (64 - 16 + 1)) + 16;
             let itemsSpawned = 0;
@@ -275,7 +279,8 @@ const randomEvents = [
     function spawnSingleItem() {
         const players = world.getAllPlayers();
         if (players.length > 0) {
-            const player = players[0];
+            const randomIndex = Math.floor(Math.random() * players.length);
+            const player = players[randomIndex];
             const dimension = player.dimension;
             const itemChoices = [
                 "no_png:no_texture_item",
@@ -286,8 +291,8 @@ const randomEvents = [
 
             world.sendMessage("A SINGLE ITEM HAS BEEN GIVEN!");
             const spawnPos = { x: player.location.x, y: player.location.y, z: player.location.z };
-            const randomIndex = Math.floor(Math.random() * itemChoices.length);
-            const selectedItem = itemChoices[randomIndex];
+            const itemIndex = Math.floor(Math.random() * itemChoices.length);
+            const selectedItem = itemChoices[itemIndex];
 
             try {
                 const itemStack = new ItemStack(selectedItem, 1);
@@ -298,16 +303,15 @@ const randomEvents = [
     function corruptChunk() {
         const players = world.getAllPlayers();
         if (players.length > 0) {
-            const player = players[0];
+            const randomIndex = Math.floor(Math.random() * players.length);
+            const player = players[randomIndex];
             const dimension = player.dimension;
             const py = Math.floor(player.location.y);
 
-            // Restrict the Y limits so the script doesn't time out checking 98,000+ blocks at once
             const startY = Math.max(MIN_Y + 1, py - 10);
             const endY = Math.min(MAX_Y, py + 10);
             let chunkCorrupted = false;
 
-            // FIXED: Swapped out MIN_Y/MAX_Y loop limits for your optimized startY/endY constraints
             for (let chunkY = startY; chunkY <= endY; chunkY++) {
                 for (let chunkX = -7; chunkX <= 8; chunkX++) {
                     for (let chunkZ = -7; chunkZ <= 8; chunkZ++) {
@@ -315,12 +319,12 @@ const randomEvents = [
                             const chunk = dimension.getBlock({ x: Math.floor(player.location.x) + chunkX, y: chunkY, z: Math.floor(player.location.z) + chunkZ });
 
                             if (chunk && chunk.typeId !== "minecraft:air" && chunk.typeId !== "no_png:missingtexture_block") {
-                                if (Math.random() < 0.1) { // Set realistic probability
+                                if (Math.random() < 0.1) {
                                     chunk.setType("no_png:missingtexture_block");
                                     chunkCorrupted = true;
                                 }
                             }
-                        } catch (e) { } // Ignore if block is in unloaded bounds
+                        } catch (e) { }
                     }
                 }
             }
@@ -332,13 +336,13 @@ const randomEvents = [
     function breakDoor() {
         const players = world.getAllPlayers();
         if (players.length > 0) {
-            const player = players[0];
+            const randomIndex = Math.floor(Math.random() * players.length);
+            const player = players[randomIndex];
             const dimension = player.dimension;
             const py = Math.floor(player.location.y);
             const px = Math.floor(player.location.x);
             const pz = Math.floor(player.location.z);
 
-            // Restrict the Y limits so the script doesn't time out
             const startY = Math.max(MIN_Y + 1, py - 7);
             const endY = Math.min(MAX_Y, py + 8);
             let doorBroken = false;
@@ -349,7 +353,6 @@ const randomEvents = [
                         try {
                             const chunk = dimension.getBlock({ x: px + chunkX, y: chunkY, z: pz + chunkZ });
 
-                            // Simplified check that catches all doors dynamically
                             if (chunk && chunk.typeId.endsWith("_door")) {
                                 const { x, y, z } = chunk.location;
                                 dimension.runCommand(`setblock ${x} ${y} ${z} air [] destroy`);
@@ -363,6 +366,36 @@ const randomEvents = [
                 world.sendMessage("All doors in the chunk have been broken!");
             }
         }
+    },
+    function spawnPlayerEntity() {
+        const players = world.getAllPlayers();
+        if (players.length > 0) {
+            const randomIndex = Math.floor(Math.random() * players.length);
+            const player = players[randomIndex];
+            const dimension = player.dimension;
+            const spawnPos = {
+                x: player.location.x,
+                y: player.location.y + 0.5,
+                z: player.location.z
+            };
+
+            const activePlayerEntities = dimension.getEntities({ type: "no_png:active_herobrine" });
+            if (activePlayerEntities.length > 0) {
+                return false; // Returns false to trigger an instant reroll
+            }
+
+            try {
+                // Catch the spawned entity in a variable
+                const newPlayerEntity = dimension.spawnEntity("no_png:player_entity", spawnPos);
+
+                // Assign the nametag right as it spawns
+                if (newPlayerEntity) {
+                    newPlayerEntity.nameTag = "D3rh3nter3";
+                }
+
+                world.sendMessage("PLAYER ENTITY SPAWNED!");
+            } catch (e) { }
+        }
     }
 ];
 
@@ -372,8 +405,19 @@ function eventDirector() {
 
     system.runTimeout(() => {
         try {
-            const index = Math.floor(Math.random() * randomEvents.length);
-            randomEvents[index]();
+            let eventSucceeded = false;
+            let attempts = 0;
+
+            // Reroll up to 10 times if an event returns false
+            while (!eventSucceeded && attempts < 10) {
+                attempts++;
+                const index = Math.floor(Math.random() * randomEvents.length);
+
+                // Run the event. If it doesn't explicitly return false, mark it as successful
+                if (randomEvents[index]() !== false) {
+                    eventSucceeded = true;
+                }
+            }
         } catch (error) {
             console.warn("Event crashed safely: " + error);
         } finally {
@@ -610,5 +654,22 @@ world.afterEvents.itemUseOn.subscribe((event) => {
                 }
             }
         } catch (e) { }
+    }
+});
+
+world.afterEvents.entityDie.subscribe((event) => {
+    const { deadEntity, damageSource } = event;
+
+    // Check if the entity that died is one of your custom mobs
+    // Replace "no_png:active_herobrine" with whatever mob you want to track
+    if (deadEntity.typeId === "no_png:player_entity") {
+
+        // Check if the killer was a player
+        const killer = damageSource?.damagingEntity;
+
+        if (killer && killer.typeId === "minecraft:player") {
+            // Send the death message to chat: "Player was slain by Herobrine" (or vice versa)
+            world.sendMessage(`${deadEntity.nameTag} was slain by ${killer.name}`);
+        }
     }
 });
