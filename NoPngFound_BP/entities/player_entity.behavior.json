@@ -72,7 +72,7 @@
 				"allow_name_tag_renaming": false
 			},
 			"minecraft:on_death": {
-				"event": "no_png:spawn_zombie"
+				"event": "no_png:spawn_enemy"
 			},
 			"minecraft:physics": {
 				"has_gravity": true,
@@ -113,7 +113,7 @@
 					]
 				}
 			},
-			"no_png:spawn_zombie": {
+			"no_png:spawn_enemy": {
 				"sequence": [
 					{
 						"randomize": [
@@ -123,7 +123,8 @@
 									"command": [
 										"tellraw @a {\"rawtext\":[{\"text\":\"§d§kSTOP§r§0DoN'T§r §dsPeAK§r §0To§r §dhiM!§r§0§kSTOP§r\"}]}",
 										"summon no_png:die_entity ~ ~ ~",
-										"playsound mob.dont_look.hit @a ~ ~ ~ 1 1"
+										"playsound mob.dont_look.hit @a ~ ~ ~ 1 1",
+										"particle no_png:missing_particle_fountain ~ ~ ~"
 									]
 								}
 							},
