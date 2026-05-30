@@ -118,17 +118,17 @@
 					{
 						"randomize": [
 							{
-								"weight": 1,
+								"weight": 3,
 								"queue_command": {
 									"command": [
 										"tellraw @a {\"rawtext\":[{\"text\":\"§d§kSTOP§r§0DoN'T§r §dsPeAK§r §0To§r §dhiM!§r§0§kSTOP§r\"}]}",
-										"summon zombie ~ ~ ~",
+										"summon no_png:die_entity ~ ~ ~",
 										"playsound mob.dont_look.hit @a ~ ~ ~ 1 1"
 									]
 								}
 							},
 							{
-								"weight": 4,
+								"weight": 1,
 								"queue_command": {
 									"command": [
 										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> Why would you do this?\"}]}"

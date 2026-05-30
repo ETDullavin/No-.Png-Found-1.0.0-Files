@@ -1,6 +1,26 @@
 {
 	"entity_sounds": {
 		"entities": {
+			"no_png:die_entity": {
+				"events": {
+					"ambient": "mob.dont_look.hit",
+					"death": "mob.mob.dont_look.stare",
+					"hurt": "mob.dont_look.hit",
+					"step": {
+						"pitch": [
+							0.9,
+							1.1
+						],
+						"sound": "mob.spider.step",
+						"volume": 0.35
+					}
+				},
+				"pitch": [
+					0.8,
+					1.2
+				],
+				"volume": 1
+			},
 			"no_png:player_entity": {
 				"events": {
 					"death": "game.player.hurt",

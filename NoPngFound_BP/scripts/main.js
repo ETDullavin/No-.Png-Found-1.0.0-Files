@@ -379,9 +379,27 @@ const randomEvents = [
                 z: player.location.z
             };
 
-            const activePlayerEntities = dimension.getEntities({ type: "no_png:active_herobrine" });
-            if (activePlayerEntities.length > 0) {
-                return false; // Returns false to trigger an instant reroll
+            // Check all standard dimensions to guarantee there are no other player_entity mobs in the entire world
+            const dimensions = ["overworld", "nether", "the_end"];
+            let entityAlreadyExists = false;
+
+            for (const dimName of dimensions) {
+                try {
+                    const dim = world.getDimension(dimName);
+                    const existingEntities = dim.getEntities({ type: "no_png:player_entity" });
+
+                    if (existingEntities.length > 0) {
+                        entityAlreadyExists = true;
+                        break; // Exit the loop early if we found one
+                    }
+                } catch (e) {
+                    // Ignore errors for unloaded dimensions
+                }
+            }
+
+            // If one was found anywhere, trigger an instant reroll
+            if (entityAlreadyExists) {
+                return false;
             }
 
             try {
