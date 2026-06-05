@@ -1,24 +1,90 @@
 {
 	"entity_sounds": {
 		"entities": {
+			"no_png:corruption": {
+				"events": {
+					"agitated": {
+						"pitch": [0.8, 1.2],
+						"sound": "mob.warden.agitated",
+						"volume": 10
+					},
+					"ambient": "mob.warden.idle",
+					"angry": {
+						"pitch": [0.8, 1.2],
+						"sound": "mob.warden.angry",
+						"volume": 10
+					},
+					"attack": {
+						"pitch": 1,
+						"sound": "mob.warden.attack",
+						"volume": 10
+					},
+					"death": {
+						"pitch": [0.8, 1],
+						"sound": "mob.warden.death",
+						"volume": 1
+					},
+					"heartbeat": {
+						"pitch": 1,
+						"sound": "mob.warden.heartbeat",
+						"volume": 5
+					},
+					"hurt": {
+						"pitch": [0.8, 1],
+						"sound": "mob.warden.hurt",
+						"volume": 1
+					},
+					"listening": {
+						"pitch": [0.8, 1.2],
+						"sound": "mob.warden.listening",
+						"volume": 10
+					},
+					"listening_angry": {
+						"pitch": [0.8, 1.2],
+						"sound": "mob.warden.listening_angry",
+						"volume": 10
+					},
+					"nearby_close": {
+						"pitch": [0.8, 1.2],
+						"sound": "mob.warden.nearby_close",
+						"volume": 5
+					},
+					"nearby_closer": {
+						"pitch": [0.8, 1.2],
+						"sound": "mob.warden.nearby_closer",
+						"volume": 5
+					},
+					"nearby_closest": {
+						"pitch": [0.8, 1.2],
+						"sound": "mob.warden.nearby_closest",
+						"volume": 5
+					},
+					"roar": {
+						"pitch": 1,
+						"sound": "mob.warden.roar",
+						"volume": 10
+					},
+					"step": {
+						"pitch": 1,
+						"sound": "mob.warden.step",
+						"volume": 10
+					}
+				},
+				"pitch": [0.8, 1.2],
+				"volume": 1
+			},
 			"no_png:die_entity": {
 				"events": {
 					"ambient": "mob.dont_look.hit",
 					"death": "mob.mob.dont_look.stare",
 					"hurt": "mob.dont_look.hit",
 					"step": {
-						"pitch": [
-							0.9,
-							1.1
-						],
+						"pitch": [0.9, 1.1],
 						"sound": "mob.spider.step",
 						"volume": 0.35
 					}
 				},
-				"pitch": [
-					0.8,
-					1.2
-				],
+				"pitch": [0.8, 1.2],
 				"volume": 1
 			},
 			"no_png:player_entity": {
@@ -26,10 +92,7 @@
 					"death": "game.player.hurt",
 					"hurt": "game.player.hurt"
 				},
-				"pitch": [
-					0.8,
-					1.2
-				],
+				"pitch": [0.8, 1.2],
 				"volume": 1
 			},
 			"no_png:active_herobrine": {
@@ -37,10 +100,7 @@
 					"death": "mob.dont_look.hit",
 					"hurt": "game.player.hurt"
 				},
-				"pitch": [
-					0.8,
-					1.2
-				],
+				"pitch": [0.8, 1.2],
 				"volume": 1
 			},
 			"no_png:pig_no_texture": {
@@ -51,10 +111,7 @@
 						"volume": 0.2
 					}
 				},
-				"pitch": [
-					0.8,
-					1.2
-				],
+				"pitch": [0.8, 1.2],
 				"volume": 1
 			},
 			"no_png:sheep_no_texture": {
@@ -65,27 +122,18 @@
 						"volume": 0.4
 					}
 				},
-				"pitch": [
-					0.8,
-					1.2
-				],
+				"pitch": [0.8, 1.2],
 				"volume": 1
 			},
 			"no_png:cow_no_texture": {
 				"events": {
 					"step": {
-						"pitch": [
-							0.9,
-							1.1
-						],
+						"pitch": [0.9, 1.1],
 						"sound": "mob.cow.step",
 						"volume": 0.65
 					}
 				},
-				"pitch": [
-					0.8,
-					1.2
-				],
+				"pitch": [0.8, 1.2],
 				"volume": 1
 			},
 			"no_png:dont_look_at_me": {
@@ -100,10 +148,7 @@
 						"volume": 100
 					}
 				},
-				"pitch": [
-					0.8,
-					1.2
-				],
+				"pitch": [0.8, 1.2],
 				"volume": 1
 			},
 			"no_png:dont_look_at_me_pig": {
@@ -122,10 +167,7 @@
 						"volume": 100
 					}
 				},
-				"pitch": [
-					0.8,
-					1.2
-				],
+				"pitch": [0.8, 1.2],
 				"volume": 1
 			},
 			"no_png:dont_look_at_me_cow": {
@@ -140,10 +182,7 @@
 						"volume": 100
 					}
 				},
-				"pitch": [
-					0.8,
-					1.2
-				],
+				"pitch": [0.8, 1.2],
 				"volume": 1
 			},
 			"no_png:dont_look_at_me_sheep": {
@@ -158,10 +197,7 @@
 						"volume": 100
 					}
 				},
-				"pitch": [
-					0.8,
-					1.2
-				],
+				"pitch": [0.8, 1.2],
 				"volume": 1
 			},
 			"no_png:chicken_no_texture": {
@@ -172,10 +208,7 @@
 						"volume": 0.25
 					}
 				},
-				"pitch": [
-					0.8,
-					1.2
-				],
+				"pitch": [0.8, 1.2],
 				"volume": 1
 			}
 		}
