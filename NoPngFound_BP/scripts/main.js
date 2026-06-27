@@ -27,20 +27,19 @@ const interactiveBlocks = [
 const Color = {
     red: "\xA7c", aqua: "\xA7b", green: "\xA7a", darkRed: "\xA74", purple: "\xA75",
     yellow: "\xA7e", gray: "\xA77", darkGray: "\xA78", bold: "\xA7l", reset: "\xA7r",
+    pink: "\xA7d"
 };
 
-const VOID_ARENA_ID = "custom_dim:void_arena";
+const THE_PLANE_ID = "no_png:the_plane";
 const SKY_LOUNGE_ID = "custom_dim:sky_lounge";
 const ENDLESS_RUNNER_ID = "custom_dim:endless_runner";
 
 const PLATFORMS = [
-    { dimensionId: VOID_ARENA_ID, blockId: "minecraft:crimson_nylium", radius: 8, center: { x: 0, y: 64, z: 0 } },
-    { dimensionId: SKY_LOUNGE_ID, blockId: "minecraft:quartz_block", radius: 6, center: { x: 0, y: 100, z: 0 }, decor: true },
-    { dimensionId: ENDLESS_RUNNER_ID, blockId: "minecraft:deepslate_bricks", radius: 3, center: { x: 0, y: 64, z: 0 }, rails: false },
+    { dimensionId: THE_PLANE_ID, blockId: "no_png:missingtexture_block", radius: 8, center: { x: 0, y: 64, z: 0 } }
 ];
 
 var DIMENSIONS = [
-    { label: `${Color.red}Void Arena ${Color.darkGray}(crimson platform in the void)${Color.reset}`, id: VOID_ARENA_ID, spawn: { x: 0, y: 66, z: 0 } },
+    { label: `${Color.pink}The Plane ${Color.darkGray}(Infinite Repeating Plane of §kMISSINGTEXTURE§r)${Color.reset}`, id: THE_PLANE_ID, spawn: { x: 0, y: 66, z: 0 } },
     { label: `${Color.aqua}Sky Lounge ${Color.darkGray}(quartz platform high up)${Color.reset}`, id: SKY_LOUNGE_ID, spawn: { x: 0, y: 102, z: 0 } },
     { label: `${Color.yellow}Endless Runner ${Color.darkGray}(sprint & survive!)${Color.reset}`, id: ENDLESS_RUNNER_ID, spawn: { x: 0, y: 66, z: 0 } },
     { label: `${Color.green}Overworld${Color.reset}`, id: "minecraft:overworld", spawn: { x: 0, y: 64, z: 0 } },
@@ -52,7 +51,7 @@ const builtDimensions = new Set();
 
 // --- STARTUP & WORLD LOAD EVENTS ---
 system.beforeEvents.startup.subscribe((event) => {
-    event.dimensionRegistry.registerCustomDimension(VOID_ARENA_ID);
+    event.dimensionRegistry.registerCustomDimension(THE_PLANE_ID);
     event.dimensionRegistry.registerCustomDimension(SKY_LOUNGE_ID);
     event.dimensionRegistry.registerCustomDimension(ENDLESS_RUNNER_ID);
 
@@ -597,34 +596,37 @@ async function ensurePlatformBuilt(config) {
         to: { x: config.center.x + config.radius + margin, y: config.center.y + 4, z: config.center.z + config.radius + margin },
     });
 
-    buildPlatform(dim, config.blockId, config.radius, config.center, config.rails !== false);
+    // Removed the "config.rails" check from the end of this line
+    buildPlatform(dim, config.blockId, config.radius, config.center);
     if (config.decor) buildDecor(dim, config.center);
 
-    if (config.dimensionId === VOID_ARENA_ID) {
-        world.structureManager.place("turn", dim, config.center);
+    if (config.dimensionId === THE_PLANE_ID) {
+        // Defines RANDOM_TREE as a randomly selected string from the provided list of glitch/pale trees.
+        const TREE_NAMES = [
+            "glitch_birch",
+            "glitch_cherry",
+            "glitch_dark_oak",
+            "glitch_jungle",
+            "glitch_mangrove",
+            "glitch_oak",
+            "glitch_spruce",
+            "glitch_acacia", // Corrected spacing from "glitch_ acacia"
+            "pale_oak"
+        ];
+        const RANDOM_TREE = TREE_NAMES[Math.floor(Math.random() * TREE_NAMES.length)];
+        world.structureManager.place(RANDOM_TREE, dim, { x: config.center.x, y: config.center.y + 1, z: config.center.z });
     }
 
     world.tickingAreaManager.removeTickingArea(tickingAreaId);
     builtDimensions.add(config.dimensionId);
 }
 
-function buildPlatform(dim, blockId, radius, center, rails) {
+function buildPlatform(dim, blockId, radius, center) {
     const perm = BlockPermutation.resolve(blockId);
+    // This loop simply generates the flat floor with no borders
     for (let x = -radius; x <= radius; x++) {
         for (let z = -radius; z <= radius; z++) {
             dim.getBlock({ x: center.x + x, y: center.y, z: center.z + z })?.setPermutation(perm);
-        }
-    }
-
-    if (!rails) return;
-
-    const glass = BlockPermutation.resolve("minecraft:glass");
-    for (let i = -radius; i <= radius; i++) {
-        for (let y = 1; y <= 2; y++) {
-            dim.getBlock({ x: center.x + i, y: center.y + y, z: center.z - radius })?.setPermutation(glass);
-            dim.getBlock({ x: center.x + i, y: center.y + y, z: center.z + radius })?.setPermutation(glass);
-            dim.getBlock({ x: center.x - radius, y: center.y + y, z: center.z + i })?.setPermutation(glass);
-            dim.getBlock({ x: center.x + radius, y: center.y + y, z: center.z + i })?.setPermutation(glass);
         }
     }
 }
