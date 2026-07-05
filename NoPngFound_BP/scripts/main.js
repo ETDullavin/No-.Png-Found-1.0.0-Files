@@ -31,16 +31,31 @@ const Color = {
 };
 
 const THE_PLANE_ID = "no_png:the_plane";
-const SKY_LOUNGE_ID = "custom_dim:sky_lounge";
+const SKY_BLOCK_ID = "no_png:sky_block";
 const ENDLESS_RUNNER_ID = "custom_dim:endless_runner";
 
 const PLATFORMS = [
-    { dimensionId: THE_PLANE_ID, blockId: "no_png:missingtexture_block", radius: 8, center: { x: 0, y: 64, z: 0 } }
+    { dimensionId: THE_PLANE_ID, blockId: "no_png:missingtexture_block", radius: 8, center: { x: 0, y: 64, z: 0 } },
+    {
+        dimensionId: SKY_BLOCK_ID,
+        blockId: "no_png:missingtexture_block",
+        radius: 5, // Increased to ensure the ticking area covers the new L-shape
+        size: { x: 3, y: 3, z: 6 },
+        center: { x: 0, y: 62, z: 0 },
+        extensions: [
+            {
+                // This offsets the center of the new box 3 blocks to the side (positive X)
+                offset: { x: 3, y: 0, z: 1 },
+                // A 3x3x3 box
+                size: { x: 3, y: 3, z: 3 }
+            }
+        ]
+    }
 ];
 
 var DIMENSIONS = [
     { label: `${Color.pink}The Plane ${Color.darkGray}(Infinite Repeating Plane of §kMISSINGTEXTURE§r)${Color.reset}`, id: THE_PLANE_ID, spawn: { x: 0, y: 66, z: 0 } },
-    { label: `${Color.aqua}Sky Lounge ${Color.darkGray}(quartz platform high up)${Color.reset}`, id: SKY_LOUNGE_ID, spawn: { x: 0, y: 102, z: 0 } },
+    { label: `${Color.pink}Sky Block ${Color.darkGray}(Glitch Sky Block)${Color.reset}`, id: SKY_BLOCK_ID, spawn: { x: 0, y: 65, z: 0 } },
     { label: `${Color.yellow}Endless Runner ${Color.darkGray}(sprint & survive!)${Color.reset}`, id: ENDLESS_RUNNER_ID, spawn: { x: 0, y: 66, z: 0 } },
     { label: `${Color.green}Overworld${Color.reset}`, id: "minecraft:overworld", spawn: { x: 0, y: 64, z: 0 } },
     { label: `${Color.darkRed}The Nether${Color.reset}`, id: "minecraft:nether", spawn: { x: 0, y: 64, z: 0 } },
@@ -52,7 +67,7 @@ const builtDimensions = new Set();
 // --- STARTUP & WORLD LOAD EVENTS ---
 system.beforeEvents.startup.subscribe((event) => {
     event.dimensionRegistry.registerCustomDimension(THE_PLANE_ID);
-    event.dimensionRegistry.registerCustomDimension(SKY_LOUNGE_ID);
+    event.dimensionRegistry.registerCustomDimension(SKY_BLOCK_ID);
     event.dimensionRegistry.registerCustomDimension(ENDLESS_RUNNER_ID);
 
     event.customCommandRegistry.registerCommand(
@@ -590,43 +605,88 @@ async function ensurePlatformBuilt(config) {
     const tickingAreaId = `${config.dimensionId}_platform`;
     const margin = 2;
 
+    // Dynamically grab the height if a 3D size is provided, otherwise default to 4
+    const heightBound = config.size ? config.size.y : 4;
+
     await world.tickingAreaManager.createTickingArea(tickingAreaId, {
         dimension: dim,
         from: { x: config.center.x - config.radius - margin, y: config.center.y - 1, z: config.center.z - config.radius - margin },
-        to: { x: config.center.x + config.radius + margin, y: config.center.y + 4, z: config.center.z + config.radius + margin },
+        to: { x: config.center.x + config.radius + margin, y: config.center.y + heightBound + margin, z: config.center.z + config.radius + margin },
     });
 
-    // Removed the "config.rails" check from the end of this line
-    buildPlatform(dim, config.blockId, config.radius, config.center);
+    // Pass the entire config object to make parameter handling cleaner
+    buildPlatform(dim, config);
     if (config.decor) buildDecor(dim, config.center);
 
     if (config.dimensionId === THE_PLANE_ID) {
-        // Defines RANDOM_TREE as a randomly selected string from the provided list of glitch/pale trees.
         const TREE_NAMES = [
-            "glitch_birch",
-            "glitch_cherry",
-            "glitch_dark_oak",
-            "glitch_jungle",
-            "glitch_mangrove",
-            "glitch_oak",
-            "glitch_spruce",
-            "glitch_acacia", // Corrected spacing from "glitch_ acacia"
-            "pale_oak"
+            "glitch_birch", "glitch_cherry", "glitch_dark_oak", "glitch_jungle",
+            "glitch_mangrove", "glitch_oak", "glitch_spruce", "glitch_acacia", "pale_oak"
         ];
         const RANDOM_TREE = TREE_NAMES[Math.floor(Math.random() * TREE_NAMES.length)];
         world.structureManager.place(RANDOM_TREE, dim, { x: config.center.x, y: config.center.y + 1, z: config.center.z });
+    }
+
+    if (config.dimensionId === SKY_BLOCK_ID) {
+        world.structureManager.place("glitch_oak", dim, { x: config.center.x - 2, y: config.center.y + 3, z: config.center.z - 1 });
     }
 
     world.tickingAreaManager.removeTickingArea(tickingAreaId);
     builtDimensions.add(config.dimensionId);
 }
 
-function buildPlatform(dim, blockId, radius, center) {
-    const perm = BlockPermutation.resolve(blockId);
-    // This loop simply generates the flat floor with no borders
-    for (let x = -radius; x <= radius; x++) {
-        for (let z = -radius; z <= radius; z++) {
-            dim.getBlock({ x: center.x + x, y: center.y, z: center.z + z })?.setPermutation(perm);
+// Helper function to build a single 3D box
+// Helper function to build a single 3D box matching exact sizes
+function buildVolume(dim, perm, center, size) {
+    // Calculate the starting corner based on the center point
+    const startX = center.x - Math.floor(size.x / 2);
+    const startY = center.y;
+    const startZ = center.z - Math.floor(size.z / 2);
+
+    // Loop exactly size.x, size.y, and size.z times
+    for (let x = 0; x < size.x; x++) {
+        for (let y = 0; y < size.y; y++) {
+            for (let z = 0; z < size.z; z++) {
+                dim.getBlock({
+                    x: startX + x,
+                    y: startY + y,
+                    z: startZ + z
+                })?.setPermutation(perm);
+            }
+        }
+    }
+}
+
+// Updated platform builder
+function buildPlatform(dim, config) {
+    const perm = BlockPermutation.resolve(config.blockId);
+
+    if (config.size) {
+        // 1. Build the main 3D volume
+        buildVolume(dim, perm, config.center, config.size);
+
+        // 2. Build any extensions (like your L-shape addition)
+        if (config.extensions) {
+            for (const ext of config.extensions) {
+                // Calculate the actual world position of the extension
+                const extCenter = {
+                    x: config.center.x + ext.offset.x,
+                    y: config.center.y + ext.offset.y,
+                    z: config.center.z + ext.offset.z
+                };
+                buildVolume(dim, perm, extCenter, ext.size);
+            }
+        }
+    } else {
+        // Flat 2D generation (Legacy fallback for The Plane)
+        for (let x = -config.radius; x <= config.radius; x++) {
+            for (let z = -config.radius; z <= config.radius; z++) {
+                dim.getBlock({
+                    x: config.center.x + x,
+                    y: config.center.y,
+                    z: config.center.z + z
+                })?.setPermutation(perm);
+            }
         }
     }
 }
@@ -691,185 +751,4 @@ async function teleportToCustomDimension(player, destination) {
     world.tickingAreaManager.removeTickingArea(tickingAreaId);
 
     if (destination.id === ENDLESS_RUNNER_ID) startRunner(player);
-}
-
-// --- ENDLESS RUNNER MINIGAME ---
-const RUNNER_PATH_HALF_WIDTH = 1;
-const RUNNER_FLOOR_Y = 64;
-const RUNNER_SEGMENT_LENGTH = 30;
-const RUNNER_LOOK_AHEAD = 40;
-const RUNNER_ZOMBIE_INTERVAL = 40;
-const RUNNER_TICKING_AREA_ID = "endless_runner_ahead";
-
-function turnRight(dir) { return { dx: -dir.dz, dz: dir.dx }; }
-function turnLeft(dir) { return { dx: dir.dz, dz: -dir.dx }; }
-function sameDir(a, b) { return a.dx === b.dx && a.dz === b.dz; }
-function cellKey(x, z) { return `${Math.round(x / RUNNER_SEGMENT_LENGTH)},${Math.round(z / RUNNER_SEGMENT_LENGTH)}`; }
-
-const runner = {
-    active: false,
-    headX: 0,
-    headZ: 0,
-    dir: { dx: 0, dz: 1 },
-    occupiedCells: new Set(),
-    intervalId: undefined,
-    zombies: [],
-    tickCount: 0,
-    lastTickingX: 0,
-    lastTickingZ: 0,
-};
-
-async function startRunner(player) {
-    stopRunner();
-    const dim = world.getDimension(ENDLESS_RUNNER_ID);
-
-    runner.dir = { dx: 0, dz: 1 };
-    runner.headX = 0;
-    runner.headZ = 0;
-    runner.occupiedCells = new Set();
-    runner.occupiedCells.add(cellKey(0, 0));
-    runner.lastTickingX = 0;
-    runner.lastTickingZ = 0;
-
-    await updateRunnerTickingArea(dim, 0, 0);
-    generateNextSegment(dim);
-    player.addEffect("speed", 20 * 600, { amplifier: 1, showParticles: false });
-
-    runner.active = true;
-    runner.tickCount = 0;
-
-    player.sendMessage(`${Color.yellow}${Color.bold}GO! ${Color.reset}${Color.gray}Run forward to survive. Zombies are coming!`);
-
-    runner.intervalId = system.runInterval(() => {
-        runner.tickCount += 5;
-
-        if (player.dimension.id !== ENDLESS_RUNNER_ID) {
-            stopRunner();
-            return;
-        }
-
-        if (player.location.y < RUNNER_FLOOR_Y - 10) {
-            player.sendMessage(`${Color.red}${Color.bold}Game Over! ${Color.reset}${Color.gray}You fell off the path.`);
-            stopRunner();
-            return;
-        }
-
-        if (Math.abs(runner.headX - runner.lastTickingX) > 20 || Math.abs(runner.headZ - runner.lastTickingZ) > 20) {
-            updateRunnerTickingArea(dim, runner.headX, runner.headZ);
-        }
-
-        const distSq = Math.pow(runner.headX - player.location.x, 2) + Math.pow(runner.headZ - player.location.z, 2);
-        if (distSq < RUNNER_LOOK_AHEAD * RUNNER_LOOK_AHEAD) generateNextSegment(dim);
-
-        if (runner.tickCount % RUNNER_ZOMBIE_INTERVAL === 0) spawnRunnerZombie(dim, player);
-
-        runner.zombies = runner.zombies.filter((z) => {
-            if (!z.isValid || z.location.y < RUNNER_FLOOR_Y - 20) {
-                if (z.isValid) z.remove();
-                return false;
-            }
-            return true;
-        });
-    }, 5);
-}
-
-function generateNextSegment(dim) {
-    const straight = runner.dir;
-    const candidates = [straight, turnLeft(straight), turnRight(straight)].filter((d) => {
-        return !runner.occupiedCells.has(cellKey(runner.headX + d.dx * RUNNER_SEGMENT_LENGTH, runner.headZ + d.dz * RUNNER_SEGMENT_LENGTH));
-    });
-
-    let chosen;
-    if (candidates.length === 0) chosen = straight;
-    else if (candidates.some((c) => sameDir(c, straight)) && Math.random() < 0.5) chosen = straight;
-    else chosen = candidates[Math.floor(Math.random() * candidates.length)];
-
-    if (!sameDir(chosen, runner.dir)) fillCorner(dim, runner.headX, runner.headZ);
-
-    runner.dir = chosen;
-    buildLedgeSegment(dim, runner.headX, runner.headZ, chosen, RUNNER_SEGMENT_LENGTH);
-
-    runner.headX += chosen.dx * RUNNER_SEGMENT_LENGTH;
-    runner.headZ += chosen.dz * RUNNER_SEGMENT_LENGTH;
-    runner.occupiedCells.add(cellKey(runner.headX, runner.headZ));
-}
-
-function buildLedgeSegment(dim, fromX, fromZ, dir, length) {
-    const hw = RUNNER_PATH_HALF_WIDTH;
-    const y = RUNNER_FLOOR_Y;
-    const toX = fromX + dir.dx * (length - 1);
-    const toZ = fromZ + dir.dz * (length - 1);
-
-    dim.fillBlocks(
-        new BlockVolume(
-            { x: Math.min(fromX, toX) - Math.abs(dir.dz) * hw, y, z: Math.min(fromZ, toZ) - Math.abs(dir.dx) * hw },
-            { x: Math.max(fromX, toX) + Math.abs(dir.dz) * hw, y, z: Math.max(fromZ, toZ) + Math.abs(dir.dx) * hw }
-        ),
-        BlockPermutation.resolve("minecraft:deepslate_bricks"),
-        { ignoreChunkBoundErrors: true }
-    );
-
-    const glow = BlockPermutation.resolve("minecraft:glowstone");
-    for (let i = 0; i < length; i += 10) {
-        dim.getBlock({ x: fromX + dir.dx * i - Math.abs(dir.dz) * (hw + 1), y, z: fromZ + dir.dz * i - Math.abs(dir.dx) * (hw + 1) })?.setPermutation(glow);
-        dim.getBlock({ x: fromX + dir.dx * i + Math.abs(dir.dz) * (hw + 1), y, z: fromZ + dir.dz * i + Math.abs(dir.dx) * (hw + 1) })?.setPermutation(glow);
-    }
-}
-
-function fillCorner(dim, x, z) {
-    const pad = RUNNER_PATH_HALF_WIDTH + 1;
-    dim.fillBlocks(
-        new BlockVolume({ x: x - pad, y: RUNNER_FLOOR_Y, z: z - pad }, { x: x + pad, y: RUNNER_FLOOR_Y, z: z + pad }),
-        BlockPermutation.resolve("minecraft:deepslate_bricks"),
-        { ignoreChunkBoundErrors: true }
-    );
-}
-
-async function updateRunnerTickingArea(dim, centerX, centerZ) {
-    if (world.tickingAreaManager.hasTickingArea(RUNNER_TICKING_AREA_ID)) {
-        world.tickingAreaManager.removeTickingArea(RUNNER_TICKING_AREA_ID);
-    }
-    await world.tickingAreaManager.createTickingArea(RUNNER_TICKING_AREA_ID, {
-        dimension: dim,
-        from: { x: centerX - 50, y: RUNNER_FLOOR_Y - 2, z: centerZ - 50 },
-        to: { x: centerX + 50, y: RUNNER_FLOOR_Y + 10, z: centerZ + 50 },
-    });
-    runner.lastTickingX = centerX;
-    runner.lastTickingZ = centerZ;
-}
-
-function spawnRunnerZombie(dim, player) {
-    const behindX = Math.floor(player.location.x) - runner.dir.dx * 10;
-    const behindZ = Math.floor(player.location.z) - runner.dir.dz * 10;
-    for (const side of [-1, 1]) {
-        const zombie = dim.spawnEntity("minecraft:zombie", {
-            x: behindX + Math.abs(runner.dir.dz) * side,
-            y: RUNNER_FLOOR_Y + 1,
-            z: behindZ + Math.abs(runner.dir.dx) * side,
-        });
-        zombie.addEffect("speed", 20 * 120, { amplifier: 2, showParticles: false });
-        runner.zombies.push(zombie);
-    }
-}
-
-function stopRunner() {
-    if (runner.intervalId !== undefined) {
-        system.clearRun(runner.intervalId);
-        runner.intervalId = undefined;
-    }
-    for (const z of runner.zombies) { if (z.isValid) z.remove(); }
-
-    runner.zombies = [];
-    runner.active = false;
-    runner.headX = 0;
-    runner.headZ = 0;
-    runner.dir = { dx: 0, dz: 1 };
-    runner.occupiedCells = new Set();
-    runner.tickCount = 0;
-    runner.lastTickingX = 0;
-    runner.lastTickingZ = 0;
-
-    if (world.tickingAreaManager.hasTickingArea(RUNNER_TICKING_AREA_ID)) {
-        world.tickingAreaManager.removeTickingArea(RUNNER_TICKING_AREA_ID);
-    }
 }
