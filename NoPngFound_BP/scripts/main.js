@@ -11,6 +11,27 @@ import {
 
 import { ActionFormData } from "@minecraft/server-ui";
 
+// --- MOB DAMAGE TO DIMENSION TELEPORT ---
+world.afterEvents.entityHurt.subscribe((event) => {
+    const { hurtEntity, damageSource } = event;
+
+    // Check if the damaged entity is a player
+    if (hurtEntity instanceof Player) {
+        const attacker = damageSource.damagingEntity;
+
+        // Check if the attacker exists and is the specific mob type
+        if (attacker && attacker.typeId === "no_png:corruption") {
+            const skyBlockDestination = DIMENSIONS.find(d => d.id === SKY_BLOCK_ID);
+
+            if (skyBlockDestination) {
+                // Use your existing teleport logic
+                teleportToCustomDimension(hurtEntity, skyBlockDestination);
+                world.sendMessage(`§4[WARNING]§r ${hurtEntity.name} was corrupted and sent to the Sky Block!`);
+            }
+        }
+    }
+});
+
 // --- GLITCH & HEROBRINE CONSTANTS ---
 const MIN_Y = -64;
 const MAX_Y = 319;
