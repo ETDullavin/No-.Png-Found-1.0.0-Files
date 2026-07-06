@@ -1,0 +1,45 @@
+{
+    "format_version": "1.12.0",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "no_png:recipe_overworld_compass"
+        },
+        "tags": [
+            "crafting_table"
+        ],
+        "pattern": [
+            "BGP",
+            "GCG",
+            "RGS"
+        ],
+        "key": {
+            "G": {
+                "item": "minecraft:grass_block"
+            },
+            "C": {
+                "item": "minecraft:compass"
+            },
+            "R": {
+                "item": "minecraft:rotten_flesh"
+            },
+            "B": {
+                "item": "minecraft:bone"
+            },
+            "P": {
+                "item": "minecraft:gunpowder"
+            },
+            "S": {
+                "item": "minecraft:spider_eye"
+            }
+        },
+        "unlock": [
+            {
+                "context": "AlwaysUnlocked"
+            }
+        ],
+        "result": {
+            "item": "no_png:overworld_compass",
+            "count": 1
+        }
+    }
+}

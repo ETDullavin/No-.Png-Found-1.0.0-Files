@@ -1,13 +1,18 @@
 {
+	"resource_pack_name": "vanilla",
+	"texture_name": "atlas.items",
 	"texture_data": {
 		"no_texture_bucket": {
-			"textures": "textures/items/no_texture_bucket.png"
+			"textures": "textures/items/no_texture_bucket"
 		},
 		"no_texture_item": {
-			"textures": "textures/items/missing.png"
+			"textures": "textures/items/missing"
 		},
 		"no_texture_disc": {
-			"textures": "textures/items/no_texture_disc.png"
+			"textures": "textures/items/no_texture_disc"
+		},
+		"overworld_compass": {
+			"textures": "textures/items/overworld_compass"
 		}
 	}
 }

@@ -11,6 +11,41 @@ import {
 
 import { ActionFormData } from "@minecraft/server-ui";
 
+// --- ITEM USE TELEPORT ---
+world.afterEvents.itemUse.subscribe((event) => {
+    const { source: player, itemStack } = event;
+
+    if (itemStack.typeId === "no_png:overworld_compass") {
+
+        // Prevent usage if the player is already in the Overworld
+        if (player.dimension.id === "minecraft:overworld") {
+            return;
+        }
+
+        const overworld = world.getDimension("minecraft:overworld");
+
+        // Get the player's personal spawn point
+        const spawnData = player.getSpawnPoint();
+        let targetLocation;
+
+        // Check if they have a valid spawn point specifically in the Overworld
+        if (spawnData && spawnData.dimension.id === "minecraft:overworld") {
+            targetLocation = { x: spawnData.x, y: spawnData.y, z: spawnData.z };
+        } else {
+            // FIX: Pull the safe fallback spawn from your DIMENSIONS array 
+            // to avoid the 32767 height bug from getDefaultSpawnLocation()
+            targetLocation = DIMENSIONS.find(d => d.id === "minecraft:overworld").spawn;
+        }
+
+        // Safely run the teleport on the next tick
+        system.run(() => {
+            player.teleport(targetLocation, {
+                dimension: overworld
+            });
+        });
+    }
+});
+
 // --- MOB DAMAGE TO DIMENSION TELEPORT ---
 world.afterEvents.entityHurt.subscribe((event) => {
     const { hurtEntity, damageSource } = event;
