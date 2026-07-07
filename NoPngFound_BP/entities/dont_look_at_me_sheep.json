@@ -139,9 +139,6 @@
                     ]
                 }
             },
-            "minecraft:despawn": {
-                "despawn_from_distance": {}
-            },
             "minecraft:navigation.walk": {
                 "can_path_over_water": true
             },

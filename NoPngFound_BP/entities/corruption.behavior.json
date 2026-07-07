@@ -197,6 +197,12 @@
 			"minecraft:nameable": {},
 			"minecraft:loot": {
 				"table": "loot_tables/entities/corruption.json"
+			},
+			"minecraft:damage_sensor": {
+				"triggers": {
+					"cause": "fall",
+					"deals_damage": false
+				}
 			}
 		},
 		"events": {

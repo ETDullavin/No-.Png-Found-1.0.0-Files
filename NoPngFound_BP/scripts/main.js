@@ -37,8 +37,24 @@ world.afterEvents.itemUse.subscribe((event) => {
             targetLocation = DIMENSIONS.find(d => d.id === "minecraft:overworld").spawn;
         }
 
-        // Safely run the teleport on the next tick
+        // Safely run the item deletion and teleport on the next tick
         system.run(() => {
+            // 1. Consume the item from the player's main hand
+            const equipment = player.getComponent("minecraft:equippable");
+            if (equipment) {
+                const mainHandSlot = equipment.getEquipmentSlot("Mainhand");
+
+                // Verify the compass is still in their hand
+                if (mainHandSlot.hasItem() && mainHandSlot.typeId === "no_png:overworld_compass") {
+                    if (mainHandSlot.amount > 1) {
+                        mainHandSlot.amount -= 1; // Decrease stack size if they have multiple
+                    } else {
+                        mainHandSlot.setItem(undefined); // Clear slot if they only have one
+                    }
+                }
+            }
+
+            // 2. Teleport the player
             player.teleport(targetLocation, {
                 dimension: overworld
             });
@@ -233,6 +249,26 @@ world.afterEvents.playerInteractWithBlock.subscribe((event) => {
 });
 
 const randomEvents = [
+    function spawnCorruption() {
+        const players = world.getAllPlayers();
+        if (players.length > 0) {
+            const player = players[Math.floor(Math.random() * players.length)];
+            const dimension = player.dimension;
+
+            if (dimension.getEntities({ type: "no_png:corruption" }).length > 0) return false;
+
+            const corruptionPos = {
+                x: player.location.x + (Math.random() * 100 - 50),
+                y: MAX_Y,
+                z: player.location.z + (Math.random() * 100 - 50)
+            };
+
+            try {
+                dimension.spawnEntity("no_png:corruption", corruptionPos);
+                world.sendMessage("CORRUPTION SPAWNED!");
+            } catch (e) { }
+        }
+    },
     function spawnHerobrine() {
         const players = world.getAllPlayers();
         if (players.length > 0) {
