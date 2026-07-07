@@ -102,12 +102,12 @@ const Color = {
     pink: "\xA7d"
 };
 
-const THE_PLANE_ID = "no_png:the_plane";
+const THE_GARDEN_ID = "no_png:the_garden";
 const SKY_BLOCK_ID = "no_png:sky_block";
 const ENDLESS_RUNNER_ID = "custom_dim:endless_runner";
 
 const PLATFORMS = [
-    { dimensionId: THE_PLANE_ID, blockId: "no_png:missingtexture_block", radius: 8, center: { x: 0, y: 64, z: 0 } },
+    { dimensionId: THE_GARDEN_ID, blockId: "no_png:missingtexture_block", radius: 32, center: { x: 0, y: 64, z: 0 } },
     {
         dimensionId: SKY_BLOCK_ID,
         blockId: "no_png:missingtexture_block",
@@ -126,7 +126,7 @@ const PLATFORMS = [
 ];
 
 var DIMENSIONS = [
-    { label: `${Color.pink}The Plane ${Color.darkGray}(Infinite Repeating Plane of §kMISSINGTEXTURE§r)${Color.reset}`, id: THE_PLANE_ID, spawn: { x: 0, y: 66, z: 0 } },
+    { label: `${Color.pink}The Garden ${Color.darkGray}(Garden of Glitch Trees)${Color.reset}`, id: THE_GARDEN_ID, spawn: { x: 0, y: 66, z: 0 } },
     { label: `${Color.pink}Sky Block ${Color.darkGray}(Glitch Sky Block)${Color.reset}`, id: SKY_BLOCK_ID, spawn: { x: 0, y: 65, z: 0 } },
     { label: `${Color.yellow}Endless Runner ${Color.darkGray}(sprint & survive!)${Color.reset}`, id: ENDLESS_RUNNER_ID, spawn: { x: 0, y: 66, z: 0 } },
     { label: `${Color.green}Overworld${Color.reset}`, id: "minecraft:overworld", spawn: { x: 0, y: 64, z: 0 } },
@@ -138,16 +138,16 @@ const builtDimensions = new Set();
 
 // --- STARTUP & WORLD LOAD EVENTS ---
 system.beforeEvents.startup.subscribe((event) => {
-    event.dimensionRegistry.registerCustomDimension(THE_PLANE_ID);
+    event.dimensionRegistry.registerCustomDimension(THE_GARDEN_ID);
     event.dimensionRegistry.registerCustomDimension(SKY_BLOCK_ID);
     event.dimensionRegistry.registerCustomDimension(ENDLESS_RUNNER_ID);
 
     event.customCommandRegistry.registerCommand(
         {
-            name: "custom_dim:dimensions",
+            name: "no_png:dimensions",
             description: "Open the dimension travel menu",
             permissionLevel: CommandPermissionLevel.Any,
-            cheatsRequired: false,
+            cheatsRequired: true,
         },
         (origin) => {
             const player = origin.sourceEntity;
@@ -710,13 +710,20 @@ async function ensurePlatformBuilt(config) {
     buildPlatform(dim, config);
     if (config.decor) buildDecor(dim, config.center);
 
-    if (config.dimensionId === THE_PLANE_ID) {
+    if (config.dimensionId === THE_GARDEN_ID) {
         const TREE_NAMES = [
             "glitch_birch", "glitch_cherry", "glitch_dark_oak", "glitch_jungle",
-            "glitch_mangrove", "glitch_oak", "glitch_spruce", "glitch_acacia", "pale_oak"
+            "glitch_mangrove", "glitch_oak", "glitch_spruce", "glitch_acacia", "glitch_pale_oak", "glitch_giant_spruce", "glitch_warped_fungus", "glitch_crimson_fungus",
+            "glitch_fountain"
         ];
-        const RANDOM_TREE = TREE_NAMES[Math.floor(Math.random() * TREE_NAMES.length)];
-        world.structureManager.place(RANDOM_TREE, dim, { x: config.center.x, y: config.center.y + 1, z: config.center.z });
+
+        for (let i = 0; i < 100; i++) {
+            const RANDOM_TREE = TREE_NAMES[Math.floor(Math.random() * TREE_NAMES.length)];
+            const randomPosX = Math.floor(Math.random() * 48) - 26;
+            const randomPosZ = Math.floor(Math.random() * 48) - 26;
+
+            world.structureManager.place(RANDOM_TREE, dim, { x: config.center.x + randomPosX, y: config.center.y + 1, z: config.center.z + randomPosZ });
+        }
     }
 
     if (config.dimensionId === SKY_BLOCK_ID) {
@@ -754,13 +761,10 @@ function buildPlatform(dim, config) {
     const perm = BlockPermutation.resolve(config.blockId);
 
     if (config.size) {
-        // 1. Build the main 3D volume
+        // ... (existing 3D volume logic remains unchanged)
         buildVolume(dim, perm, config.center, config.size);
-
-        // 2. Build any extensions (like your L-shape addition)
         if (config.extensions) {
             for (const ext of config.extensions) {
-                // Calculate the actual world position of the extension
                 const extCenter = {
                     x: config.center.x + ext.offset.x,
                     y: config.center.y + ext.offset.y,
@@ -770,7 +774,7 @@ function buildPlatform(dim, config) {
             }
         }
     } else {
-        // Flat 2D generation (Legacy fallback for The Plane)
+        // Flat 2D generation
         for (let x = -config.radius; x <= config.radius; x++) {
             for (let z = -config.radius; z <= config.radius; z++) {
                 dim.getBlock({
@@ -778,6 +782,24 @@ function buildPlatform(dim, config) {
                     y: config.center.y,
                     z: config.center.z + z
                 })?.setPermutation(perm);
+            }
+        }
+
+        // --- NEW: Add this loop to build a 2-tall wall ---
+        for (let i = -config.radius; i <= config.radius; i++) {
+            // Define boundary coordinates
+            const boundaries = [
+                { x: config.center.x + i, z: config.center.z - config.radius }, // North
+                { x: config.center.x + i, z: config.center.z + config.radius }, // South
+                { x: config.center.x - config.radius, z: config.center.z + i }, // West
+                { x: config.center.x + config.radius, z: config.center.z + i }  // East
+            ];
+
+            for (const pos of boundaries) {
+                // Build 2 blocks high starting from the floor (y + 1 and y + 2)
+                dim.getBlock({ x: pos.x, y: config.center.y + 1, z: pos.z })?.setPermutation(perm);
+                dim.getBlock({ x: pos.x, y: config.center.y + 2, z: pos.z })?.setPermutation(perm);
+                dim.getBlock({ x: pos.x, y: config.center.y + 3, z: pos.z })?.setPermutation(perm);
             }
         }
     }
