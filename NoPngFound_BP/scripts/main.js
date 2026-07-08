@@ -761,6 +761,7 @@ async function ensurePlatformBuilt(config) {
 
     if (config.dimensionId === SKY_BLOCK_ID) {
         world.structureManager.place("glitch_oak", dim, { x: config.center.x - 2, y: config.center.y + 3, z: config.center.z - 1 });
+        world.structureManager.place("sky_block_chest", dim, { x: config.center.x, y: config.center.y + 3, z: config.center.z });
     }
 
     world.tickingAreaManager.removeTickingArea(tickingAreaId);
