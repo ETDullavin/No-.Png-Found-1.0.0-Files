@@ -32,7 +32,7 @@ world.afterEvents.itemUse.subscribe((event) => {
         if (spawnData && spawnData.dimension.id === "minecraft:overworld") {
             targetLocation = { x: spawnData.x, y: spawnData.y, z: spawnData.z };
         } else {
-            // FIX: Pull the safe fallback spawn from your DIMENSIONS array 
+            // FIX: Pull the safe fallback spawn from your DIMENSIONS array
             // to avoid the 32767 height bug from getDefaultSpawnLocation()
             targetLocation = DIMENSIONS.find(d => d.id === "minecraft:overworld").spawn;
         }
@@ -507,10 +507,24 @@ const randomEvents = [
 
 function eventDirector() {
     world.sendMessage("Event started/reset!");
+
     system.runTimeout(() => {
         try {
+            // 1. Get all online players
+            const allPlayers = world.getAllPlayers();
+
+            // 2. Filter to see if any player is actually in the Overworld
+            const overworldPlayers = allPlayers.filter(p => p.dimension.id === "minecraft:overworld");
+
+            // 3. If nobody is in the Overworld, stop here and let 'finally' queue the next check
+            if (overworldPlayers.length === 0) {
+                return;
+            }
+
+            // 4. If we made it here, someone is in the overworld. Proceed with event logic.
             let eventSucceeded = false;
             let attempts = 0;
+
             while (!eventSucceeded && attempts < 10) {
                 attempts++;
                 if (randomEvents[Math.floor(Math.random() * randomEvents.length)]() !== false) {
@@ -520,6 +534,7 @@ function eventDirector() {
         } catch (error) {
             console.warn("Event crashed safely: " + error);
         } finally {
+            // This guarantees the loop keeps ticking for when players return to the Overworld
             eventDirector();
         }
     }, Math.floor(Math.random() * 100) + 100);
@@ -691,7 +706,16 @@ world.afterEvents.entityDie.subscribe((event) => {
 
 // --- DIMENSION TRAVEL LOGIC ---
 async function ensurePlatformBuilt(config) {
-    if (builtDimensions.has(config.dimensionId)) return;
+    // 1. Check persistent world storage first
+    const propertyKey = `built_${config.dimensionId}`;
+    const hasBeenBuilt = world.getDynamicProperty(propertyKey);
+
+    // 2. Return early if it's already in memory OR saved to the world file
+    if (hasBeenBuilt || builtDimensions.has(config.dimensionId)) {
+        // Keep the memory set updated just in case
+        builtDimensions.add(config.dimensionId);
+        return;
+    }
 
     const dim = world.getDimension(config.dimensionId);
     const tickingAreaId = `${config.dimensionId}_platform`;
@@ -713,14 +737,13 @@ async function ensurePlatformBuilt(config) {
     if (config.dimensionId === THE_GARDEN_ID) {
         const TREE_NAMES = [
             "glitch_birch", "glitch_cherry", "glitch_dark_oak", "glitch_jungle",
-            "glitch_mangrove", "glitch_oak", "glitch_spruce", "glitch_acacia", "glitch_pale_oak", "glitch_giant_spruce", "glitch_warped_fungus", "glitch_crimson_fungus",
-            "glitch_fountain"
+            "glitch_mangrove", "glitch_oak", "glitch_spruce", "glitch_acacia", "glitch_pale_oak", "glitch_giant_spruce", "glitch_warped_fungus", "glitch_crimson_fungus", "glitch_fountain", "garden_chest"
         ];
 
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 175; i++) {
             const RANDOM_TREE = TREE_NAMES[Math.floor(Math.random() * TREE_NAMES.length)];
-            const randomPosX = Math.floor(Math.random() * 48) - 26;
-            const randomPosZ = Math.floor(Math.random() * 48) - 26;
+            const randomPosX = Math.floor(Math.random() * 55) - 31;
+            const randomPosZ = Math.floor(Math.random() * 55) - 31;
 
             world.structureManager.place(RANDOM_TREE, dim, { x: config.center.x + randomPosX, y: config.center.y + 1, z: config.center.z + randomPosZ });
         }
@@ -731,7 +754,10 @@ async function ensurePlatformBuilt(config) {
     }
 
     world.tickingAreaManager.removeTickingArea(tickingAreaId);
+
+    // 3. Mark as built in BOTH memory and persistent world storage
     builtDimensions.add(config.dimensionId);
+    world.setDynamicProperty(propertyKey, true);
 }
 
 // Helper function to build a single 3D box
