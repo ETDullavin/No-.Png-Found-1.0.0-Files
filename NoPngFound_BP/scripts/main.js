@@ -1,3 +1,6 @@
+// --- CONFIGURATION TOGGLES ---
+const test = true; // Set to true to show debug/test chat messages, false to mute them
+
 import {
     world,
     system,
@@ -10,6 +13,13 @@ import {
 } from "@minecraft/server";
 
 import { ActionFormData } from "@minecraft/server-ui";
+
+// Helper function to handle conditional test logs
+function sendTestMessage(message) {
+    if (test) {
+        world.sendMessage(message);
+    }
+}
 
 // --- ITEM USE TELEPORT ---
 world.afterEvents.itemUse.subscribe((event) => {
@@ -265,7 +275,7 @@ const randomEvents = [
 
             try {
                 dimension.spawnEntity("no_png:corruption", corruptionPos);
-                world.sendMessage("CORRUPTION SPAWNED!");
+                sendTestMessage("CORRUPTION SPAWNED!");
             } catch (e) { }
         }
     },
@@ -289,7 +299,7 @@ const randomEvents = [
 
             try {
                 dimension.spawnEntity("no_png:watching_herobrine", herobrinePos);
-                world.sendMessage("HEROBRINE SPAWNED!");
+                sendTestMessage("HEROBRINE SPAWNED!");
             } catch (e) { }
         }
     },
@@ -312,10 +322,10 @@ const randomEvents = [
                 if (glitchBlock.typeId !== "minecraft:grass_block") {
                     if (Math.random() < 0.5) {
                         glitchBlock.setPermutation(BlockPermutation.resolve("minecraft:oak_sign"));
-                        world.sendMessage("A GLITCHED SIGN HAS APPEARED!");
+                        sendTestMessage("A GLITCHED SIGN HAS APPEARED!");
                     } else {
                         glitchBlock.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
-                        world.sendMessage("A GLITCHED BLOCK HAS APPEARED!");
+                        sendTestMessage("A GLITCHED BLOCK HAS APPEARED!");
                     }
                 } else {
                     for (let trunkY = blockPos.y + 1; trunkY <= blockPos.y + 6; trunkY++) {
@@ -348,7 +358,7 @@ const randomEvents = [
                                                         }
 
                                                         if (leafX2 === 1 && leafY2 === trunkY && leafZ2 === 1) {
-                                                            world.sendMessage("GLITCHED TREE SPAWNED!");
+                                                            sendTestMessage("GLITCHED TREE SPAWNED!");
                                                         }
                                                     }
                                                 }
@@ -367,7 +377,7 @@ const randomEvents = [
         for (const player of world.getAllPlayers()) {
             player.playSound("mob.dont_look.hit", { location: player.location });
         }
-        world.sendMessage("SOUND PLAYED!");
+        sendTestMessage("SOUND PLAYED!");
     },
     function placeCross() {
         const players = world.getAllPlayers();
@@ -388,7 +398,7 @@ const randomEvents = [
                 player.dimension.getBlock({ x: originBlockPos.x + 1, y: originBlockPos.y, z: originBlockPos.z })?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
                 player.dimension.getBlock({ x: originBlockPos.x, y: originBlockPos.y - 1, z: originBlockPos.z })?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
                 player.dimension.getBlock({ x: originBlockPos.x, y: originBlockPos.y - 2, z: originBlockPos.z })?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
-                world.sendMessage("GLITCHED CROSS SPAWNED!");
+                sendTestMessage("GLITCHED CROSS SPAWNED!");
             } catch (e) { }
         }
     },
@@ -399,7 +409,7 @@ const randomEvents = [
             const totalItems = Math.floor(Math.random() * (64 - 16 + 1)) + 16;
             let itemsSpawned = 0;
 
-            world.sendMessage("A FOUNTAIN OF ITEMS HAS APPEARED!");
+            sendTestMessage("A FOUNTAIN OF ITEMS HAS APPEARED!");
 
             const fountainInterval = system.runInterval(() => {
                 if (itemsSpawned >= totalItems) {
@@ -421,7 +431,7 @@ const randomEvents = [
             const itemChoices = ["no_png:no_texture_item", "no_png:no_texture_disc", "minecraft:music_disc_11", "minecraft:music_disc_13"];
             const selectedItem = itemChoices[Math.floor(Math.random() * itemChoices.length)];
 
-            world.sendMessage("A SINGLE ITEM HAS BEEN GIVEN!");
+            sendTestMessage("A SINGLE ITEM HAS BEEN GIVEN!");
             try {
                 player.dimension.spawnItem(new ItemStack(selectedItem, 1), player.location);
             } catch (e) { }
@@ -451,7 +461,7 @@ const randomEvents = [
                     }
                 }
             }
-            if (chunkCorrupted) world.sendMessage("A CHUNK HAS BEEN CORRUPTED!");
+            if (chunkCorrupted) sendTestMessage("A CHUNK HAS BEEN CORRUPTED!");
         }
     },
     function breakDoor() {
@@ -476,7 +486,7 @@ const randomEvents = [
                     }
                 }
             }
-            if (doorBroken) world.sendMessage("All doors in the chunk have been broken!");
+            if (doorBroken) sendTestMessage("All doors in the chunk have been broken!");
         }
     },
     function spawnPlayerEntity() {
@@ -499,14 +509,14 @@ const randomEvents = [
             try {
                 const newPlayerEntity = player.dimension.spawnEntity("no_png:player_entity", { x: player.location.x, y: player.location.y + 0.5, z: player.location.z });
                 if (newPlayerEntity) newPlayerEntity.nameTag = "D3rh3nter3";
-                world.sendMessage("PLAYER ENTITY SPAWNED!");
+                sendTestMessage("PLAYER ENTITY SPAWNED!");
             } catch (e) { }
         }
     }
 ];
 
 function eventDirector() {
-    world.sendMessage("Event started/reset!");
+    sendTestMessage("Event started/reset!");
 
     system.runTimeout(() => {
         try {
@@ -560,7 +570,7 @@ world.afterEvents.entitySpawn.subscribe((event) => {
             if (isAreaAir(entity.dimension, spawnPos, 3, 2, 1)) {
                 try {
                     entity.dimension.spawnEntity(entitySpawnMap[entity.typeId], spawnPos);
-                    world.sendMessage("§b[Test]§r A friend has arrived after " + attempts + " attempts.");
+                    sendTestMessage("§b[Test]§r A friend has arrived after " + attempts + " attempts.");
                     spawned = true;
                 } catch (error) { }
             }
@@ -760,7 +770,6 @@ async function ensurePlatformBuilt(config) {
     world.setDynamicProperty(propertyKey, true);
 }
 
-// Helper function to build a single 3D box
 // Helper function to build a single 3D box matching exact sizes
 function buildVolume(dim, perm, center, size) {
     // Calculate the starting corner based on the center point
@@ -787,7 +796,6 @@ function buildPlatform(dim, config) {
     const perm = BlockPermutation.resolve(config.blockId);
 
     if (config.size) {
-        // ... (existing 3D volume logic remains unchanged)
         buildVolume(dim, perm, config.center, config.size);
         if (config.extensions) {
             for (const ext of config.extensions) {
