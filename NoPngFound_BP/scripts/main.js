@@ -151,7 +151,9 @@ world.afterEvents.entityHurt.subscribe((event) => {
 
         // Check if the attacker exists and is the specific mob type
         if (attacker && attacker.typeId === "no_png:corruption") {
-            const skyBlockDestination = DIMENSIONS.find(d => d.id === SKY_BLOCK_ID);
+            const targetDimension = [THE_GARDEN_ID, SKY_BLOCK_ID];
+            const randomDimension = targetDimension[Math.floor(Math.random() * Object.keys(targetDimension).length)];
+            const skyBlockDestination = DIMENSIONS.find(d => d.id === randomDimension);
 
             if (skyBlockDestination) {
                 // Use your existing teleport logic
