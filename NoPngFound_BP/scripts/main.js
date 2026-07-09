@@ -4,6 +4,7 @@ const test = true; // Set to true to show debug/test chat messages, false to mut
 import {
     world,
     system,
+    EquipmentSlot,
     ItemStack,
     Player,
     BlockPermutation,
@@ -20,6 +21,74 @@ function sendTestMessage(message) {
         world.sendMessage(message);
     }
 }
+
+// Subscribe to the event that fires AFTER a block is placed
+world.afterEvents.playerPlaceBlock.subscribe((eventData) => {
+    const { player, block } = eventData;
+
+    // Check if the placed block matches a specific type (e.g., Diamond Block)
+    if (block.typeId === "no_png:glitch_rose_bush") {
+        const blockTop = player.dimension.getBlock({ x: block.location.x, y: block.location.y + 1, z: block.location.z });
+        if (blockTop && blockTop.typeId === "minecraft:air") {
+            blockTop.setPermutation(BlockPermutation.resolve("no_png:glitch_rose_bush_top"));
+        } else {
+            block.setPermutation(BlockPermutation.resolve("minecraft:air"));
+            player.dimension.spawnItem(new ItemStack("no_png:glitch_rose_bush", 1), player.location);
+        }
+    }
+});
+
+world.afterEvents.playerBreakBlock.subscribe((eventData) => {
+    const { player, block, brokenBlockPermutation } = eventData;
+    const dimension = block.dimension;
+    const blockLocation = block.location;
+
+    // Check if the broken block is the top part
+    if (brokenBlockPermutation.type.id === "no_png:glitch_rose_bush_top") {
+
+        // 1. Clear the bottom block
+        const bottomBlockLocation = { x: blockLocation.x, y: blockLocation.y - 1, z: blockLocation.z };
+        const bottomBlock = dimension.getBlock(bottomBlockLocation);
+        if (bottomBlock && bottomBlock.typeId === "no_png:glitch_rose_bush") {
+            bottomBlock.setPermutation(BlockPermutation.resolve("minecraft:air"));
+        }
+
+        // 2. Silk Touch Check
+        let hasSilkTouch = false;
+        const equippable = player.getComponent("minecraft:equippable");
+        const toolInHand = equippable ? equippable.getEquipment(EquipmentSlot.Mainhand) : null;
+
+        if (toolInHand) {
+            const enchantable = toolInHand.getComponent("minecraft:enchantable");
+            if (enchantable && enchantable.hasEnchantment("minecraft:silk_touch")) {
+                hasSilkTouch = true;
+            }
+        }
+
+        // 3. Handle Spawning and Cleanup
+        if (hasSilkTouch) {
+            system.run(() => {
+                // Remove the "top" block item if it dropped automatically
+                const itemEntities = dimension.getEntities({
+                    location: blockLocation,
+                    maxDistance: 2,
+                    type: "minecraft:item"
+                });
+
+                for (const entity of itemEntities) {
+                    const itemComponent = entity.getComponent("item");
+                    // If the game dropped the 'top' block as an item, kill it
+                    if (itemComponent && itemComponent.itemStack.typeId === "no_png:glitch_rose_bush_top") {
+                        entity.kill();
+                    }
+                }
+
+                // Spawn the correct item
+                dimension.spawnItem(new ItemStack("no_png:glitch_rose_bush", 1), blockLocation);
+            });
+        }
+    }
+});
 
 // --- ITEM USE TELEPORT ---
 world.afterEvents.itemUse.subscribe((event) => {
@@ -137,7 +206,7 @@ const PLATFORMS = [
 
 var DIMENSIONS = [
     { label: `${Color.pink}The Garden ${Color.darkGray}(Garden of Glitch Trees)${Color.reset}`, id: THE_GARDEN_ID, spawn: { x: 0, y: 66, z: 0 } },
-    { label: `${Color.pink}Sky Block ${Color.darkGray}(Glitch Sky Block)${Color.reset}`, id: SKY_BLOCK_ID, spawn: { x: 0, y: 65, z: 0 } },
+    { label: `${Color.pink}Sky Block ${Color.darkGray}(Glitch Sky Block)${Color.reset}`, id: SKY_BLOCK_ID, spawn: { x: 0, y: 65, z: -1 } },
     { label: `${Color.yellow}Endless Runner ${Color.darkGray}(sprint & survive!)${Color.reset}`, id: ENDLESS_RUNNER_ID, spawn: { x: 0, y: 66, z: 0 } },
     { label: `${Color.green}Overworld${Color.reset}`, id: "minecraft:overworld", spawn: { x: 0, y: 64, z: 0 } },
     { label: `${Color.darkRed}The Nether${Color.reset}`, id: "minecraft:nether", spawn: { x: 0, y: 64, z: 0 } },
@@ -747,7 +816,7 @@ async function ensurePlatformBuilt(config) {
     if (config.dimensionId === THE_GARDEN_ID) {
         const TREE_NAMES = [
             "glitch_birch", "glitch_cherry", "glitch_dark_oak", "glitch_jungle",
-            "glitch_mangrove", "glitch_oak", "glitch_spruce", "glitch_acacia", "glitch_pale_oak", "glitch_giant_spruce", "glitch_warped_fungus", "glitch_crimson_fungus", "glitch_fountain", "garden_chest"
+            "glitch_mangrove", "glitch_oak", "glitch_spruce", "glitch_acacia", "glitch_pale_oak", "glitch_giant_spruce", "glitch_warped_fungus", "glitch_crimson_fungus", "glitch_fountain", "garden_chest", "glitch_poppy", "glitch_dandelion", "glitch_rose_bush"
         ];
 
         for (let i = 0; i < 175; i++) {

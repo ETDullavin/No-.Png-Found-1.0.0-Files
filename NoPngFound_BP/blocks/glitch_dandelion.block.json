@@ -1,0 +1,81 @@
+{
+    "format_version": "1.21.100",
+    "minecraft:block": {
+        "description": {
+            "identifier": "no_png:glitch_dandelion",
+            "menu_category": {
+                "category": "nature",
+                "group": "minecraft:itemGroup.name.flower"
+            }
+        },
+        "components": {
+            "minecraft:collision_box": false,
+            "minecraft:selection_box": {
+                "origin": [
+                    -4,
+                    0,
+                    -4
+                ],
+                "size": [
+                    8,
+                    8,
+                    8
+                ]
+            },
+            "minecraft:destructible_by_mining": {
+                "seconds_to_destroy": 0
+            },
+            "minecraft:destructible_by_explosion": {
+                "explosion_resistance": 0
+            },
+            "minecraft:geometry": "geometry.glitch_poppy",
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "glitch_dandelion",
+                    "render_method": "alpha_test",
+                    "face_dimming": false,
+                    "ambient_occlusion": false
+                }
+            },
+            "minecraft:light_dampening": 0,
+            "minecraft:map_color": "#f800f8",
+            "minecraft:loot": "loot_tables/blocks/glitch_poppy.json",
+            "minecraft:random_offset": {
+                "x": {
+                    "range": {
+                        "min": -5,
+                        "max": 5
+                    },
+                    "steps": 10
+                },
+                "z": {
+                    "range": {
+                        "min": -5,
+                        "max": 5
+                    },
+                    "steps": 10
+                }
+            },
+            "minecraft:liquid_detection": {
+                "detection_rules": [
+                    {
+                        "liquid_type": "water",
+                        "on_liquid_touches": "popped"
+                    }
+                ]
+            },
+            "minecraft:placement_filter": {
+                "conditions": [
+                    {
+                        "allowed_faces": [
+                            "up"
+                        ],
+                        "block_filter": [
+                            "no_png:missingtexture_block"
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

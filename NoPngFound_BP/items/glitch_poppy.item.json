@@ -1,0 +1,18 @@
+{
+    "format_version": "1.21.100",
+    "minecraft:item": {
+        "description": {
+            "identifier": "no_png:glitch_poppy",
+            "menu_category": {
+                "category": "nature",
+                "group": "minecraft:itemGroup.name.flower"
+            }
+        },
+        "components": {
+            "minecraft:icon": "glitch_poppy",
+            "minecraft:block_placer": {
+                "block": "no_png:glitch_poppy"
+            }
+        }
+    }
+}

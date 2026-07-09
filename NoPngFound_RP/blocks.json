@@ -1,5 +1,17 @@
 {
 	"format_version": "1.21.0",
+	"no_png:glitch_poppy": {
+		"sound": "stone"
+	},
+	"no_png:glitch_dandelion": {
+		"sound": "stone"
+	},
+	"no_png:glitch_rose_bush": {
+		"sound": "stone"
+	},
+	"no_png:glitch_rose_bush_top": {
+		"sound": "stone"
+	},
 	"no_png:burnt_out_torch": {
 		"sound": "wood"
 	},

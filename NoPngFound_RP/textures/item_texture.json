@@ -13,6 +13,15 @@
 		},
 		"overworld_compass": {
 			"textures": "textures/items/overworld_compass"
+		},
+		"glitch_poppy": {
+			"textures": "textures/blocks/glitch_poppy"
+		},
+		"glitch_dandelion": {
+			"textures": "textures/blocks/glitch_dandelion"
+		},
+		"glitch_rose_bush": {
+			"textures": "textures/blocks/glitch_rose_bush_top"
 		}
 	}
 }
