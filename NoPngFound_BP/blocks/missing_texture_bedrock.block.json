@@ -1,0 +1,25 @@
+{
+    "format_version": "1.21.100",
+    "minecraft:block": {
+        "description": {
+            "identifier": "no_png:missing_texture_bedrock"
+        },
+        "components": {
+            "minecraft:collision_box": true,
+            "minecraft:selection_box": true,
+            "minecraft:destructible_by_mining": false,
+            "minecraft:destructible_by_explosion": {
+                "explosion_resistance": 3600000
+            },
+            "minecraft:geometry": "geometry.missingtexture_block",
+            "minecraft:material_instances": {
+                "*": {
+                    "texture": "missingtexture_block",
+                    "render_method": "alpha_test"
+                }
+            },
+            "minecraft:map_color": "#f500ff",
+            "minecraft:loot": "loot_tables/blocks/missingtexture_block.json"
+        }
+    }
+}
