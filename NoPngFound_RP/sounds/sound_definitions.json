@@ -20,6 +20,56 @@
                     "attenuation_distance": 16
                 }
             ]
+        },
+        "mob.corruption.agitated": {
+            "category": "mob",
+            "sounds": [
+                {
+                    "name": "sounds/corruption_agitated",
+                    "volume": 7.5,
+                    "attenuation_distance": 16
+                }
+            ]
+        },
+        "mob.corruption.idle": {
+            "category": "mob",
+            "sounds": [
+                {
+                    "name": "sounds/corruption_idle",
+                    "volume": 5,
+                    "attenuation_distance": 16
+                }
+            ]
+        },
+        "mob.corruption.heartbeat": {
+            "category": "mob",
+            "sounds": [
+                {
+                    "name": "sounds/corruption_heartbeat",
+                    "volume": 12.5,
+                    "attenuation_distance": 16
+                }
+            ]
+        },
+        "mob.corruption.hurt": {
+            "category": "mob",
+            "sounds": [
+                {
+                    "name": "sounds/corruption_hurt",
+                    "volume": 2.5,
+                    "attenuation_distance": 16
+                }
+            ]
+        },
+        "mob.corruption.roar": {
+            "category": "mob",
+            "sounds": [
+                {
+                    "name": "sounds/corruption_roar",
+                    "volume": 10,
+                    "attenuation_distance": 16
+                }
+            ]
         }
     }
 }

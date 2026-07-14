@@ -4,64 +4,91 @@
 			"no_png:corruption": {
 				"events": {
 					"agitated": {
-						"pitch": [0.8, 1.2],
-						"sound": "mob.warden.agitated",
+						"pitch": [
+							0.5,
+							1.2
+						],
+						"sound": "mob.corruption.agitated",
 						"volume": 10
 					},
-					"ambient": "mob.warden.idle",
+					"ambient": "mob.corruption.idle",
 					"angry": {
-						"pitch": [0.8, 1.2],
-						"sound": "mob.warden.angry",
+						"pitch": [
+							0.5,
+							1.2
+						],
+						"sound": "mob.corruption.agitated",
 						"volume": 10
 					},
 					"attack": {
 						"pitch": 1,
-						"sound": "mob.warden.attack",
+						"sound": "mob.dont_look.hit",
 						"volume": 10
 					},
 					"death": {
-						"pitch": [0.8, 1],
-						"sound": "mob.warden.death",
+						"pitch": [
+							0.8,
+							1
+						],
+						"sound": "mob.dont_look.stare",
 						"volume": 1
 					},
 					"heartbeat": {
 						"pitch": 1,
-						"sound": "mob.warden.heartbeat",
+						"sound": "mob.corruption.heartbeat",
 						"volume": 5
 					},
 					"hurt": {
-						"pitch": [0.8, 1],
-						"sound": "mob.warden.hurt",
+						"pitch": [
+							0.8,
+							1
+						],
+						"sound": "mob.corruption.hurt",
 						"volume": 1
 					},
 					"listening": {
-						"pitch": [0.8, 1.2],
-						"sound": "mob.warden.listening",
+						"pitch": [
+							0.8,
+							1.2
+						],
+						"sound": "mob.corruption.agitated",
 						"volume": 10
 					},
 					"listening_angry": {
-						"pitch": [0.8, 1.2],
-						"sound": "mob.warden.listening_angry",
+						"pitch": [
+							0.8,
+							1.2
+						],
+						"sound": "mob.corruption.agitated",
 						"volume": 10
 					},
 					"nearby_close": {
-						"pitch": [0.8, 1.2],
-						"sound": "mob.warden.nearby_close",
+						"pitch": [
+							0.8,
+							1.2
+						],
+						"sound": "mob.corruption.heartbeat",
 						"volume": 5
 					},
 					"nearby_closer": {
-						"pitch": [0.8, 1.2],
-						"sound": "mob.warden.nearby_closer",
+						"pitch": [
+							0.8,
+							1.2
+						],
+						"sound": "mob.corruption.heartbeat",
 						"volume": 5
 					},
 					"nearby_closest": {
-						"pitch": [0.8, 1.2],
-						"sound": "mob.warden.nearby_closest",
+						"pitch": [
+							0.8,
+							1.2
+						],
+						"sound": "mob.corruption.heartbeat",
 						"volume": 5
 					},
 					"roar": {
 						"pitch": 1,
-						"sound": "mob.warden.roar",
+						"sound": "mob.corruption.roar",
 						"volume": 10
 					},
 					"step": {
@@ -70,7 +97,10 @@
 						"volume": 10
 					}
 				},
-				"pitch": [0.8, 1.2],
+				"pitch": [
+					0.8,
+					1.2
+				],
 				"volume": 1
 			},
 			"no_png:die_entity": {
@@ -79,12 +109,18 @@
 					"death": "mob.mob.dont_look.stare",
 					"hurt": "mob.dont_look.hit",
 					"step": {
-						"pitch": [0.9, 1.1],
+						"pitch": [
+							0.9,
+							1.1
+						],
 						"sound": "mob.spider.step",
 						"volume": 0.35
 					}
 				},
-				"pitch": [0.8, 1.2],
+				"pitch": [
+					0.8,
+					1.2
+				],
 				"volume": 1
 			},
 			"no_png:player_entity": {
@@ -92,7 +128,10 @@
 					"death": "game.player.hurt",
 					"hurt": "game.player.hurt"
 				},
-				"pitch": [0.8, 1.2],
+				"pitch": [
+					0.8,
+					1.2
+				],
 				"volume": 1
 			},
 			"no_png:active_herobrine": {
@@ -100,7 +139,10 @@
 					"death": "mob.dont_look.hit",
 					"hurt": "game.player.hurt"
 				},
-				"pitch": [0.8, 1.2],
+				"pitch": [
+					0.8,
+					1.2
+				],
 				"volume": 1
 			},
 			"no_png:pig_no_texture": {
@@ -111,7 +153,10 @@
 						"volume": 0.2
 					}
 				},
-				"pitch": [0.8, 1.2],
+				"pitch": [
+					0.8,
+					1.2
+				],
 				"volume": 1
 			},
 			"no_png:sheep_no_texture": {
@@ -122,18 +167,27 @@
 						"volume": 0.4
 					}
 				},
-				"pitch": [0.8, 1.2],
+				"pitch": [
+					0.8,
+					1.2
+				],
 				"volume": 1
 			},
 			"no_png:cow_no_texture": {
 				"events": {
 					"step": {
-						"pitch": [0.9, 1.1],
+						"pitch": [
+							0.9,
+							1.1
+						],
 						"sound": "mob.cow.step",
 						"volume": 0.65
 					}
 				},
-				"pitch": [0.8, 1.2],
+				"pitch": [
+					0.8,
+					1.2
+				],
 				"volume": 1
 			},
 			"no_png:dont_look_at_me": {
@@ -148,7 +202,10 @@
 						"volume": 100
 					}
 				},
-				"pitch": [0.8, 1.2],
+				"pitch": [
+					0.8,
+					1.2
+				],
 				"volume": 1
 			},
 			"no_png:dont_look_at_me_pig": {
@@ -167,7 +224,10 @@
 						"volume": 100
 					}
 				},
-				"pitch": [0.8, 1.2],
+				"pitch": [
+					0.8,
+					1.2
+				],
 				"volume": 1
 			},
 			"no_png:dont_look_at_me_cow": {
@@ -182,7 +242,10 @@
 						"volume": 100
 					}
 				},
-				"pitch": [0.8, 1.2],
+				"pitch": [
+					0.8,
+					1.2
+				],
 				"volume": 1
 			},
 			"no_png:dont_look_at_me_sheep": {
@@ -197,7 +260,10 @@
 						"volume": 100
 					}
 				},
-				"pitch": [0.8, 1.2],
+				"pitch": [
+					0.8,
+					1.2
+				],
 				"volume": 1
 			},
 			"no_png:chicken_no_texture": {
@@ -208,7 +274,10 @@
 						"volume": 0.25
 					}
 				},
-				"pitch": [0.8, 1.2],
+				"pitch": [
+					0.8,
+					1.2
+				],
 				"volume": 1
 			}
 		}

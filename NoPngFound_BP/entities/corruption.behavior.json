@@ -166,7 +166,7 @@
 			},
 			"minecraft:behavior.melee_attack": {
 				"priority": 4,
-				"speed_multiplier": 2.5,
+				"speed_multiplier": 3.5,
 				"melee_fov": 360
 			},
 			"minecraft:behavior.investigate_suspicious_location": {

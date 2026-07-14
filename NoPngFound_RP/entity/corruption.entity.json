@@ -102,10 +102,10 @@
 			"enable_attachables": true,
 			"sound_effects": {
 				"emerge": "mob.warden.emerge",
-				"sniff": "mob.warden.sniff",
+				"sniff": "mob.corruption.roar",
 				"dig": "mob.warden.dig",
-				"roar": "mob.warden.roar",
-				"clicking": "mob.warden.clicking"
+				"roar": "mob.corruption.roar",
+				"clicking": "mob.corruption.heartbeat"
 			},
 			"particle_effects": {
 				"digging": "minecraft:warden_dig"
