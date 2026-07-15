@@ -1,0 +1,32 @@
+{
+    "format_version": "1.21.100",
+    "minecraft:template_pool": {
+        "description": {
+            "identifier": "no_png:glitch_mineshaft"
+        },
+        "elements": [
+            {
+                "element": {
+                    "element_type": "minecraft:single_pool_element",
+                    "location": "no_png:glitch_mineshaft"
+                },
+                "weight": 4
+            },
+            {
+                "element": {
+                    "element_type": "minecraft:single_pool_element",
+                    "location": "no_png:glitch_mineshafttunnel1"
+                },
+                "weight": 5
+            },
+            {
+                "element": {
+                    "element_type": "minecraft:single_pool_element",
+                    "location": "no_png:glitch_mineshafttunnel2"
+                },
+                "weight": 8
+            }
+        ],
+        "fallback": "no_png:glitch_mineshaft"
+    }
+}

@@ -1,5 +1,6 @@
 // --- CONFIGURATION TOGGLES ---
 const test = true; // Set to true to show debug/test chat messages, false to mute them
+const events = false; // Set to false to disable random events and glitching
 
 import {
     world,
@@ -185,7 +186,7 @@ const Color = {
 
 const THE_GARDEN_ID = "no_png:the_garden";
 const SKY_BLOCK_ID = "no_png:sky_block";
-const ENDLESS_RUNNER_ID = "custom_dim:endless_runner";
+const MINESHAFT_ID = "no_png:mineshaft";
 
 const PLATFORMS = [
     { dimensionId: THE_GARDEN_ID, blockId: "no_png:missingtexture_block", radius: 32, center: { x: 0, y: 64, z: 0 } },
@@ -203,13 +204,14 @@ const PLATFORMS = [
                 size: { x: 3, y: 3, z: 3 }
             }
         ]
-    }
+    },
+    { dimensionId: MINESHAFT_ID, blockId: "minecraft:stone", radius: 32, center: { x: 0, y: 64, z: 0 } }
 ];
 
 var DIMENSIONS = [
     { label: `${Color.pink}The Garden ${Color.darkGray}(Garden of Glitch Trees)${Color.reset}`, id: THE_GARDEN_ID, spawn: { x: 0, y: 66, z: 0 } },
     { label: `${Color.pink}Sky Block ${Color.darkGray}(Glitch Sky Block)${Color.reset}`, id: SKY_BLOCK_ID, spawn: { x: 0, y: 65, z: -1 } },
-    { label: `${Color.yellow}Endless Runner ${Color.darkGray}(sprint & survive!)${Color.reset}`, id: ENDLESS_RUNNER_ID, spawn: { x: 0, y: 66, z: 0 } },
+    { label: `${Color.pink}Mineshafts ${Color.darkGray}(A sprawling mineshaft)${Color.reset}`, id: MINESHAFT_ID, spawn: { x: 0, y: 66, z: 0 } },
     { label: `${Color.green}Overworld${Color.reset}`, id: "minecraft:overworld", spawn: { x: 0, y: 64, z: 0 } },
     { label: `${Color.darkRed}The Nether${Color.reset}`, id: "minecraft:nether", spawn: { x: 0, y: 64, z: 0 } },
     { label: `${Color.purple}The End${Color.reset}`, id: "minecraft:the_end", spawn: { x: 0, y: 64, z: 0 } },
@@ -221,7 +223,7 @@ const builtDimensions = new Set();
 system.beforeEvents.startup.subscribe((event) => {
     event.dimensionRegistry.registerCustomDimension(THE_GARDEN_ID);
     event.dimensionRegistry.registerCustomDimension(SKY_BLOCK_ID);
-    event.dimensionRegistry.registerCustomDimension(ENDLESS_RUNNER_ID);
+    event.dimensionRegistry.registerCustomDimension(MINESHAFT_ID);
 
     event.customCommandRegistry.registerCommand(
         {
@@ -281,6 +283,9 @@ function isAreaAir(dimension, startPos, width, height, depth) {
 
 // --- GLITCH & SCARY MECHANICS ---
 world.afterEvents.playerInteractWithBlock.subscribe((event) => {
+
+    if (!events) return;
+
     const { player, block } = event;
     const blockId = block.typeId;
     const { dimension, location } = block;
@@ -587,6 +592,9 @@ const randomEvents = [
 ];
 
 function eventDirector() {
+
+    if (!events) return;
+
     sendTestMessage("Event started/reset!");
 
     system.runTimeout(() => {
@@ -835,6 +843,10 @@ async function ensurePlatformBuilt(config) {
         world.structureManager.place("sky_block_chest", dim, { x: config.center.x, y: config.center.y + 3, z: config.center.z });
     }
 
+    if (config.dimensionId === MINESHAFT_ID) {
+        world.structureManager.place("glitch_oak", dim, { x: config.center.x - 2, y: config.center.y + 3, z: config.center.z - 1 });
+    }
+
     world.tickingAreaManager.removeTickingArea(tickingAreaId);
 
     // 3. Mark as built in BOTH memory and persistent world storage
@@ -955,12 +967,14 @@ async function teleportToCustomDimension(player, destination) {
     const tickingAreaId = `${destination.id}_teleport`;
     const spawn = destination.spawn;
 
+    const loadRange = (destination.id === "no_png:mineshaft") ? 16 : 4;
+
     player.sendMessage(`${Color.yellow}Loading ${destination.label}${Color.yellow}...`);
 
     await world.tickingAreaManager.createTickingArea(tickingAreaId, {
         dimension: dim,
-        from: { x: spawn.x - 4, y: spawn.y - 4, z: spawn.z - 4 },
-        to: { x: spawn.x + 4, y: spawn.y + 4, z: spawn.z + 4 },
+        from: { x: spawn.x - loadRange, y: spawn.y - loadRange, z: spawn.z - loadRange },
+        to: { x: spawn.x + loadRange, y: spawn.y + loadRange, z: spawn.z + loadRange },
     });
 
     const config = PLATFORMS.find((platform) => platform.dimensionId === destination.id);
@@ -969,6 +983,4 @@ async function teleportToCustomDimension(player, destination) {
     player.teleport(spawn, { dimension: dim });
     player.sendMessage(`${Color.green}Teleported to ${destination.label}${Color.green}!`);
     world.tickingAreaManager.removeTickingArea(tickingAreaId);
-
-    if (destination.id === ENDLESS_RUNNER_ID) startRunner(player);
 }
