@@ -17,11 +17,35 @@
                 "weight": 1
             },
             {
+                "structure": "no_png:glitch_mineshaft2",
+                "weight": 1
+            },
+            {
                 "structure": "no_png:glitch_mineshafttunnel1",
                 "weight": 1
             },
             {
                 "structure": "no_png:glitch_mineshafttunnel2",
+                "weight": 1
+            },
+            {
+                "structure": "no_png:glitch_mineshafttunnel3",
+                "weight": 1
+            },
+            {
+                "structure": "no_png:glitch_mineshafttunnel4",
+                "weight": 1
+            },
+            {
+                "structure": "no_png:glitch_mineshafttunnel5",
+                "weight": 1
+            },
+            {
+                "structure": "no_png:glitch_mineshafttunnel6",
+                "weight": 1
+            },
+            {
+                "structure": "no_png:glitch_mineshafttunnel7",
                 "weight": 1
             }
         ]

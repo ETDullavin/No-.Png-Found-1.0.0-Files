@@ -15,16 +15,58 @@
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
+                    "location": "no_png:glitch_mineshaft2"
+                },
+                "weight": 4
+            },
+            {
+                "element": {
+                    "element_type": "minecraft:single_pool_element",
                     "location": "no_png:glitch_mineshafttunnel1"
                 },
-                "weight": 5
+                "weight": 2
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
                     "location": "no_png:glitch_mineshafttunnel2"
                 },
-                "weight": 8
+                "weight": 10
+            },
+            {
+                "element": {
+                    "element_type": "minecraft:single_pool_element",
+                    "location": "no_png:glitch_mineshafttunnel3"
+                },
+                "weight": 10
+            },
+            {
+                "element": {
+                    "element_type": "minecraft:single_pool_element",
+                    "location": "no_png:glitch_mineshafttunnel4"
+                },
+                "weight": 10
+            },
+            {
+                "element": {
+                    "element_type": "minecraft:single_pool_element",
+                    "location": "no_png:glitch_mineshafttunnel5"
+                },
+                "weight": 1
+            },
+            {
+                "element": {
+                    "element_type": "minecraft:single_pool_element",
+                    "location": "no_png:glitch_mineshafttunnel6"
+                },
+                "weight": 1
+            },
+            {
+                "element": {
+                    "element_type": "minecraft:single_pool_element",
+                    "location": "no_png:glitch_mineshafttunnel7"
+                },
+                "weight": 1
             }
         ],
         "fallback": "no_png:glitch_mineshaft"

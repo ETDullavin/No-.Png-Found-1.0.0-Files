@@ -205,7 +205,7 @@ const PLATFORMS = [
             }
         ]
     },
-    { dimensionId: MINESHAFT_ID, blockId: "minecraft:stone", radius: 32, center: { x: 0, y: 64, z: 0 } }
+    { dimensionId: MINESHAFT_ID, blockId: "minecraft:stone", radius: 32, center: { x: 0, y: 32, z: 0 } }
 ];
 
 var DIMENSIONS = [
@@ -248,9 +248,7 @@ system.beforeEvents.startup.subscribe((event) => {
 });
 
 world.afterEvents.worldLoad.subscribe(() => {
-    for (const platform of PLATFORMS) {
-        ensurePlatformBuilt(platform);
-    }
+
 
     // START EVENT DIRECTOR AFTER WORLD IS LOADED
     eventDirector();
@@ -844,7 +842,28 @@ async function ensurePlatformBuilt(config) {
     }
 
     if (config.dimensionId === MINESHAFT_ID) {
-        world.structureManager.place("glitch_oak", dim, { x: config.center.x - 2, y: config.center.y + 3, z: config.center.z - 1 });
+        const { x, y, z } = config.center;
+
+        system.runTimeout(() => {
+            try {
+                // Using runCommand to send messages via /tellraw
+                dim.runCommand(`tellraw @a {"rawtext":[{"text":"§a[INFO]§r The Mineshaft dimension is now loaded!"}]}`);
+
+                dim.runCommand(`place jigsaw no_png:glitch_mineshaft no_png:glitch_mineshaft 10 ~ ~-2 ~ false`);
+
+                // Perform the command to generate the structure
+                // Note: The structure name must match your registered jigsaw structure
+                const result = dim.runCommand(`place structure your_jigsaw_name ${x} ${y} ${z}`);
+
+                if (result.successCount > 0) {
+                    dim.runCommand(`tellraw @a {"rawtext":[{"text":"§a[SUCCESS]§r Mineshaft jigsaw generated!"}]}`);
+                } else {
+                    dim.runCommand(`tellraw @a {"rawtext":[{"text":"§4[WARNING]§r Jigsaw failed. Ensure coordinates ${x} ${y} ${z} are clear."}]}`);
+                }
+            } catch (error) {
+                console.warn(`[JIGSAW ERROR] ${error}`);
+            }
+        }, 5);
     }
 
     world.tickingAreaManager.removeTickingArea(tickingAreaId);
@@ -967,7 +986,8 @@ async function teleportToCustomDimension(player, destination) {
     const tickingAreaId = `${destination.id}_teleport`;
     const spawn = destination.spawn;
 
-    const loadRange = (destination.id === "no_png:mineshaft") ? 16 : 4;
+    // Increase the load range to 128 to ensure the engine has enough buffer space
+    const loadRange = (destination.id === "no_png:mineshaft") ? 128 : 4;
 
     player.sendMessage(`${Color.yellow}Loading ${destination.label}${Color.yellow}...`);
 
