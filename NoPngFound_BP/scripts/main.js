@@ -205,13 +205,13 @@ const PLATFORMS = [
             }
         ]
     },
-    { dimensionId: MINESHAFT_ID, blockId: "minecraft:stone", radius: 32, center: { x: 0, y: 32, z: 0 } }
+    { dimensionId: MINESHAFT_ID, blockId: "minecraft:stone", radius: 1, center: { x: 0, y: 32, z: 0 } }
 ];
 
 var DIMENSIONS = [
     { label: `${Color.pink}The Garden ${Color.darkGray}(Garden of Glitch Trees)${Color.reset}`, id: THE_GARDEN_ID, spawn: { x: 0, y: 66, z: 0 } },
     { label: `${Color.pink}Sky Block ${Color.darkGray}(Glitch Sky Block)${Color.reset}`, id: SKY_BLOCK_ID, spawn: { x: 0, y: 65, z: -1 } },
-    { label: `${Color.pink}Mineshafts ${Color.darkGray}(A sprawling mineshaft)${Color.reset}`, id: MINESHAFT_ID, spawn: { x: 0, y: 66, z: 0 } },
+    { label: `${Color.pink}Mineshafts ${Color.darkGray}(A sprawling mineshaft)${Color.reset}`, id: MINESHAFT_ID, spawn: { x: 0, y: 35, z: 0 } },
     { label: `${Color.green}Overworld${Color.reset}`, id: "minecraft:overworld", spawn: { x: 0, y: 64, z: 0 } },
     { label: `${Color.darkRed}The Nether${Color.reset}`, id: "minecraft:nether", spawn: { x: 0, y: 64, z: 0 } },
     { label: `${Color.purple}The End${Color.reset}`, id: "minecraft:the_end", spawn: { x: 0, y: 64, z: 0 } },
@@ -792,7 +792,7 @@ world.afterEvents.entityDie.subscribe((event) => {
 
 
 // --- DIMENSION TRAVEL LOGIC ---
-async function ensurePlatformBuilt(config) {
+async function ensurePlatformBuilt(config, player) { // Added player here
     // 1. Check persistent world storage first
     const propertyKey = `built_${config.dimensionId}`;
     const hasBeenBuilt = world.getDynamicProperty(propertyKey);
@@ -841,29 +841,34 @@ async function ensurePlatformBuilt(config) {
         world.structureManager.place("sky_block_chest", dim, { x: config.center.x, y: config.center.y + 3, z: config.center.z });
     }
 
+
     if (config.dimensionId === MINESHAFT_ID) {
-        const { x, y, z } = config.center;
+        if (config.dimensionId === MINESHAFT_ID) {
+            const location = {
+                x: Math.floor(config.center.x - 3),
+                y: Math.floor(config.center.y),
+                z: Math.floor(config.center.z - 3)
+            };
 
-        system.runTimeout(() => {
             try {
-                // Using runCommand to send messages via /tellraw
-                dim.runCommand(`tellraw @a {"rawtext":[{"text":"§a[INFO]§r The Mineshaft dimension is now loaded!"}]}`);
+                const bounds = world.structureManager.placeJigsawStructure(
+                    "no_png:glitch_mineshaft",
+                    dim,
+                    location,
+                    {
+                        ignoreStartHeight: true,
+                        maxAttempts: 10
+                    }
+                );
 
-                dim.runCommand(`place jigsaw no_png:glitch_mineshaft no_png:glitch_mineshaft 10 ~ ~-2 ~ false`);
+                player.sendMessage(`§aSuccessfully placed jigsaw structure!`);
+                player.sendMessage(`§7Bounds: Min(${bounds.min.x}, ${bounds.min.y}, ${bounds.min.z}) Max(${bounds.max.x}, ${bounds.max.y}, ${bounds.max.z})`);
 
-                // Perform the command to generate the structure
-                // Note: The structure name must match your registered jigsaw structure
-                const result = dim.runCommand(`place structure your_jigsaw_name ${x} ${y} ${z}`);
-
-                if (result.successCount > 0) {
-                    dim.runCommand(`tellraw @a {"rawtext":[{"text":"§a[SUCCESS]§r Mineshaft jigsaw generated!"}]}`);
-                } else {
-                    dim.runCommand(`tellraw @a {"rawtext":[{"text":"§4[WARNING]§r Jigsaw failed. Ensure coordinates ${x} ${y} ${z} are clear."}]}`);
-                }
             } catch (error) {
-                console.warn(`[JIGSAW ERROR] ${error}`);
+                player.sendMessage(`§4Failed to place structure: ${error}`);
+                console.warn(`[Jigsaw Error] ${error}`);
             }
-        }, 5);
+        }
     }
 
     world.tickingAreaManager.removeTickingArea(tickingAreaId);
@@ -998,7 +1003,7 @@ async function teleportToCustomDimension(player, destination) {
     });
 
     const config = PLATFORMS.find((platform) => platform.dimensionId === destination.id);
-    if (config) await ensurePlatformBuilt(config);
+    if (config) await ensurePlatformBuilt(config, player);
 
     player.teleport(spawn, { dimension: dim });
     player.sendMessage(`${Color.green}Teleported to ${destination.label}${Color.green}!`);
