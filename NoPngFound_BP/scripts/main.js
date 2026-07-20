@@ -845,9 +845,9 @@ async function ensurePlatformBuilt(config, player) { // Added player here
     if (config.dimensionId === MINESHAFT_ID) {
         if (config.dimensionId === MINESHAFT_ID) {
             const location = {
-                x: Math.floor(config.center.x - 3),
+                x: Math.floor(config.center.x),
                 y: Math.floor(config.center.y),
-                z: Math.floor(config.center.z - 3)
+                z: Math.floor(config.center.z)
             };
 
             try {
@@ -986,10 +986,51 @@ function showDimensionMenu(player) {
     });
 }
 
+// --- ASYNC BLOCK SEARCH UTILITY ---
+function findSpawnBlockAsync(dim, center) {
+    return new Promise((resolve) => {
+        const iterator = (function* () {
+            let blocksChecked = 0;
+
+            const searchRadius = 32;
+
+            // Loop through the radius around the center coordinates
+            for (let x = center.x - searchRadius; x <= center.x + searchRadius; x++) {
+                for (let z = center.z - searchRadius; z <= center.z + searchRadius; z++) {
+                    for (let y = center.y - searchRadius; y <= center.y + searchRadius; y++) {
+                        try {
+                            const block = dim.getBlock({ x, y, z });
+                            if (block && block.typeId === "no_png:spawn_block") {
+                                // If found, return coordinates exactly 1 block above the center of it
+                                resolve({ x: x + 0.5, y: y + 1, z: z + 0.5 });
+                                return;
+                            }
+                        } catch (e) {
+                            // Safely ignore unloaded chunks outside the ticking area
+                        }
+
+                        blocksChecked++;
+                        // Yield execution every 3000 blocks to prevent watchdog crashes
+                        if (blocksChecked >= 3000) {
+                            blocksChecked = 0;
+                            yield;
+                        }
+                    }
+                }
+            }
+            resolve(null); // Return null if the block is entirely missing
+        })();
+
+        system.runJob(iterator);
+    });
+}
+
 async function teleportToCustomDimension(player, destination) {
     const dim = world.getDimension(destination.id);
     const tickingAreaId = `${destination.id}_teleport`;
-    const spawn = destination.spawn;
+
+    // Changed from a constant to a let variable so we can overwrite it if the spawn block is found
+    let targetSpawn = destination.spawn;
 
     // Increase the load range to 128 to ensure the engine has enough buffer space
     const loadRange = (destination.id === "no_png:mineshaft") ? 128 : 4;
@@ -998,14 +1039,31 @@ async function teleportToCustomDimension(player, destination) {
 
     await world.tickingAreaManager.createTickingArea(tickingAreaId, {
         dimension: dim,
-        from: { x: spawn.x - loadRange, y: spawn.y - loadRange, z: spawn.z - loadRange },
-        to: { x: spawn.x + loadRange, y: spawn.y + loadRange, z: spawn.z + loadRange },
+        from: { x: targetSpawn.x - loadRange, y: targetSpawn.y - loadRange, z: targetSpawn.z - loadRange },
+        to: { x: targetSpawn.x + loadRange, y: targetSpawn.y + loadRange, z: targetSpawn.z + loadRange },
     });
 
     const config = PLATFORMS.find((platform) => platform.dimensionId === destination.id);
     if (config) await ensurePlatformBuilt(config, player);
 
-    player.teleport(spawn, { dimension: dim });
+    // --- NEW: Check for spawn block specifically in the Mineshaft ---
+    if (destination.id === MINESHAFT_ID) {
+        player.sendMessage(`${Color.yellow}Scanning for safe spawn point...`);
+
+        // Searches a 128x128 area around the dimension's default center, from Y=10 to Y=60
+        // You can increase the radius (64) or Y bounds (10, 60) if your jigsaw generation is larger
+        const foundSpawn = await findSpawnBlockAsync(dim, targetSpawn);
+
+        if (foundSpawn) {
+            targetSpawn = foundSpawn; // Overwrite default spawn with the found block's coordinates
+        } else {
+            player.sendMessage(`${Color.red}Spawn block not found, defaulting to fallback coordinates.`);
+        }
+    }
+
+    // Teleport the player to the newly determined coordinates
+    player.teleport(targetSpawn, { dimension: dim });
     player.sendMessage(`${Color.green}Teleported to ${destination.label}${Color.green}!`);
+
     world.tickingAreaManager.removeTickingArea(tickingAreaId);
 }
