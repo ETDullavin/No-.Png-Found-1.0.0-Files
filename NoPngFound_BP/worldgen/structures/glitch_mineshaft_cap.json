@@ -2,7 +2,7 @@
     "format_version": "1.21.100",
     "minecraft:jigsaw": {
         "description": {
-            "identifier": "no_png:glitch_mineshaft_wall"
+            "identifier": "no_png:glitch_mineshaft_cap"
         },
         "step": "surface_structures",
         "terrain_adaptation": "none",
