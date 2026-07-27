@@ -69,6 +69,6 @@
                 "weight": 1
             }
         ],
-        "fallback": "no_png:glitch_mineshaft"
+        "fallback": "no_png:glitch_mineshaft_cap_pool"
     }
 }

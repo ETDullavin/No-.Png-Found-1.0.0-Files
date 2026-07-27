@@ -152,7 +152,7 @@ world.afterEvents.entityHurt.subscribe((event) => {
 
         // Check if the attacker exists and is the specific mob type
         if (attacker && attacker.typeId === "no_png:corruption") {
-            const targetDimension = [THE_GARDEN_ID, SKY_BLOCK_ID];
+            const targetDimension = [THE_GARDEN_ID, SKY_BLOCK_ID, MINESHAFT_ID];
             const randomDimension = targetDimension[Math.floor(Math.random() * Object.keys(targetDimension).length)];
             const skyBlockDestination = DIMENSIONS.find(d => d.id === randomDimension);
 
@@ -842,34 +842,34 @@ async function ensurePlatformBuilt(config, player) { // Added player here
     }
 
 
+
     if (config.dimensionId === MINESHAFT_ID) {
-        if (config.dimensionId === MINESHAFT_ID) {
-            const location = {
-                x: Math.floor(config.center.x),
-                y: Math.floor(config.center.y),
-                z: Math.floor(config.center.z)
-            };
+        const location = {
+            x: Math.floor(config.center.x),
+            y: Math.floor(config.center.y),
+            z: Math.floor(config.center.z)
+        };
 
-            try {
-                const bounds = world.structureManager.placeJigsawStructure(
-                    "no_png:glitch_mineshaft",
-                    dim,
-                    location,
-                    {
-                        ignoreStartHeight: true,
-                        maxAttempts: 10
-                    }
-                );
+        try {
+            const bounds = world.structureManager.placeJigsawStructure(
+                "no_png:glitch_mineshaft",
+                dim,
+                location,
+                {
+                    ignoreStartHeight: true,
+                    maxAttempts: 10
+                }
+            );
 
-                player.sendMessage(`§aSuccessfully placed jigsaw structure!`);
-                player.sendMessage(`§7Bounds: Min(${bounds.min.x}, ${bounds.min.y}, ${bounds.min.z}) Max(${bounds.max.x}, ${bounds.max.y}, ${bounds.max.z})`);
+            player.sendMessage(`§aSuccessfully placed jigsaw structure!`);
+            player.sendMessage(`§7Bounds: Min(${bounds.min.x}, ${bounds.min.y}, ${bounds.min.z}) Max(${bounds.max.x}, ${bounds.max.y}, ${bounds.max.z})`);
 
-            } catch (error) {
-                player.sendMessage(`§4Failed to place structure: ${error}`);
-                console.warn(`[Jigsaw Error] ${error}`);
-            }
+        } catch (error) {
+            player.sendMessage(`§4Failed to place structure: ${error}`);
+            console.warn(`[Jigsaw Error] ${error}`);
         }
     }
+
 
     world.tickingAreaManager.removeTickingArea(tickingAreaId);
 
