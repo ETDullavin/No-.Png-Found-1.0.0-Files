@@ -205,13 +205,13 @@ const PLATFORMS = [
             }
         ]
     },
-    { dimensionId: MINESHAFT_ID, blockId: "minecraft:stone", radius: 1, center: { x: 0, y: 32, z: 0 } }
+    { dimensionId: MINESHAFT_ID, blockId: "minecraft:stone", radius: 1, center: { x: 0, y: 0, z: 0 } }
 ];
 
 var DIMENSIONS = [
     { label: `${Color.pink}The Garden ${Color.darkGray}(Garden of Glitch Trees)${Color.reset}`, id: THE_GARDEN_ID, spawn: { x: 0, y: 66, z: 0 } },
     { label: `${Color.pink}Sky Block ${Color.darkGray}(Glitch Sky Block)${Color.reset}`, id: SKY_BLOCK_ID, spawn: { x: 0, y: 65, z: -1 } },
-    { label: `${Color.pink}Mineshafts ${Color.darkGray}(A sprawling mineshaft)${Color.reset}`, id: MINESHAFT_ID, spawn: { x: 0, y: 35, z: 0 } },
+    { label: `${Color.pink}Mineshafts ${Color.darkGray}(A sprawling mineshaft)${Color.reset}`, id: MINESHAFT_ID, spawn: { x: 0, y: 0, z: 0 } },
     { label: `${Color.green}Overworld${Color.reset}`, id: "minecraft:overworld", spawn: { x: 0, y: 64, z: 0 } },
     { label: `${Color.darkRed}The Nether${Color.reset}`, id: "minecraft:nether", spawn: { x: 0, y: 64, z: 0 } },
     { label: `${Color.purple}The End${Color.reset}`, id: "minecraft:the_end", spawn: { x: 0, y: 64, z: 0 } },
@@ -845,20 +845,18 @@ async function ensurePlatformBuilt(config, player) { // Added player here
 
     if (config.dimensionId === MINESHAFT_ID) {
         const location = {
-            x: Math.floor(config.center.x),
-            y: Math.floor(config.center.y),
-            z: Math.floor(config.center.z)
+            x: 3,
+            y: 0,
+            z: 3
         };
 
         try {
-            const bounds = world.structureManager.placeJigsawStructure(
-                "no_png:glitch_mineshaft",
+            const bounds = world.structureManager.placeJigsaw(
+                "no_png:glitch_mineshaft", // Replace with your actual start pool identifier
+                "no_png:glitch_mineshaft",    // Replace with the target jigsaw block name
+                12,                            // maxDepth parameter (capped at 11 levels)
                 dim,
-                location,
-                {
-                    ignoreStartHeight: true,
-                    maxAttempts: 10
-                }
+                location
             );
 
             player.sendMessage(`§aSuccessfully placed jigsaw structure!`);

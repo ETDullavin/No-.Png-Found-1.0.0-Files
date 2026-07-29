@@ -8,63 +8,56 @@
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshaft"
+                    "location": "no_png:glitch_mineshaft_4way"
                 },
-                "weight": 4
-            },
-            {
-                "element": {
-                    "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshaft2"
-                },
-                "weight": 4
+                "weight": 6
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
                     "location": "no_png:glitch_mineshafttunnel1"
                 },
-                "weight": 1
+                "weight": 3
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
                     "location": "no_png:glitch_mineshafttunnel2"
                 },
-                "weight": 10
+                "weight": 6
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
                     "location": "no_png:glitch_mineshafttunnel3"
                 },
-                "weight": 10
+                "weight": 6
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
                     "location": "no_png:glitch_mineshafttunnel4"
                 },
-                "weight": 10
+                "weight": 3
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
                     "location": "no_png:glitch_mineshafttunnel5"
                 },
-                "weight": 1
+                "weight": 3
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshafttunnel6"
+                    "location": "no_png:glitch_mineshaft"
                 },
-                "weight": 1
+                "weight": 3
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshafttunnel7"
+                    "location": "no_png:glitch_mineshaft_c"
                 },
                 "weight": 1
             }
