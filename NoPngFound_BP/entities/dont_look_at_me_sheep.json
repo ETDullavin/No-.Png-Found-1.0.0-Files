@@ -97,7 +97,9 @@
                             "event": "minecraft:become_angry",
                             "target": "self",
                             "set_target": true
-                        }
+                        },
+                        "cause": "fall",
+                        "deals_damage": false
                     }
                 ]
             },

@@ -60,6 +60,27 @@
                     "location": "no_png:glitch_mineshaft_c"
                 },
                 "weight": 1
+            },
+            {
+                "element": {
+                    "element_type": "minecraft:single_pool_element",
+                    "location": "no_png:glitch_mineshaft2"
+                },
+                "weight": 3
+            },
+            {
+                "element": {
+                    "element_type": "minecraft:single_pool_element",
+                    "location": "no_png:glitch_mineshaft3"
+                },
+                "weight": 3
+            },
+            {
+                "element": {
+                    "element_type": "minecraft:single_pool_element",
+                    "location": "no_png:glitch_mineshaft4"
+                },
+                "weight": 4
             }
         ],
         "fallback": "no_png:glitch_mineshaft_cap_pool"

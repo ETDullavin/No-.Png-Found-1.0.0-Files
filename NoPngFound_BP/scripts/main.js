@@ -110,11 +110,11 @@ world.afterEvents.itemUse.subscribe((event) => {
 
         // Check if they have a valid spawn point specifically in the Overworld
         if (spawnData && spawnData.dimension.id === "minecraft:overworld") {
-            targetLocation = { x: spawnData.x, y: spawnData.y, z: spawnData.z };
+            targetLocation = { x: spawnData.x, y: MAX_Y, z: spawnData.z };
         } else {
             // FIX: Pull the safe fallback spawn from your DIMENSIONS array
             // to avoid the 32767 height bug from getDefaultSpawnLocation()
-            targetLocation = DIMENSIONS.find(d => d.id === "minecraft:overworld").spawn;
+            targetLocation = { x: 0, y: MAX_Y, z: 0 };
         }
 
         // Safely run the item deletion and teleport on the next tick
@@ -133,6 +133,9 @@ world.afterEvents.itemUse.subscribe((event) => {
                     }
                 }
             }
+
+            // 3. Apply Slow Falling for 10 seconds (200 ticks)
+            player.addEffect("minecraft:slow_falling", 1200, { amplifier: 0, showParticles: false });
 
             // 2. Teleport the player
             player.teleport(targetLocation, {
