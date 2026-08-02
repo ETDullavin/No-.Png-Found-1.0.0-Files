@@ -11,11 +11,11 @@
             "minecraft:destructible_by_explosion": {
                 "explosion_resistance": 3600000
             },
-            "minecraft:geometry": "geometry.missingtexture_block",
+            "minecraft:geometry": "minecraft:geometry.full_block",
             "minecraft:material_instances": {
                 "*": {
                     "texture": "missingtexture_block",
-                    "render_method": "alpha_test"
+                    "render_method": "opaque"
                 }
             },
             "minecraft:map_color": "#f500ff",
