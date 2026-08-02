@@ -5,6 +5,7 @@
 			"identifier": "no_png:missingtexture_block"
 		},
 		"components": {
+			"minecraft:light_dampening": 15,
 			"minecraft:collision_box": true,
 			"minecraft:selection_box": true,
 			"minecraft:destructible_by_mining": {

@@ -15,6 +15,20 @@
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
+                    "location": "no_png:glitch_mineshaft_3way"
+                },
+                "weight": 3
+            },
+            {
+                "element": {
+                    "element_type": "minecraft:single_pool_element",
+                    "location": "no_png:glitch_mineshaft_2way"
+                },
+                "weight": 3
+            },
+            {
+                "element": {
+                    "element_type": "minecraft:single_pool_element",
                     "location": "no_png:glitch_mineshafttunnel1"
                 },
                 "weight": 3
@@ -46,6 +60,20 @@
                     "location": "no_png:glitch_mineshafttunnel5"
                 },
                 "weight": 3
+            },
+            {
+                "element": {
+                    "element_type": "minecraft:single_pool_element",
+                    "location": "no_png:glitch_mineshafttunnel7"
+                },
+                "weight": 4
+            },
+            {
+                "element": {
+                    "element_type": "minecraft:single_pool_element",
+                    "location": "no_png:glitch_mineshafttunnel8"
+                },
+                "weight": 1
             },
             {
                 "element": {

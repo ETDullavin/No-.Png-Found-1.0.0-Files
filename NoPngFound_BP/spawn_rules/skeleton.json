@@ -12,7 +12,8 @@
                 "minecraft:spawns_on_block_prevented_filter": [
                     "minecraft:nether_wart_block",
                     "minecraft:shroomlight",
-                    "no_png:missing_texture_bedrock"
+                    "no_png:missing_texture_bedrock",
+                    "no_png:spawn_block"
                 ],
                 "minecraft:brightness_filter": {
                     "min": 0,
@@ -49,7 +50,8 @@
                 "minecraft:spawns_on_block_prevented_filter": [
                     "minecraft:nether_wart_block",
                     "minecraft:shroomlight",
-                    "no_png:missing_texture_bedrock"
+                    "no_png:missing_texture_bedrock",
+                    "no_png:spawn_block"
                 ],
                 "minecraft:brightness_filter": {
                     "min": 0,

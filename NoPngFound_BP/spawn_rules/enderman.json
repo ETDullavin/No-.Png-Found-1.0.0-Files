@@ -10,7 +10,8 @@
                 "minecraft:spawns_on_surface": {},
                 "minecraft:spawns_underground": {},
                 "minecraft:spawns_on_block_prevented_filter": [
-                    "no_png:missing_texture_bedrock"
+                    "no_png:missing_texture_bedrock",
+                    "no_png:spawn_block"
                 ],
                 "minecraft:brightness_filter": {
                     "min": 0,
@@ -37,7 +38,8 @@
             {
                 "minecraft:spawns_underground": {},
                 "minecraft:spawns_on_block_prevented_filter": [
-                    "no_png:missing_texture_bedrock"
+                    "no_png:missing_texture_bedrock",
+                    "no_png:spawn_block"
                 ],
                 "minecraft:brightness_filter": {
                     "min": 0,
@@ -73,7 +75,8 @@
             {
                 "minecraft:spawns_underground": {},
                 "minecraft:spawns_on_block_prevented_filter": [
-                    "no_png:missing_texture_bedrock"
+                    "no_png:missing_texture_bedrock",
+                    "no_png:spawn_block"
                 ],
                 "minecraft:difficulty_filter": {
                     "min": "easy",
@@ -95,7 +98,8 @@
             {
                 "minecraft:spawns_on_surface": {},
                 "minecraft:spawns_on_block_prevented_filter": [
-                    "no_png:missing_texture_bedrock"
+                    "no_png:missing_texture_bedrock",
+                    "no_png:spawn_block"
                 ],
                 "minecraft:weight": {
                     "default": 10
