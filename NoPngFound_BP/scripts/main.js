@@ -155,14 +155,19 @@ world.afterEvents.entityHurt.subscribe((event) => {
 
         // Check if the attacker exists and is the specific mob type
         if (attacker && attacker.typeId === "no_png:corruption") {
+
+            // 1. PLAY ABSORB PARTICLE/SOUND AT CURRENT LOCATION
+            hurtEntity.dimension.spawnParticle("no_png:missing_particle_absorb", hurtEntity.location);
+            // hurtEntity.playSound("no_png:missing_particle_absorb"); // Uncomment if it's a sound
+
             const targetDimension = [THE_GARDEN_ID, SKY_BLOCK_ID, MINESHAFT_ID];
-            const randomDimension = targetDimension[Math.floor(Math.random() * Object.keys(targetDimension).length)];
+            // Minor fix: targetDimension.length is cleaner than Object.keys(targetDimension).length
+            const randomDimension = targetDimension[Math.floor(Math.random() * targetDimension.length)];
             const skyBlockDestination = DIMENSIONS.find(d => d.id === randomDimension);
 
             if (skyBlockDestination) {
                 // Use your existing teleport logic
                 teleportToCustomDimension(hurtEntity, skyBlockDestination);
-                world.sendMessage(`§4[WARNING]§r ${hurtEntity.name} was corrupted and sent to the Sky Block!`);
             }
         }
     }
@@ -1036,8 +1041,6 @@ async function teleportToCustomDimension(player, destination) {
     // Increase the load range to 128 to ensure the engine has enough buffer space
     const loadRange = (destination.id === "no_png:mineshaft") ? 128 : 4;
 
-    player.sendMessage(`${Color.yellow}Loading ${destination.label}${Color.yellow}...`);
-
     await world.tickingAreaManager.createTickingArea(tickingAreaId, {
         dimension: dim,
         from: { x: targetSpawn.x - loadRange, y: targetSpawn.y - loadRange, z: targetSpawn.z - loadRange },
@@ -1049,7 +1052,7 @@ async function teleportToCustomDimension(player, destination) {
 
     // --- NEW: Check for spawn block specifically in the Mineshaft ---
     if (destination.id === MINESHAFT_ID) {
-        player.sendMessage(`${Color.yellow}Scanning for safe spawn point...`);
+
 
         // Searches a 128x128 area around the dimension's default center, from Y=10 to Y=60
         // You can increase the radius (64) or Y bounds (10, 60) if your jigsaw generation is larger
@@ -1058,13 +1061,21 @@ async function teleportToCustomDimension(player, destination) {
         if (foundSpawn) {
             targetSpawn = foundSpawn; // Overwrite default spawn with the found block's coordinates
         } else {
-            player.sendMessage(`${Color.red}Spawn block not found, defaulting to fallback coordinates.`);
+
         }
     }
 
     // Teleport the player to the newly determined coordinates
+    // Teleport the player to the newly determined coordinates
     player.teleport(targetSpawn, { dimension: dim });
-    player.sendMessage(`${Color.green}Teleported to ${destination.label}${Color.green}!`);
+
+    // 2. PLAY EXPLODE PARTICLE/SOUND AT ARRIVAL LOCATION
+    // Delaying by 5 ticks ensures the client has loaded the new dimension before playing it
+    system.runTimeout(() => {
+        dim.spawnParticle("no_png:missing_particle_absorb", targetSpawn);
+        // player.playSound("no_png:missing_particle_explode", { location: targetSpawn }); // Uncomment if it's a sound
+    }, 5);
 
     world.tickingAreaManager.removeTickingArea(tickingAreaId);
+
 }

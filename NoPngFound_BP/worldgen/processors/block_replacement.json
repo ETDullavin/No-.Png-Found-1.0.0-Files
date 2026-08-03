@@ -17,6 +17,16 @@
                         "output_state": {
                             "name": "minecraft:air"
                         }
+                    },
+                    {
+                        "input_predicate": {
+                            "predicate_type": "minecraft:random_block_match",
+                            "block": "minecraft:oak_planks",
+                            "probability": 0.01
+                        },
+                        "output_state": {
+                            "name": "no_png:glitch_planks"
+                        }
                     }
                 ]
             }

@@ -27,3 +27,4 @@ item.no_png:glitch_rose_bush=§kRose Bush
 tile.no_png:glitch_rose_bush_top.name=Daniel
 tile.no_png:missing_texture_bedrock.name=§kBedrock
 tile.no_png:spawn_block.name=Spawn Block
+tile.no_png:glitch_planks.name=§kOak§r §kPlanks

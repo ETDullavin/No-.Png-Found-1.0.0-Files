@@ -26,14 +26,14 @@
 			},
 			"default_hitbox": {
 				"minecraft:collision_box": {
-					"width": 2.0,
-					"height": 6.0
+					"width": 1.9,
+					"height": 5.9
 				}
 			},
 			"attacking_hitbox": {
 				"minecraft:collision_box": {
-					"width": 3.5,
-					"height": 2.0
+					"width": 2.9,
+					"height": 1.9
 				},
 				"minecraft:movement_sound_distance_offset": {
 					"value": 0.225
@@ -118,7 +118,9 @@
 			"minecraft:heartbeat": {
 				"interval": "2.0 - math.clamp(query.anger_level / 80 * 1.5, 0, 1.5)"
 			},
-			"minecraft:movement.basic": {},
+			"minecraft:movement.basic": {
+				"max_auto_step": 2.1
+			},
 			"minecraft:jump.static": {},
 			"minecraft:can_climb": {},
 			"minecraft:environment_sensor": {
@@ -149,6 +151,35 @@
 			"minecraft:knockback_resistance": {
 				"value": 1
 			},
+			"minecraft:break_blocks": {
+				"breakable_blocks": [
+					"bamboo",
+					"bamboo_sapling",
+					"beetroot",
+					"brown_mushroom",
+					"carrots",
+					"carved_pumpkin",
+					"chorus_flower",
+					"chorus_plant",
+					"deadbush",
+					"leaves",
+					"leaves2",
+					"azalea_leaves",
+					"azalea_leaves_flowered",
+					"mangrove_leaves",
+					"cherry_leaves",
+					"lit_pumpkin",
+					"melon_block",
+					"potatoes",
+					"pumpkin",
+					"red_mushroom",
+					"reeds",
+					"sweet_berry_bush",
+					"tallgrass",
+					"waterlily",
+					"wheat"
+				]
+			},
 			"minecraft:behavior.float": {
 				"priority": 0
 			},
@@ -176,7 +207,7 @@
 			"minecraft:behavior.sniff": {
 				"priority": 6,
 				"duration": 4.16,
-				"sniffing_radius": 24,
+				"sniffing_radius": 32,
 				"suspicion_radius_horizontal": 6,
 				"suspicion_radius_vertical": 20,
 				"cooldown_range": [
@@ -192,7 +223,7 @@
 				"priority": 11
 			},
 			"minecraft:physics": {},
-			"minecraft:follow_range": 30,
+			"minecraft:follow_range": 48,
 			"minecraft:fire_immune": {},
 			"minecraft:nameable": {},
 			"minecraft:loot": {

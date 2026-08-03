@@ -17,5 +17,8 @@
 	},
 	"no_png:missingtexture_block": {
 		"sound": "stone"
+	},
+	"no_png:glitch_planks": {
+		"sound": "wood"
 	}
 }

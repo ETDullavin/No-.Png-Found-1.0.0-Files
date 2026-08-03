@@ -21,6 +21,9 @@
 		},
 		"missingtexture_block": {
 			"textures": "textures/blocks/missingtexture_block"
+		},
+		"glitch_planks": {
+			"textures": "textures/blocks/glitch_planks"
 		}
 	}
 }
