@@ -8,161 +8,184 @@
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshaft_4way"
+                    "location": "no_png:glitch_mineshaft_4way",
+                    "processors": "no_png:block_replacement"
                 },
                 "weight": 20
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshaft_3way"
+                    "location": "no_png:glitch_mineshaft_3way",
+                    "processors": "no_png:block_replacement"
                 },
                 "weight": 10
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshaft_2way"
+                    "location": "no_png:glitch_mineshaft_2way",
+                    "processors": "no_png:block_replacement"
                 },
                 "weight": 10
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshafttunnel1"
+                    "location": "no_png:glitch_mineshafttunnel1",
+                    "processors": "no_png:block_replacement"
                 },
                 "weight": 3
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshafttunnel2"
+                    "location": "no_png:glitch_mineshafttunnel2",
+                    "processors": "no_png:block_replacement"
                 },
                 "weight": 20
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshafttunnel3"
+                    "location": "no_png:glitch_mineshafttunnel3",
+                    "processors": "no_png:block_replacement"
                 },
                 "weight": 3
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshafttunnel4"
+                    "location": "no_png:glitch_mineshafttunnel4",
+                    "processors": "no_png:block_replacement"
                 },
                 "weight": 3
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshafttunnel5"
+                    "location": "no_png:glitch_mineshafttunnel5",
+                    "processors": "no_png:block_replacement"
                 },
                 "weight": 3
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshafttunnel7"
+                    "location": "no_png:glitch_mineshafttunnel7",
+                    "processors": "no_png:block_replacement"
                 },
                 "weight": 10
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshafttunnel8"
+                    "location": "no_png:glitch_mineshafttunnel8",
+                    "processors": "no_png:block_replacement"
                 },
                 "weight": 1
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshaft"
+                    "location": "no_png:glitch_mineshaft",
+                    "processors": "no_png:block_replacement"
                 },
                 "weight": 3
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshaft_c"
+                    "location": "no_png:glitch_mineshaft_c",
+                    "processors": "no_png:block_replacement"
                 },
                 "weight": 1
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshaft2"
+                    "location": "no_png:glitch_mineshaft2",
+                    "processors": "no_png:block_replacement"
                 },
                 "weight": 2
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshaft3"
+                    "location": "no_png:glitch_mineshaft3",
+                    "processors": "no_png:block_replacement"
                 },
                 "weight": 1
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshaft4"
+                    "location": "no_png:glitch_mineshaft4",
+                    "processors": "no_png:block_replacement"
                 },
                 "weight": 1
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshaft5"
+                    "location": "no_png:glitch_mineshaft5",
+                    "processors": "no_png:block_replacement"
                 },
                 "weight": 2
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshaft6"
+                    "location": "no_png:glitch_mineshaft6",
+                    "processors": "no_png:block_replacement"
                 },
                 "weight": 2
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshaft7"
+                    "location": "no_png:glitch_mineshaft7",
+                    "processors": "no_png:block_replacement"
                 },
                 "weight": 2
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshaft8"
+                    "location": "no_png:glitch_mineshaft8",
+                    "processors": "no_png:block_replacement"
                 },
                 "weight": 2
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshaft9"
+                    "location": "no_png:glitch_mineshaft9",
+                    "processors": "no_png:block_replacement"
                 },
                 "weight": 3
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshaft10"
+                    "location": "no_png:glitch_mineshaft10",
+                    "processors": "no_png:block_replacement"
                 },
                 "weight": 3
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshaft11"
+                    "location": "no_png:glitch_mineshaft11",
+                    "processors": "no_png:block_replacement"
                 },
                 "weight": 2
             },
             {
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "no_png:glitch_mineshaft12"
+                    "location": "no_png:glitch_mineshaft12",
+                    "processors": "no_png:block_replacement"
                 },
                 "weight": 3
             }

@@ -1,0 +1,25 @@
+{
+    "format_version": "1.21.100",
+    "minecraft:processor_list": {
+        "description": {
+            "identifier": "no_png:block_replacement"
+        },
+        "processors": [
+            {
+                "processor_type": "minecraft:rule",
+                "rules": [
+                    {
+                        "input_predicate": {
+                            "predicate_type": "minecraft:random_block_match",
+                            "block": "minecraft:rail",
+                            "probability": 0.3
+                        },
+                        "output_state": {
+                            "name": "minecraft:air"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
