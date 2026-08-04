@@ -6,7 +6,19 @@
 		},
 		"components": {
 			"minecraft:max_stack_size": 1,
-			"minecraft:icon": "no_texture_bucket"
+			"minecraft:icon": "no_texture_bucket",
+			"no_png:poison_drink": {},
+			"minecraft:use_animation": "drink",
+			"minecraft:use_modifiers": {
+				"use_duration": 1.5,
+				"movement_modifier": 0.25
+			},
+			"minecraft:food": {
+				"can_always_eat": true,
+				"nutrition": 0,
+				"saturation_modifier": 0.0,
+				"using_converts_to": "minecraft:bucket"
+			}
 		}
 	}
 }

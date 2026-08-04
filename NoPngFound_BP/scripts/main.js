@@ -146,6 +146,46 @@ world.afterEvents.playerBreakBlock.subscribe((eventData) => {
     }
 });
 
+// --- BUCKET ITEM DRINK POISON EFFECT ---
+world.afterEvents.itemCompleteUse.subscribe((event) => {
+    const { source: player, itemStack } = event;
+
+    // Check if the completed item is your custom bucket
+    if (itemStack.typeId === "no_png:no_texture_bucket") {
+        const effectTime = 500;
+        system.run(() => {
+            // Apply poison effect for 10 seconds (200 ticks) with an amplifier of 0
+            player.addEffect("minecraft:speed", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:haste", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:strength", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:health_boost", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:regeneration", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:resistance", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:fire_resistance", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:invisibility", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:jump_boost", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:levitation", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:nausea", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:night_vision", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:poison", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:wither", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:weakness", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:water_breathing", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:absorption", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:saturation", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:slowfalling", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:conduit_power", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:hero_of_the_village", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:slowness", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:mining_fatigue", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:blindness", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:hunger", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:fatal_poison", effectTime, { amplifier: 0, showParticles: true });
+            player.addEffect("minecraft:darkness", effectTime, { amplifier: 0, showParticles: true });
+        });
+    }
+});
+
 // --- ITEM USE TELEPORT ---
 world.afterEvents.itemUse.subscribe((event) => {
     const { source: player, itemStack } = event;
