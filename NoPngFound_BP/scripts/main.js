@@ -2,6 +2,13 @@
 const test = true; // Set to true to show debug/test chat messages, false to mute them
 const events = false; // Set to false to disable random events and glitching
 
+const MIN_Y = -64;
+const MAX_Y = 319;
+
+const THE_GARDEN_ID = "no_png:the_garden";
+const SKY_BLOCK_ID = "no_png:sky_block";
+const MINESHAFT_ID = "no_png:mineshaft";
+
 import {
     world,
     system,
@@ -24,10 +31,35 @@ function sendTestMessage(message) {
 }
 
 // Subscribe to the event that fires AFTER a block is placed
+// Subscribe to the event that fires AFTER a block is placed
 world.afterEvents.playerPlaceBlock.subscribe((eventData) => {
     const { player, block } = eventData;
 
+    // Check configuration toggle for glitch/sound events
+    if (events) {
+        const dimension = block.dimension;
+        const blockLocation = block.location;
+        const xdirection = Math.abs(blockLocation.x) - Math.abs(player.location.x);
+        const roundUpX = Math.ceil(xdirection);
+        const zdirection = Math.abs(blockLocation.z) - Math.abs(player.location.z);
+        const roundUpZ = Math.ceil(zdirection);
+
+        const soundMultiplier = 1.0; // Adjust this value to change the sound volume
+        const soundLocation = { x: player.location.x + (- roundUpX * soundMultiplier), y: blockLocation.y, z: player.location.z + (- roundUpZ * soundMultiplier) };
+
+        if (Math.random() < 0.005) {
+            player.playSound("use.stone", { location: soundLocation.location });
+        } else if (Math.random() < 0.001) {
+            // FIXED: Actually get the block in the world at those coordinates first
+            const targetBlock = dimension.getBlock(soundLocation);
+            if (targetBlock) {
+                targetBlock.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
+            }
+        }
+    }
+
     // Check if the placed block matches a specific type (e.g., Diamond Block)
+    // ALWAYS RUNS: This is excluded from the events toggle
     if (block.typeId === "no_png:glitch_rose_bush") {
         const blockTop = player.dimension.getBlock({ x: block.location.x, y: block.location.y + 1, z: block.location.z });
         if (blockTop && blockTop.typeId === "minecraft:air") {
@@ -44,7 +76,30 @@ world.afterEvents.playerBreakBlock.subscribe((eventData) => {
     const dimension = block.dimension;
     const blockLocation = block.location;
 
+    // Check configuration toggle for glitch/sound events
+    if (events) {
+        const xdirection = Math.abs(blockLocation.x) - Math.abs(player.location.x);
+        const roundUpX = Math.ceil(xdirection);
+        const zdirection = Math.abs(blockLocation.z) - Math.abs(player.location.z);
+        const roundUpZ = Math.ceil(zdirection);
+
+        const soundMultiplier = 1.0; // Adjust this value to change the sound volume
+        const soundLocation = { x: player.location.x + (- roundUpX * soundMultiplier), y: blockLocation.y, z: player.location.z + (- roundUpZ * soundMultiplier) };
+
+        if (Math.random() < 0.005) {
+            player.playSound("dig.stone", { location: soundLocation.location });
+        } else if (Math.random() < 0.001) {
+            // FIXED: Actually get the block in the world at those coordinates first
+            const targetBlock = dimension.getBlock(soundLocation);
+            if (targetBlock) {
+                targetBlock.setPermutation(BlockPermutation.resolve("minecraft:air"));
+                player.playSound("dig.stone", { location: soundLocation.location });
+            }
+        }
+    }
+
     // Check if the broken block is the top part
+    // ALWAYS RUNS: This is excluded from the events toggle
     if (brokenBlockPermutation.type.id === "no_png:glitch_rose_bush_top") {
 
         // 1. Clear the bottom block
@@ -174,8 +229,6 @@ world.afterEvents.entityHurt.subscribe((event) => {
 });
 
 // --- GLITCH & HEROBRINE CONSTANTS ---
-const MIN_Y = -64;
-const MAX_Y = 319;
 
 const interactiveBlocks = [
     "minecraft:chest", "minecraft:trapped_chest", "minecraft:copper_chest", "minecraft:exposed_copper_chest",
@@ -190,11 +243,7 @@ const Color = {
     red: "\xA7c", aqua: "\xA7b", green: "\xA7a", darkRed: "\xA74", purple: "\xA75",
     yellow: "\xA7e", gray: "\xA77", darkGray: "\xA78", bold: "\xA7l", reset: "\xA7r",
     pink: "\xA7d"
-};
-
-const THE_GARDEN_ID = "no_png:the_garden";
-const SKY_BLOCK_ID = "no_png:sky_block";
-const MINESHAFT_ID = "no_png:mineshaft";
+}; 1
 
 const PLATFORMS = [
     { dimensionId: THE_GARDEN_ID, blockId: "no_png:missingtexture_block", radius: 32, center: { x: 0, y: 64, z: 0 } },
@@ -312,7 +361,6 @@ world.afterEvents.playerInteractWithBlock.subscribe((event) => {
                 }, 2);
 
                 player.playSound("mob.dont_look.hit", { location: player.location });
-                world.sendMessage(`§4[ERROR]§r ${player.name} corrupted a ${blockId.split(":")[1].toUpperCase()}`);
             } catch (error) {
                 console.warn("Failed to break and glitch block: " + error);
             }
@@ -326,11 +374,6 @@ world.afterEvents.playerInteractWithBlock.subscribe((event) => {
                 block.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
                 dimension.spawnParticle("no_png:missing_particle", location);
                 player.playSound("mob.dont_look.hit", { location: player.location });
-                if (Math.random() > 0.01) {
-                    world.sendMessage(`§k${player.name}§r${player.name}§k${player.name}§r . . . you aren't allowed to hear that . . .`);
-                } else {
-                    world.sendMessage(`§k${player.name}§r${player.name}§k${player.name}§r . . . you aren't allowed to hear what HE has to say . . . . . .`);
-                }
             } catch (error) {
                 console.warn("Failed to glitch jukebox: " + error);
             }
@@ -643,6 +686,9 @@ const entitySpawnMap = {
 };
 
 world.afterEvents.entitySpawn.subscribe((event) => {
+
+    if (!events) return;
+
     const entity = event.entity;
     if (entity?.typeId && entitySpawnMap[entity.typeId]) {
         let spawned = false;
@@ -722,6 +768,9 @@ system.runInterval(() => {
 }, 10);
 
 world.afterEvents.itemUseOn.subscribe((event) => {
+
+    if (!events) return;
+
     const { itemStack: item, block } = event;
     if (item && (item.typeId === "minecraft:flint_and_steel" || item.typeId === "minecraft:fire_charge") && block?.typeId === "minecraft:netherrack") {
         const mossyPos = { x: block.location.x, y: block.location.y - 1, z: block.location.z };
@@ -867,11 +916,7 @@ async function ensurePlatformBuilt(config, player) { // Added player here
                 location
             );
 
-            player.sendMessage(`§aSuccessfully placed jigsaw structure!`);
-            player.sendMessage(`§7Bounds: Min(${bounds.min.x}, ${bounds.min.y}, ${bounds.min.z}) Max(${bounds.max.x}, ${bounds.max.y}, ${bounds.max.z})`);
-
         } catch (error) {
-            player.sendMessage(`§4Failed to place structure: ${error}`);
             console.warn(`[Jigsaw Error] ${error}`);
         }
     }
@@ -986,7 +1031,6 @@ function showDimensionMenu(player) {
         } else {
             system.run(() => {
                 player.teleport(selected.spawn, { dimension: world.getDimension(selected.id) });
-                player.sendMessage(`${Color.green}Teleported to ${selected.label}${Color.green}!`);
             });
         }
     });
