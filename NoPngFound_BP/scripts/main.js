@@ -249,6 +249,7 @@ world.afterEvents.itemUse.subscribe((event) => {
 // --- MOB DAMAGE TO DIMENSION TELEPORT ---
 world.afterEvents.entityHurt.subscribe((event) => {
     const { hurtEntity, damageSource } = event;
+    const hurtEntityLocation = hurtEntity.location;
 
     // Check if the damaged entity is a player
     if (hurtEntity instanceof Player) {
@@ -269,6 +270,14 @@ world.afterEvents.entityHurt.subscribe((event) => {
             if (skyBlockDestination) {
                 // Use your existing teleport logic
                 teleportToCustomDimension(hurtEntity, skyBlockDestination);
+            }
+        }
+
+        if (attacker && attacker.typeId === "no_png:pink_man") {
+            for (let damageTimes = 0; damageTimes <= 9; damageTimes++) {
+                try {
+                    messagePlayer(hurtEntity, `${Color.red}You have been hit by Pink Man! Teleporting to The Garden...`);
+                } catch (e) { }
             }
         }
     }
@@ -683,6 +692,40 @@ const randomEvents = [
                 sendTestMessage("PLAYER ENTITY SPAWNED!");
             } catch (e) { }
         }
+    },
+    function spawnPinkMan() {
+        const players = world.getAllPlayers();
+        const randomOffset = Math.random() * 16 - 8;
+        if (players.length > 0) {
+            const player = players[Math.floor(Math.random() * players.length)];
+            let entityAlreadyExists = false;
+
+            for (const dimName of ["overworld", "nether", "the_end"]) {
+                try {
+                    // Store the array of existing entities
+                    const existingEntities = world.getDimension(dimName).getEntities({ type: "no_png:pink_man" });
+
+                    if (existingEntities.length > 0) {
+                        entityAlreadyExists = true;
+
+                        // Loop through and destroy each one found
+                        for (const entity of existingEntities) {
+                            entity.kill();
+                        }
+                    }
+                } catch (e) { }
+            }
+
+            // IMPORTANT: If you want to spawn a NEW mob after killing the old one, 
+            // you will need to delete or comment out the line below. 
+            // Leaving it in means the script will kill the old mob and then stop.
+            if (entityAlreadyExists) return false;
+
+            try {
+                const newPlayerEntity = player.dimension.spawnEntity("no_png:pink_man", { x: player.location.x + randomOffset, y: player.location.y + 16, z: player.location.z + randomOffset });
+                sendTestMessage("PINK MAN SPAWNED!");
+            } catch (e) { }
+        }
     }
 ];
 
@@ -759,7 +802,8 @@ system.runInterval(() => {
     const dimension = world.getDimension("overworld");
     const entities = dimension.getEntities().filter(e =>
         e.typeId === "no_png:dont_look_at_me" || e.typeId === "no_png:dont_look_at_me_cow" ||
-        e.typeId === "no_png:dont_look_at_me_pig" || e.typeId === "no_png:dont_look_at_me_sheep"
+        e.typeId === "no_png:dont_look_at_me_pig" || e.typeId === "no_png:dont_look_at_me_sheep" ||
+        e.typeId === "no_png:pink_man"
     );
 
     for (const entity of entities) {

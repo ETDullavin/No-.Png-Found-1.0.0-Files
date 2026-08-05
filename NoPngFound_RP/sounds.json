@@ -1,6 +1,10 @@
 {
 	"entity_sounds": {
 		"entities": {
+			"no_png:pink_man": {
+				"events": {},
+				"volume": 0
+			},
 			"no_png:corruption": {
 				"events": {
 					"agitated": {
