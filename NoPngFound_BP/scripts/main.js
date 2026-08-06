@@ -46,12 +46,13 @@ world.afterEvents.playerPlaceBlock.subscribe((eventData) => {
 
         const soundMultiplier = 1.0; // Adjust this value to change the sound volume
         const soundLocation = { x: player.location.x + (- roundUpX * soundMultiplier), y: blockLocation.y, z: player.location.z + (- roundUpZ * soundMultiplier) };
+        const soundDelayTicks = 5; // 0.25 seconds
 
         if (Math.random() < 0.005) {
             system.runTimeout(() => {
                 player.playSound("use.stone", { location: soundLocation.location });
                 // player.playSound("no_png:missing_particle_explode", { location: targetSpawn }); // Uncomment if it's a sound
-            }, 5);
+            }, soundDelayTicks);
         } else if (Math.random() < 0.001) {
             // FIXED: Actually get the block in the world at those coordinates first
             const targetBlock = dimension.getBlock(soundLocation);
@@ -88,12 +89,13 @@ world.afterEvents.playerBreakBlock.subscribe((eventData) => {
 
         const soundMultiplier = 1.0; // Adjust this value to change the sound volume
         const soundLocation = { x: player.location.x + (- roundUpX * soundMultiplier), y: blockLocation.y, z: player.location.z + (- roundUpZ * soundMultiplier) };
+        const soundDelayTicks = 5; // 0.25 seconds
 
         if (Math.random() < 0.005) {
             system.runTimeout(() => {
                 player.playSound("dig.stone", { location: soundLocation.location });
                 // player.playSound("no_png:missing_particle_explode", { location: targetSpawn }); // Uncomment if it's a sound
-            }, 5);
+            }, soundDelayTicks);
         } else if (Math.random() < 0.001) {
             // FIXED: Actually get the block in the world at those coordinates first
             const targetBlock = dimension.getBlock(soundLocation);
