@@ -30,6 +30,21 @@ function sendTestMessage(message) {
     }
 }
 
+function breakBlockWithEffect(dimension, location) {
+    const x = Math.floor(location.x);
+    const y = Math.floor(location.y);
+    const z = Math.floor(location.z);
+
+    try {
+        dimension.runCommand(`setblock ${x} ${y} ${z} air [] destroy`);
+    } catch (e) {
+        const block = dimension.getBlock({ x, y, z });
+        if (block) {
+            block.setPermutation(BlockPermutation.resolve("minecraft:air"));
+        }
+    }
+}
+
 // Subscribe to the event that fires AFTER a block is placed
 // Subscribe to the event that fires AFTER a block is placed
 world.afterEvents.playerPlaceBlock.subscribe((eventData) => {
@@ -69,7 +84,7 @@ world.afterEvents.playerPlaceBlock.subscribe((eventData) => {
         if (blockTop && blockTop.typeId === "minecraft:air") {
             blockTop.setPermutation(BlockPermutation.resolve("no_png:glitch_rose_bush_top"));
         } else {
-            block.setPermutation(BlockPermutation.resolve("minecraft:air"));
+            breakBlockWithEffect(player.dimension, block.location);
             player.dimension.spawnItem(new ItemStack("no_png:glitch_rose_bush", 1), player.location);
         }
     }
@@ -114,7 +129,7 @@ world.afterEvents.playerBreakBlock.subscribe((eventData) => {
         const bottomBlockLocation = { x: blockLocation.x, y: blockLocation.y - 1, z: blockLocation.z };
         const bottomBlock = dimension.getBlock(bottomBlockLocation);
         if (bottomBlock && bottomBlock.typeId === "no_png:glitch_rose_bush") {
-            bottomBlock.setPermutation(BlockPermutation.resolve("minecraft:air"));
+            breakBlockWithEffect(dimension, bottomBlockLocation);
         }
 
         // 2. Silk Touch Check
@@ -727,6 +742,67 @@ const randomEvents = [
                 const newPlayerEntity = player.dimension.spawnEntity("no_png:pink_man", { x: player.location.x + randomOffset, y: player.location.y + 16, z: player.location.z + randomOffset });
                 sendTestMessage("PINK MAN SPAWNED!");
             } catch (e) { }
+        }
+    },
+    function spawnNull() {
+        const players = world.getAllPlayers();
+        const randomOffset = Math.random() * 16 - 8;
+        if (players.length > 0) {
+            const player = players[Math.floor(Math.random() * players.length)];
+            let entityAlreadyExists = false;
+
+            for (const dimName of ["overworld", "nether", "the_end"]) {
+                try {
+                    // Store the array of existing entities
+                    const existingEntities = world.getDimension(dimName).getEntities({ type: "no_png:pink_man" });
+
+                    if (existingEntities.length > 0) {
+                        entityAlreadyExists = true;
+
+                        // Loop through and destroy each one found
+                        for (const entity of existingEntities) {
+                            entity.kill();
+                        }
+                    }
+                } catch (e) { }
+            }
+
+            // IMPORTANT: If you want to spawn a NEW mob after killing the old one, 
+            // you will need to delete or comment out the line below. 
+            // Leaving it in means the script will kill the old mob and then stop.
+            if (entityAlreadyExists) return false;
+
+            for (let nullX = -8; nullX <= 8; nullX++) {
+                for (let nullZ = -8; nullZ <= 8; nullZ++) {
+                    for (let nullY = 0; nullY <= 16; nullY++) {
+                        const candidatePos = {
+                            x: Math.floor(player.location.x) + nullX,
+                            y: Math.floor(player.location.y) + nullY,
+                            z: Math.floor(player.location.z) + nullZ
+                        };
+
+                        const nullSpawnBlock = player.dimension.getBlock(candidatePos);
+                        if (!nullSpawnBlock) continue;
+
+                        const blockY = candidatePos.y;
+                        if (blockY < MIN_Y || blockY > MAX_Y) continue;
+
+                        if (nullSpawnBlock.typeId && nullSpawnBlock.typeId !== "minecraft:air") {
+                            const blockAbovePos = { x: candidatePos.x, y: blockY + 1, z: candidatePos.z };
+                            const blockAbove = player.dimension.getBlock(blockAbovePos);
+                            if (blockAbove && blockAbove.typeId === "minecraft:air") {
+                                try {
+                                    player.dimension.spawnEntity("no_png:null", blockAbovePos);
+                                    sendTestMessage("NULL SPAWNED!");
+                                    return true;
+                                } catch (e) { }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
     }
 ];

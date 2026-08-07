@@ -35,12 +35,13 @@
                     },
                     "move",
                     "bob",
-                    "look_at_target_controller",
                     "piglin_attack_controller",
-                    "riding_controller"
+                    "riding_controller",
+                    "look_down"
                 ]
             },
             "animations": {
+                "look_down": "animation.no_png_null.look_down",
                 "move": "animation.player_entity.move",
                 "bob": "animation.humanoid.bob",
                 "humanoid_big_head": "animation.humanoid.big_head",

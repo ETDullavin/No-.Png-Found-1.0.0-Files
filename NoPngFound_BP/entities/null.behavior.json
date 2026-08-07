@@ -7,8 +7,61 @@
             "is_summonable": true,
             "is_experimental": false
         },
-        "component_groups": {},
+        "component_groups": {
+            "no_png:dirt_place_group": {
+                "minecraft:environment_sensor": {
+                    "triggers": [
+                        {
+                            "filters": {
+                                "test": "is_on_ground",
+                                "subject": "self",
+                                "value": false
+                            },
+                            "event": "place_dirt"
+                        }
+                    ]
+                }
+            },
+            "no_png:cobblestone_place_group": {
+                "minecraft:environment_sensor": {
+                    "triggers": [
+                        {
+                            "filters": {
+                                "test": "is_on_ground",
+                                "subject": "self",
+                                "value": false
+                            },
+                            "event": "place_cobblestone"
+                        }
+                    ]
+                }
+            },
+            "no_png:planks_place_group": {
+                "minecraft:environment_sensor": {
+                    "triggers": [
+                        {
+                            "filters": {
+                                "test": "is_on_ground",
+                                "subject": "self",
+                                "value": false
+                            },
+                            "event": "place_planks"
+                        }
+                    ]
+                }
+            },
+            "no_png:instant_despawn_group": {
+                "minecraft:instant_despawn": {}
+            }
+        },
         "components": {
+            "minecraft:timer": {
+                "time": 30,
+                "looping": false,
+                "time_down_event": {
+                    "event": "no_png:execute_despawn"
+                }
+            },
             "minecraft:health": {
                 "value": 20,
                 "max": 20
@@ -24,29 +77,162 @@
                 "value": 1
             },
             "minecraft:movement": {
-                "value": 0.25
+                "value": 0.0
             },
-            "minecraft:movement.basic": {},
+            "minecraft:movement.jump": {},
             "minecraft:jump.static": {},
-            "minecraft:navigation.walk": {
+            "minecraft:navigation.generic": {
                 "avoid_water": true
             },
-            "minecraft:behavior.random_stroll": {
+            "minecraft:behavior.slime_keep_on_jumping": {
+                "priority": 2,
+                "speed_multiplier": 1.0
+            },
+            "minecraft:behavior.slime_random_direction": {
                 "priority": 3,
-                "speed_multiplier": 0.8
-            },
-            "minecraft:behavior.look_at_player": {
-                "priority": 4,
-                "look_distance": 16.0,
-                "probability": 1.0
-            },
-            "minecraft:behavior.random_look_around": {
-                "priority": 5
+                "add_random_time_range": 0.0
             },
             "minecraft:loot": {
-                "table": "loot_tables/entities/player_entity.json"
+                "table": "loot_tables/entities/null.json"
             }
         },
-        "events": {}
+        "events": {
+            "minecraft:entity_spawned": {
+                "randomize": [
+                    {
+                        "weight": 1,
+                        "add": {
+                            "component_groups": [
+                                "no_png:dirt_place_group"
+                            ]
+                        }
+                    },
+                    {
+                        "weight": 1,
+                        "add": {
+                            "component_groups": [
+                                "no_png:cobblestone_place_group"
+                            ]
+                        }
+                    },
+                    {
+                        "weight": 1,
+                        "add": {
+                            "component_groups": [
+                                "no_png:planks_place_group"
+                            ]
+                        }
+                    }
+                ]
+            },
+            "place_dirt": {
+                "sequence": [
+                    {
+                        "randomize": [
+                            {
+                                "weight": 3,
+                                "queue_command": {
+                                    "command": [
+                                        "setblock ~ ~-1 ~ dirt"
+                                    ]
+                                }
+                            },
+                            {
+                                "weight": 1,
+                                "queue_command": {
+                                    "command": [
+                                        "setblock ~ ~-1 ~ no_png:missingtexture_block"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "queue_command": {
+                            "command": [
+                                "setblock ~ ~2 ~ air destroy"
+                            ]
+                        }
+                    }
+                ]
+            },
+            "place_cobblestone": {
+                "sequence": [
+                    {
+                        "randomize": [
+                            {
+                                "weight": 3,
+                                "queue_command": {
+                                    "command": [
+                                        "setblock ~ ~-1 ~ cobblestone"
+                                    ]
+                                }
+                            },
+                            {
+                                "weight": 1,
+                                "queue_command": {
+                                    "command": [
+                                        "setblock ~ ~-1 ~ no_png:missingtexture_block"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "queue_command": {
+                            "command": [
+                                "setblock ~ ~2 ~ air destroy"
+                            ]
+                        }
+                    }
+                ]
+            },
+            "place_planks": {
+                "sequence": [
+                    {
+                        "randomize": [
+                            {
+                                "weight": 3,
+                                "queue_command": {
+                                    "command": [
+                                        "setblock ~ ~-1 ~ oak_planks"
+                                    ]
+                                }
+                            },
+                            {
+                                "weight": 2,
+                                "queue_command": {
+                                    "command": [
+                                        "setblock ~ ~-1 ~ no_png:glitch_planks"
+                                    ]
+                                }
+                            },
+                            {
+                                "weight": 1,
+                                "queue_command": {
+                                    "command": [
+                                        "setblock ~ ~-1 ~ no_png:missingtexture_block"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "queue_command": {
+                            "command": [
+                                "setblock ~ ~2 ~ air destroy"
+                            ]
+                        }
+                    }
+                ]
+            },
+            "no_png:execute_despawn": {
+                "add": {
+                    "component_groups": [
+                        "no_png:instant_despawn_group"
+                    ]
+                }
+            }
+        }
     }
 }

@@ -70,7 +70,7 @@
                 "speed_multiplier": 0.8
             },
             "minecraft:loot": {
-                "table": "loot_tables/entities/player_entity.json"
+                "table": "loot_tables/entities/null.json"
             },
             "minecraft:attack": {
                 "damage": 1
