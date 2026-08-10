@@ -1,0 +1,128 @@
+{
+    "format_version": "1.16.100",
+    "minecraft:entity": {
+        "description": {
+            "identifier": "no_png:null_tool",
+            "is_spawnable": false,
+            "is_summonable": true,
+            "is_experimental": false
+        },
+        "component_groups": {
+            "no_png:instant_despawn_group": {
+                "minecraft:instant_despawn": {}
+            },
+            "no_png:iron_armor_group": {
+                "minecraft:equipment": {
+                    "table": "loot_tables/equipment/armor_iron.json"
+                },
+                "minecraft:attack": {
+                    "damage": 2
+                },
+                "minecraft:behavior.melee_attack": {
+                    "priority": 1,
+                    "speed_multiplier": 1.25,
+                    "reach_multiplier": 1.25
+                },
+                "minecraft:behavior.hurt_by_target": {
+                    "priority": 2
+                },
+                "minecraft:behavior.nearest_attackable_target": {
+                    "priority": 3,
+                    "must_see": true,
+                    "reselect_targets": true,
+                    "within_radius": 128,
+                    "entity_types": [
+                        {
+                            "filters": {
+                                "test": "is_family",
+                                "subject": "other",
+                                "value": "player"
+                            },
+                            "max_dist": 128
+                        }
+                    ]
+                }
+            },
+            "no_png:iron_pickaxe_group": {
+                "minecraft:equipment": {
+                    "table": "loot_tables/equipment/tool_iron_pickaxe.json"
+                }
+            }
+        },
+        "components": {
+            "minecraft:timer": {
+                "time": 60,
+                "looping": false,
+                "time_down_event": {
+                    "event": "no_png:execute_despawn"
+                }
+            },
+            "minecraft:health": {
+                "value": 20,
+                "max": 20
+            },
+            "minecraft:physics": {
+                "has_gravity": true,
+                "has_collision": true
+            },
+            "minecraft:pushable": {
+                "is_pushable": true
+            },
+            "minecraft:push_through": {
+                "value": 1
+            },
+            "minecraft:movement": {
+                "value": 0.25
+            },
+            "minecraft:movement.basic": {},
+            "minecraft:jump.static": {},
+            "minecraft:navigation.walk": {
+                "avoid_water": true
+            },
+            "minecraft:behavior.random_stroll": {
+                "priority": 6,
+                "speed_multiplier": 1.0
+            },
+            "minecraft:behavior.look_at_player": {
+                "priority": 5,
+                "look_distance": 6.0,
+                "probability": 0.02
+            },
+            "minecraft:behavior.random_look_around": {
+                "priority": 8
+            },
+            "minecraft:loot": {
+                "table": "loot_tables/entities/null_tool.json"
+            }
+        },
+        "events": {
+            "minecraft:entity_spawned": {
+                "randomize": [
+                    {
+                        "weight": 1,
+                        "add": {
+                            "component_groups": [
+                                "no_png:iron_armor_group"
+                            ]
+                        }
+                    },
+                    {
+                        "weight": 1,
+                        "add": {
+                            "component_groups": [
+                                "no_png:iron_pickaxe_group"
+                            ]
+                        }
+                    }
+                ]
+            },
+            "no_png:execute_despawn": {
+                "add": {
+                    "component_groups": [
+                        "no_png:instant_despawn_group"
+                    ]
+                }
+            }
+        }
+    }
+}

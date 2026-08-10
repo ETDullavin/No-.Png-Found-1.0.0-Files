@@ -29,3 +29,4 @@ tile.no_png:missing_texture_bedrock.name=§kBedrock§r
 tile.no_png:spawn_block.name=Spawn Block
 tile.no_png:glitch_planks.name=§kOak§r §kPlanks§r
 entity.no_png:null.name=§kNull§r
+entity.no_png:null_tool.name=§kNull§r
