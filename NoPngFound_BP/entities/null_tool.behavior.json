@@ -36,7 +36,7 @@
                             "filters": {
                                 "test": "is_family",
                                 "subject": "other",
-                                "value": "player"
+                                "value": "mob"
                             },
                             "max_dist": 128
                         }
