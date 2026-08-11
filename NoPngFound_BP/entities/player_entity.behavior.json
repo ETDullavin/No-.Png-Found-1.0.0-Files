@@ -67,6 +67,10 @@
 				"value": 20,
 				"max": 20
 			},
+			"minecraft:behavior.open_door": {
+				"priority": 4,
+				"close_door": true
+			},
 			"minecraft:nameable": {
 				"always_show": true,
 				"allow_name_tag_renaming": false

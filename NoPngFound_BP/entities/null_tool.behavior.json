@@ -36,7 +36,7 @@
                             "filters": {
                                 "test": "is_family",
                                 "subject": "other",
-                                "value": "mob"
+                                "value": "player"
                             },
                             "max_dist": 128
                         }
@@ -56,6 +56,10 @@
                 "time_down_event": {
                     "event": "no_png:execute_despawn"
                 }
+            },
+            "minecraft:behavior.open_door": {
+                "priority": 4,
+                "close_door": true
             },
             "minecraft:health": {
                 "value": 20,
