@@ -46,6 +46,13 @@
             "no_png:iron_pickaxe_group": {
                 "minecraft:equipment": {
                     "table": "loot_tables/equipment/tool_iron_pickaxe.json"
+                },
+                "minecraft:timer": {
+                    "time": 0.5,
+                    "looping": true,
+                    "time_down_event": {
+                        "event": "no_png:swing_pickaxe"
+                    }
                 }
             }
         },
@@ -126,6 +133,25 @@
                         "no_png:instant_despawn_group"
                     ]
                 }
+            },
+            "no_png:swing_pickaxe": {
+                "sequence": [
+                    {
+                        "queue_command": {
+                            "command": [
+                                "playanimation @s command_attack",
+                                "execute as @s at @s unless block ^ ^1 ^1 bedrock unless block ^ ^1 ^1 reinforced_deepslate unless block ^ ^1 ^1 no_png:missing_texture_bedrock unless block ^ ^1 ^1 no_png:spawn_block run setblock ^ ^1 ^1 air destroy"
+                            ]
+                        }
+                    },
+                    {
+                        "queue_command": {
+                            "command": [
+                                "execute as @s at @s unless block ^ ^ ^1 bedrock unless block ^ ^ ^1 reinforced_deepslate unless block ^ ^ ^1 no_png:missing_texture_bedrock unless block ^ ^ ^1 no_png:spawn_block run setblock ^ ^ ^1 air destroy"
+                            ]
+                        }
+                    }
+                ]
             }
         }
     }

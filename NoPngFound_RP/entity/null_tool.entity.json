@@ -43,6 +43,7 @@
                 ]
             },
             "animations": {
+                "command_attack": "animation.player_entity.sword.command_attack",
                 "move": "animation.player_entity.move",
                 "bob": "animation.humanoid.bob",
                 "humanoid_big_head": "animation.humanoid.big_head",

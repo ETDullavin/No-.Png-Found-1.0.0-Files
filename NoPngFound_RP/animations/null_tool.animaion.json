@@ -40,7 +40,8 @@
             "loop": true
         },
         "animation.player_entity.sword.attack": {
-            "loop": true,
+            "animation_length": 0.5,
+            "loop": false,
             "bones": {
                 "leftArm": {
                     "rotation": [
@@ -53,6 +54,26 @@
                     "rotation": [
                         "-100 + (variable.attack2 * 2.2 - variable.attack * 0.4) + variable.x_bob - this",
                         "variable.attack2 * 0.6 - 5.73 - this",
+                        "variable.z_bob - this"
+                    ]
+                }
+            }
+        },
+        "animation.player_entity.sword.command_attack": {
+            "animation_length": 0.5,
+            "loop": false,
+            "bones": {
+                "leftArm": {
+                    "rotation": [
+                        "(math.sin((1.0 - query.anim_time * 2.0) * 180.0) * 68.76 - (math.sin((1.0 - (query.anim_time * 2.0) * (query.anim_time * 2.0)) * 180.0)) * 22.92)",
+                        0,
+                        0
+                    ]
+                },
+                "rightArm": {
+                    "rotation": [
+                        "-100 + ((math.sin((1.0 - query.anim_time * 2.0) * 120.0) * 57.3) * 2.2 - (math.sin((1.0 - (query.anim_time * 2.0) * (query.anim_time * 2.0)) * 180.0) * 57.3) * 0.4) + variable.x_bob - this",
+                        "(math.sin((1.0 - query.anim_time * 2.0) * 120.0) * 57.3) * 0.6 - 5.73 - this",
                         "variable.z_bob - this"
                     ]
                 }

@@ -1,0 +1,16 @@
+{
+    "format_version": "1.8.0",
+    "render_controllers": {
+        "controller.render.pink_man": {
+            "geometry": "geometry.pink_man",
+            "materials": [
+                {
+                    "*": "material.default"
+                }
+            ],
+            "textures": [
+                "texture.default"
+            ]
+        }
+    }
+}

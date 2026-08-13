@@ -746,64 +746,127 @@ const randomEvents = [
     },
     function spawnNull() {
         const players = world.getAllPlayers();
-        const randomOffset = Math.random() * 16 - 8;
-        if (players.length > 0) {
-            const player = players[Math.floor(Math.random() * players.length)];
-            let entityAlreadyExists = false;
+        if (players.length === 0) return false;
 
-            for (const dimName of ["overworld", "nether", "the_end"]) {
-                try {
-                    // Store the array of existing entities
-                    const existingEntities = world.getDimension(dimName).getEntities({ type: "no_png:pink_man" });
+        const player = players[Math.floor(Math.random() * players.length)];
 
-                    if (existingEntities.length > 0) {
-                        entityAlreadyExists = true;
+        // 1. Clear existing null entities across ALL dimensions (vanilla + custom)
+        const dimensionsToCheck = [
+            "overworld", "nether", "the_end"
+        ];
 
-                        // Loop through and destroy each one found
-                        for (const entity of existingEntities) {
-                            entity.kill();
-                        }
-                    }
-                } catch (e) { }
-            }
+        for (const dimId of dimensionsToCheck) {
+            try {
+                const existingEntities = world.getDimension(dimId).getEntities({ type: "no_png:null" });
+                for (const entity of existingEntities) {
+                    entity.kill();
+                }
+            } catch (e) { }
+        }
 
-            // IMPORTANT: If you want to spawn a NEW mob after killing the old one, 
-            // you will need to delete or comment out the line below. 
-            // Leaving it in means the script will kill the old mob and then stop.
-            if (entityAlreadyExists) return false;
+        // 2. Collect all valid spawn candidate coordinates around the player
+        const validPositions = [];
 
-            for (let nullX = -8; nullX <= 8; nullX++) {
-                for (let nullZ = -8; nullZ <= 8; nullZ++) {
-                    for (let nullY = 0; nullY <= 16; nullY++) {
-                        const candidatePos = {
-                            x: Math.floor(player.location.x) + nullX,
-                            y: Math.floor(player.location.y) + nullY,
-                            z: Math.floor(player.location.z) + nullZ
-                        };
+        for (let nullX = -8; nullX <= 8; nullX++) {
+            for (let nullZ = -8; nullZ <= 8; nullZ++) {
+                for (let nullY = 0; nullY <= 16; nullY++) {
+                    const candidatePos = {
+                        x: Math.floor(player.location.x) + nullX,
+                        y: Math.floor(player.location.y) + nullY,
+                        z: Math.floor(player.location.z) + nullZ
+                    };
 
-                        const nullSpawnBlock = player.dimension.getBlock(candidatePos);
-                        if (!nullSpawnBlock) continue;
+                    const blockY = candidatePos.y;
+                    if (blockY < MIN_Y || blockY > MAX_Y) continue;
 
-                        const blockY = candidatePos.y;
-                        if (blockY < MIN_Y || blockY > MAX_Y) continue;
+                    const nullSpawnBlock = player.dimension.getBlock(candidatePos);
+                    if (!nullSpawnBlock || !nullSpawnBlock.typeId || nullSpawnBlock.typeId === "minecraft:air") continue;
 
-                        if (nullSpawnBlock.typeId && nullSpawnBlock.typeId !== "minecraft:air") {
-                            const blockAbovePos = { x: candidatePos.x, y: blockY + 1, z: candidatePos.z };
-                            const blockAbove = player.dimension.getBlock(blockAbovePos);
-                            if (blockAbove && blockAbove.typeId === "minecraft:air") {
-                                try {
-                                    player.dimension.spawnEntity("no_png:null", blockAbovePos);
-                                    sendTestMessage("NULL SPAWNED!");
-                                    return true;
-                                } catch (e) { }
-                            }
-                        }
+                    const blockAbovePos = { x: candidatePos.x, y: blockY + 1, z: candidatePos.z };
+                    const blockAbove = player.dimension.getBlock(blockAbovePos);
+
+                    // Check for 1 block of air space above a non-air block
+                    if (blockAbove && blockAbove.typeId === "minecraft:air") {
+                        validPositions.push(blockAbovePos);
                     }
                 }
             }
-
-            return false;
         }
+
+        // 3. Pick a random valid position from the gathered options
+        if (validPositions.length > 0) {
+            const selectedPos = validPositions[Math.floor(Math.random() * validPositions.length)];
+            try {
+                player.dimension.spawnEntity("no_png:null", selectedPos);
+                sendTestMessage("NULL SPAWNED!");
+                return true;
+            } catch (e) { }
+        }
+
+        return false;
+    },
+    function spawnNullTool() {
+        const players = world.getAllPlayers();
+        if (players.length === 0) return false;
+
+        const player = players[Math.floor(Math.random() * players.length)];
+
+        // 1. Clear existing null_tool entities across ALL dimensions (vanilla + custom)
+        const dimensionsToCheck = [
+            "overworld", "nether", "the_end"
+        ];
+
+        for (const dimId of dimensionsToCheck) {
+            try {
+                const existingEntities = world.getDimension(dimId).getEntities({ type: "no_png:null_tool" });
+                for (const entity of existingEntities) {
+                    entity.kill();
+                }
+            } catch (e) { }
+        }
+
+        // 2. Collect all valid spawn candidate coordinates around the player
+        const validPositions = [];
+
+        for (let nullX = -8; nullX <= 8; nullX++) {
+            for (let nullZ = -8; nullZ <= 8; nullZ++) {
+                for (let nullY = 0; nullY <= 16; nullY++) {
+                    const candidatePos = {
+                        x: Math.floor(player.location.x) + nullX,
+                        y: Math.floor(player.location.y) + nullY,
+                        z: Math.floor(player.location.z) + nullZ
+                    };
+
+                    const blockY = candidatePos.y;
+                    if (blockY < MIN_Y || blockY > MAX_Y) continue;
+
+                    const nullSpawnBlock = player.dimension.getBlock(candidatePos);
+                    if (!nullSpawnBlock || !nullSpawnBlock.typeId || nullSpawnBlock.typeId === "minecraft:air") continue;
+
+                    const blockAbovePos = { x: candidatePos.x, y: blockY + 1, z: candidatePos.z };
+                    const blockAbove = player.dimension.getBlock(blockAbovePos);
+                    const blockAbove2Pos = { x: candidatePos.x, y: blockY + 2, z: candidatePos.z };
+                    const blockAbove2 = player.dimension.getBlock(blockAbove2Pos);
+
+                    // Ensure two blocks of air space above a solid ground block
+                    if (blockAbove?.typeId === "minecraft:air" && blockAbove2?.typeId === "minecraft:air") {
+                        validPositions.push(blockAbovePos);
+                    }
+                }
+            }
+        }
+
+        // 3. Pick a random valid position from the gathered options
+        if (validPositions.length > 0) {
+            const selectedPos = validPositions[Math.floor(Math.random() * validPositions.length)];
+            try {
+                player.dimension.spawnEntity("no_png:null_tool", selectedPos);
+                sendTestMessage("NULL TOOL SPAWNED!");
+                return true;
+            } catch (e) { }
+        }
+
+        return false;
     }
 ];
 
