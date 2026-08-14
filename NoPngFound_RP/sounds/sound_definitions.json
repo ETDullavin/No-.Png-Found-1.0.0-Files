@@ -140,6 +140,36 @@
                     "attenuation_distance": 16
                 }
             ]
+        },
+        "ambient.glass.tap2": {
+            "category": "ambient",
+            "sounds": [
+                {
+                    "name": "sounds/glass_tap2",
+                    "volume": 5,
+                    "attenuation_distance": 16
+                }
+            ]
+        },
+        "ambient.glass.tap4": {
+            "category": "ambient",
+            "sounds": [
+                {
+                    "name": "sounds/glass_tap4",
+                    "volume": 5,
+                    "attenuation_distance": 16
+                }
+            ]
+        },
+        "ambient.glass.tap5": {
+            "category": "ambient",
+            "sounds": [
+                {
+                    "name": "sounds/glass_tap5",
+                    "volume": 5,
+                    "attenuation_distance": 16
+                }
+            ]
         }
     }
 }
