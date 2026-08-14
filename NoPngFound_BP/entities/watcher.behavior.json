@@ -1,0 +1,71 @@
+{
+    "format_version": "1.16.100",
+    "minecraft:entity": {
+        "description": {
+            "identifier": "no_png:watcher",
+            "is_spawnable": false,
+            "is_summonable": true,
+            "is_experimental": false
+        },
+        "component_groups": {
+            "no_png:despawn_on_sight": {
+                "minecraft:instant_despawn": {}
+            }
+        },
+        "components": {
+            "minecraft:physics": {
+                "has_gravity": false,
+                "has_collision": true
+            },
+            "minecraft:behavior.look_at_player": {
+                "priority": 1,
+                "look_distance": 128.0,
+                "probability": 1.0
+            },
+            "minecraft:damage_sensor": {
+                "triggers": [
+                    {
+                        "on_damage": {
+                            "filters": [
+                                {
+                                    "test": "has_damage",
+                                    "value": true
+                                }
+                            ],
+                            "event": "no_png:on_seen",
+                            "target": "self"
+                        }
+                    }
+                ]
+            },
+            "minecraft:looked_at": {
+                "search_radius": 128.0,
+                "find_players_only": true,
+                "looked_at_event": {
+                    "event": "no_png:on_seen",
+                    "target": "self"
+                }
+            },
+            "minecraft:pushable": {
+                "is_pushable": false
+            },
+            "minecraft:push_through": {
+                "value": 1
+            }
+        },
+        "events": {
+            "no_png:on_seen": {
+                "queue_command": {
+                    "command": [
+                        "particle no_png:herobrine_vanish ~ ~1.5 ~"
+                    ]
+                },
+                "add": {
+                    "component_groups": [
+                        "no_png:despawn_on_sight"
+                    ]
+                }
+            }
+        }
+    }
+}

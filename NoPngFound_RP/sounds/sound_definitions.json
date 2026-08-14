@@ -70,6 +70,76 @@
                     "attenuation_distance": 16
                 }
             ]
+        },
+        "ambient.knock.1": {
+            "category": "ambient",
+            "sounds": [
+                {
+                    "name": "sounds/1_knock",
+                    "volume": 5,
+                    "attenuation_distance": 16
+                }
+            ]
+        },
+        "ambient.knock.2": {
+            "category": "ambient",
+            "sounds": [
+                {
+                    "name": "sounds/2_knock",
+                    "volume": 5,
+                    "attenuation_distance": 16
+                }
+            ]
+        },
+        "ambient.knock.3": {
+            "category": "ambient",
+            "sounds": [
+                {
+                    "name": "sounds/3_knock",
+                    "volume": 5,
+                    "attenuation_distance": 16
+                }
+            ]
+        },
+        "ambient.knock.4": {
+            "category": "ambient",
+            "sounds": [
+                {
+                    "name": "sounds/4_knock",
+                    "volume": 5,
+                    "attenuation_distance": 16
+                }
+            ]
+        },
+        "ambient.knock.5": {
+            "category": "ambient",
+            "sounds": [
+                {
+                    "name": "sounds/5_knock",
+                    "volume": 5,
+                    "attenuation_distance": 16
+                }
+            ]
+        },
+        "ambient.knock.6": {
+            "category": "ambient",
+            "sounds": [
+                {
+                    "name": "sounds/6_knock",
+                    "volume": 5,
+                    "attenuation_distance": 16
+                }
+            ]
+        },
+        "ambient.knock.8": {
+            "category": "ambient",
+            "sounds": [
+                {
+                    "name": "sounds/8_knock",
+                    "volume": 5,
+                    "attenuation_distance": 16
+                }
+            ]
         }
     }
 }

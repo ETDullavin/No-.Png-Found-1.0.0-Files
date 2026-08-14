@@ -1,6 +1,6 @@
 // --- CONFIGURATION TOGGLES ---
 const test = true; // Set to true to show debug/test chat messages, false to mute them
-const events = false; // Set to false to disable random events and glitching
+const events = true; // Set to false to disable random events and glitching
 
 const MIN_Y = -64;
 const MAX_Y = 319;
@@ -866,6 +866,52 @@ const randomEvents = [
             } catch (e) { }
         }
 
+        return false;
+    },
+    function knockSound() {
+        const players = world.getAllPlayers();
+        const knockSounds = [
+            "ambient.knock.1",
+            "ambient.knock.2",
+            "ambient.knock.3",
+            "ambient.knock.4",
+            "ambient.knock.5",
+            "ambient.knock.6",
+            "ambient.knock.8"
+        ];
+        const KNOCKSOUND = knockSounds[Math.floor(Math.random() * knockSounds.length)];
+
+        if (players.length === 0) return false;
+
+        const player = players[Math.floor(Math.random() * players.length)];
+
+        for (let knockX = -8; knockX <= 8; knockX++) {
+            for (let knockZ = -8; knockZ <= 8; knockZ++) {
+                for (let knockY = -8; knockY <= 8; knockY++) {
+                    const blockPos = {
+                        x: Math.floor(player.location.x) + knockX,
+                        y: Math.floor(player.location.y) + knockY,
+                        z: Math.floor(player.location.z) + knockZ
+                    };
+
+                    // 1. Prevent out-of-bounds height crashes
+                    if (blockPos.y < MIN_Y || blockPos.y > MAX_Y) continue;
+
+                    // 2. Prevent unloaded chunk crashes
+                    try {
+                        const block = player.dimension.getBlock(blockPos);
+
+                        if (block && block.typeId.endsWith("_door")) {
+                            sendTestMessage("Knock sound played!")
+                            block.dimension.playSound(KNOCKSOUND, blockPos);
+                            return true;
+                        }
+                    } catch (e) {
+                        // Fails silently if the block is in an unloaded chunk
+                    }
+                }
+            }
+        }
         return false;
     }
 ];
