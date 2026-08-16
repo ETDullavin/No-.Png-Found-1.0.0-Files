@@ -228,6 +228,14 @@
                     "processors": "no_png:block_replacement"
                 },
                 "weight": 1
+            },
+            {
+                "element": {
+                    "element_type": "minecraft:single_pool_element",
+                    "location": "no_png:glitch_mineshaft_camp",
+                    "processors": "no_png:block_replacement"
+                },
+                "weight": 1
             }
         ],
         "fallback": "no_png:glitch_mineshaft_cap_pool"

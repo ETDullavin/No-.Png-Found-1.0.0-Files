@@ -108,7 +108,7 @@
 			"minecraft:entity_spawned": {
 				"queue_command": {
 					"command": [
-						"tellraw @a {\"rawtext\":[{\"text\":\"§eD3rh3nter3 joined the game\"}]}"
+						"tellraw @a {\"rawtext\":[{\"text\":\"§e§kM1ke316§r §ejoined the game\"}]}"
 					]
 				},
 				"add": {
@@ -125,7 +125,7 @@
 								"weight": 3,
 								"queue_command": {
 									"command": [
-										"tellraw @a {\"rawtext\":[{\"text\":\"§d§kSTOP§r§0DoN'T§r §dsPeAK§r §0To§r §dhiM!§r§0§kSTOP§r\"}]}",
+										"tellraw @a {\"rawtext\":[{\"text\":\"§kouch >:(\"}]}",
 										"summon no_png:die_entity ~ ~ ~",
 										"playsound mob.dont_look.hit @a ~ ~ ~ 1 1",
 										"particle no_png:missing_particle_fountain ~ ~ ~"
@@ -136,7 +136,7 @@
 								"weight": 1,
 								"queue_command": {
 									"command": [
-										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> Why would you do this?\"}]}"
+										"tellraw @a {\"rawtext\":[{\"text\":\"<§kM1ke316§r> Why would you do this?\"}]}"
 									]
 								}
 							}
@@ -226,7 +226,7 @@
 				"queue_command": {
 					"command": [
 						"event entity @s no_png:chat_pool",
-						"tellraw @a {\"rawtext\":[{\"text\":\"§eD3rh3nter3 left the game\"}]}"
+						"tellraw @a {\"rawtext\":[{\"text\":\"§e§kM1ke316§r §eleft the game\"}]}"
 					]
 				}
 			},
@@ -238,7 +238,7 @@
 								"weight": 10,
 								"queue_command": {
 									"command": [
-										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> Don't look for it...\"}]}"
+										"tellraw @a {\"rawtext\":[{\"text\":\"<§kM1ke316§r> Don't look for it...\"}]}"
 									]
 								}
 							},
@@ -246,7 +246,7 @@
 								"weight": 10,
 								"queue_command": {
 									"command": [
-										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> Hello..?\"}]}"
+										"tellraw @a {\"rawtext\":[{\"text\":\"<§kM1ke316§r> Hello..?\"}]}"
 									]
 								}
 							},
@@ -254,7 +254,7 @@
 								"weight": 10,
 								"queue_command": {
 									"command": [
-										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> What are you doing here?\"}]}"
+										"tellraw @a {\"rawtext\":[{\"text\":\"<§kM1ke316§r> What are you doing here?\"}]}"
 									]
 								}
 							},
@@ -262,7 +262,7 @@
 								"weight": 10,
 								"queue_command": {
 									"command": [
-										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> I searched...and I found...\"}]}"
+										"tellraw @a {\"rawtext\":[{\"text\":\"<§kM1ke316§r> It found me.\"}]}"
 									]
 								}
 							},
@@ -270,7 +270,7 @@
 								"weight": 1,
 								"queue_command": {
 									"command": [
-										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> Don't look for me...\"}]}"
+										"tellraw @a {\"rawtext\":[{\"text\":\"<§kM1ke316§r> Don't look for me...\"}]}"
 									]
 								}
 							},
@@ -278,7 +278,7 @@
 								"weight": 1,
 								"queue_command": {
 									"command": [
-										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> The one who watches...\"}]}"
+										"tellraw @a {\"rawtext\":[{\"text\":\"<§kM1ke316§r> The one who watches...\"}]}"
 									]
 								}
 							},
@@ -286,7 +286,7 @@
 								"weight": 1,
 								"queue_command": {
 									"command": [
-										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> ...is a lie.\"}]}"
+										"tellraw @a {\"rawtext\":[{\"text\":\"<§kM1ke316§r> ...is a lie.\"}]}"
 									]
 								}
 							},
@@ -294,7 +294,7 @@
 								"weight": 1,
 								"queue_command": {
 									"command": [
-										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> It stops me...\"}]}"
+										"tellraw @a {\"rawtext\":[{\"text\":\"<§kM1ke316§r> It stops me...\"}]}"
 									]
 								}
 							},
@@ -302,7 +302,7 @@
 								"weight": 1,
 								"queue_command": {
 									"command": [
-										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> Help me...\"}]}"
+										"tellraw @a {\"rawtext\":[{\"text\":\"<§kM1ke316§r> Help me...\"}]}"
 									]
 								}
 							},
@@ -310,7 +310,7 @@
 								"weight": 1,
 								"queue_command": {
 									"command": [
-										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> Are you still there?\"}]}"
+										"tellraw @a {\"rawtext\":[{\"text\":\"<§kM1ke316§r> Are you still there?\"}]}"
 									]
 								}
 							},
@@ -318,7 +318,7 @@
 								"weight": 1,
 								"queue_command": {
 									"command": [
-										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> I may hop off soon\"}]}"
+										"tellraw @a {\"rawtext\":[{\"text\":\"<§kM1ke316§r> I may hop off soon\"}]}"
 									]
 								}
 							},
@@ -326,7 +326,7 @@
 								"weight": 1,
 								"queue_command": {
 									"command": [
-										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> Don't dig too deep...\"}]}"
+										"tellraw @a {\"rawtext\":[{\"text\":\"<§kM1ke316§r> Don't dig too deep...\"}]}"
 									]
 								}
 							},
@@ -334,7 +334,7 @@
 								"weight": 0.5,
 								"queue_command": {
 									"command": [
-										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> hey guys, welcome back to the channel\"}]}"
+										"tellraw @a {\"rawtext\":[{\"text\":\"<§kM1ke316§r> hey guys, welcome back to the channel\"}]}"
 									]
 								}
 							},
@@ -342,7 +342,7 @@
 								"weight": 0.1,
 								"queue_command": {
 									"command": [
-										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> It'S tRyINg tO tAkE oVEr..!\"}]}"
+										"tellraw @a {\"rawtext\":[{\"text\":\"<§kM1ke316§r> Look behind you.\"}]}"
 									]
 								}
 							},
@@ -350,7 +350,7 @@
 								"weight": 0.1,
 								"queue_command": {
 									"command": [
-										"tellraw @a {\"rawtext\":[{\"text\":\"<D3rh3nter3> 01000110 01101001 01101100 01100101 00100000 01100011 01101111 01110010 01110010 01110101 01110000 01110100 01100101 01100100 00001010\"}]}"
+										"tellraw @a {\"rawtext\":[{\"text\":\"<§kM1ke316§r> 01000110 01101001 01101100 01100101 00100000 01100011 01101111 01110010 01110010 01110101 01110000 01110100 01100101 01100100 00001010\"}]}"
 									]
 								}
 							}
