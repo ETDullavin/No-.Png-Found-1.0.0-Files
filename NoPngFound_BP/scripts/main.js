@@ -1,6 +1,6 @@
 // --- CONFIGURATION TOGGLES ---
 const test = true; // Set to true to show debug/test chat messages, false to mute them
-const events = false; // Set to false to disable random events and glitching
+const events = true; // Set to false to disable random events and glitching
 
 const MIN_Y = -64;
 const MAX_Y = 319;
@@ -377,10 +377,9 @@ system.beforeEvents.startup.subscribe((event) => {
 });
 
 world.afterEvents.worldLoad.subscribe(() => {
-
-
-    // START EVENT DIRECTOR AFTER WORLD IS LOADED
+    // START EVENT DIRECTORS AFTER WORLD IS LOADED
     eventDirector();
+    eventShortDirector();
 });
 
 // --- HELPER FUNCTIONS ---
@@ -476,164 +475,6 @@ const randomEvents = [
             } catch (e) { }
         }
     },
-    function spawnHerobrine() {
-        const players = world.getAllPlayers();
-        if (players.length > 0) {
-            const player = players[Math.floor(Math.random() * players.length)];
-            const dimension = player.dimension;
-
-            if (dimension.getEntities({ type: "no_png:active_herobrine" }).length > 0) return false;
-
-            for (const entity of dimension.getEntities({ type: "no_png:watching_herobrine" })) {
-                entity.remove();
-            }
-
-            const herobrinePos = {
-                x: player.location.x + (Math.random() * 100 - 50),
-                y: Math.min(MAX_Y, player.location.y + 25),
-                z: player.location.z + (Math.random() * 100 - 50)
-            };
-
-            try {
-                dimension.spawnEntity("no_png:watching_herobrine", herobrinePos);
-                sendTestMessage("HEROBRINE SPAWNED!");
-            } catch (e) { }
-        }
-    },
-    function placeGlitchedBlock() {
-        const players = world.getAllPlayers();
-        if (players.length > 0) {
-            const player = players[Math.floor(Math.random() * players.length)];
-            const blockPos = {
-                x: player.location.x + (Math.random() * 64 - 32),
-                y: Math.floor(player.location.y + (Math.random() * 64 - 32)),
-                z: player.location.z + (Math.random() * 64 - 32)
-            };
-
-            if (!isYValid(blockPos.y) || !isYValid(blockPos.y + 6)) return;
-
-            try {
-                const glitchBlock = player.dimension.getBlock(blockPos);
-                if (!glitchBlock) return;
-
-                if (glitchBlock.typeId !== "minecraft:grass_block") {
-                    if (Math.random() < 0.5) {
-                        glitchBlock.setPermutation(BlockPermutation.resolve("minecraft:oak_sign"));
-                        sendTestMessage("A GLITCHED SIGN HAS APPEARED!");
-                    } else {
-                        glitchBlock.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
-                        sendTestMessage("A GLITCHED BLOCK HAS APPEARED!");
-                    }
-                } else {
-                    for (let trunkY = blockPos.y + 1; trunkY <= blockPos.y + 6; trunkY++) {
-                        player.dimension.getBlock({ x: blockPos.x, y: trunkY, z: blockPos.z })?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
-
-                        if (trunkY === blockPos.y + 6) {
-                            for (let leafX = -2; leafX <= 2; leafX++) {
-                                for (let leafZ = -2; leafZ <= 2; leafZ++) {
-                                    for (let leafY = trunkY - 3; leafY <= trunkY - 2; leafY++) {
-                                        if (!isYValid(leafY)) continue;
-                                        const isCorner = Math.abs(leafX) === 2 && Math.abs(leafZ) === 2;
-
-                                        if (isCorner) {
-                                            if (Math.random() < 0.4) player.dimension.getBlock({ x: blockPos.x + leafX, y: leafY, z: blockPos.z + leafZ })?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
-                                        } else {
-                                            player.dimension.getBlock({ x: blockPos.x + leafX, y: leafY, z: blockPos.z + leafZ })?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
-                                        }
-
-                                        if (leafX === 2 && leafY === trunkY - 2 && leafZ === 2) {
-                                            for (let leafX2 = -1; leafX2 <= 1; leafX2++) {
-                                                for (let leafZ2 = -1; leafZ2 <= 1; leafZ2++) {
-                                                    for (let leafY2 = trunkY - 1; leafY2 <= trunkY; leafY2++) {
-                                                        if (!isYValid(leafY2)) continue;
-                                                        const isTopCorner = Math.abs(leafX2) === 1 && Math.abs(leafZ2) === 1;
-
-                                                        if (isTopCorner) {
-                                                            if (Math.random() < 0.33) player.dimension.getBlock({ x: blockPos.x + leafX2, y: leafY2, z: blockPos.z + leafZ2 })?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
-                                                        } else {
-                                                            player.dimension.getBlock({ x: blockPos.x + leafX2, y: leafY2, z: blockPos.z + leafZ2 })?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
-                                                        }
-
-                                                        if (leafX2 === 1 && leafY2 === trunkY && leafZ2 === 1) {
-                                                            sendTestMessage("GLITCHED TREE SPAWNED!");
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            } catch (error) { }
-        }
-    },
-    function playScarySound() {
-        for (const player of world.getAllPlayers()) {
-            player.playSound("mob.dont_look.hit", { location: player.location });
-        }
-        sendTestMessage("SOUND PLAYED!");
-    },
-    function placeCross() {
-        const players = world.getAllPlayers();
-        if (players.length > 0) {
-            const player = players[Math.floor(Math.random() * players.length)];
-            const originBlockPos = {
-                x: player.location.x + (Math.random() * 200 - 100),
-                y: Math.floor(player.location.y + (Math.random() * 100)),
-                z: player.location.z + (Math.random() * 200 - 100)
-            };
-
-            if (!isYValid(originBlockPos.y - 2) || !isYValid(originBlockPos.y + 1)) return;
-
-            try {
-                player.dimension.getBlock(originBlockPos)?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
-                player.dimension.getBlock({ x: originBlockPos.x, y: originBlockPos.y + 1, z: originBlockPos.z })?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
-                player.dimension.getBlock({ x: originBlockPos.x - 1, y: originBlockPos.y, z: originBlockPos.z })?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
-                player.dimension.getBlock({ x: originBlockPos.x + 1, y: originBlockPos.y, z: originBlockPos.z })?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
-                player.dimension.getBlock({ x: originBlockPos.x, y: originBlockPos.y - 1, z: originBlockPos.z })?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
-                player.dimension.getBlock({ x: originBlockPos.x, y: originBlockPos.y - 2, z: originBlockPos.z })?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
-                sendTestMessage("GLITCHED CROSS SPAWNED!");
-            } catch (e) { }
-        }
-    },
-    function spawnFountainItem() {
-        const players = world.getAllPlayers();
-        if (players.length > 0) {
-            const player = players[Math.floor(Math.random() * players.length)];
-            const totalItems = Math.floor(Math.random() * (64 - 16 + 1)) + 16;
-            let itemsSpawned = 0;
-
-            sendTestMessage("A FOUNTAIN OF ITEMS HAS APPEARED!");
-
-            const fountainInterval = system.runInterval(() => {
-                if (itemsSpawned >= totalItems) {
-                    system.clearRun(fountainInterval);
-                    return;
-                }
-                try {
-                    const spawnPos = { x: player.location.x + (Math.random() * 4 - 2), y: player.location.y + 1.5, z: player.location.z + (Math.random() * 4 - 2) };
-                    player.dimension.spawnItem(new ItemStack("no_png:no_texture_item", 1), spawnPos);
-                    itemsSpawned++;
-                } catch (e) { }
-            }, 1);
-        }
-    },
-    function spawnSingleItem() {
-        const players = world.getAllPlayers();
-        if (players.length > 0) {
-            const player = players[Math.floor(Math.random() * players.length)];
-            const itemChoices = ["no_png:no_texture_item", "no_png:no_texture_disc", "minecraft:music_disc_11", "minecraft:music_disc_13"];
-            const selectedItem = itemChoices[Math.floor(Math.random() * itemChoices.length)];
-
-            sendTestMessage("A SINGLE ITEM HAS BEEN GIVEN!");
-            try {
-                player.dimension.spawnItem(new ItemStack(selectedItem, 1), player.location);
-            } catch (e) { }
-        }
-    },
     function corruptChunk() {
         const players = world.getAllPlayers();
         if (players.length > 0) {
@@ -661,31 +502,7 @@ const randomEvents = [
             if (chunkCorrupted) sendTestMessage("A CHUNK HAS BEEN CORRUPTED!");
         }
     },
-    function breakDoor() {
-        const players = world.getAllPlayers();
-        if (players.length > 0) {
-            const player = players[Math.floor(Math.random() * players.length)];
-            const py = Math.floor(player.location.y);
-            const px = Math.floor(player.location.x);
-            const pz = Math.floor(player.location.z);
-            let doorBroken = false;
 
-            for (let chunkY = Math.max(MIN_Y + 1, py - 7); chunkY <= Math.min(MAX_Y, py + 8); chunkY++) {
-                for (let chunkX = -7; chunkX <= 8; chunkX++) {
-                    for (let chunkZ = -7; chunkZ <= 8; chunkZ++) {
-                        try {
-                            const chunk = player.dimension.getBlock({ x: px + chunkX, y: chunkY, z: pz + chunkZ });
-                            if (chunk && chunk.typeId.endsWith("_door")) {
-                                player.dimension.runCommand(`setblock ${chunk.location.x} ${chunk.location.y} ${chunk.location.z} air [] destroy`);
-                                doorBroken = true;
-                            }
-                        } catch (e) { }
-                    }
-                }
-            }
-            if (doorBroken) sendTestMessage("All doors in the chunk have been broken!");
-        }
-    },
     function spawnPlayerEntity() {
         const players = world.getAllPlayers();
         if (players.length > 0) {
@@ -867,6 +684,233 @@ const randomEvents = [
         }
 
         return false;
+    }
+];
+
+function eventDirector() {
+
+    if (!events) return;
+
+    sendTestMessage("Event started/reset!");
+
+    const minShortEventDelayTicks = 6000; // 5 minute
+    const maxShortEventDelayTicks = 12000; // 10 minutes
+
+    system.runTimeout(() => {
+        try {
+            // 1. Get all online players
+            const allPlayers = world.getAllPlayers();
+
+            // 2. Filter to see if any player is actually in the Overworld
+            const overworldPlayers = allPlayers.filter(p => p.dimension.id === "minecraft:overworld");
+
+            // 3. If nobody is in the Overworld, stop here and let 'finally' queue the next check
+            if (overworldPlayers.length === 0) {
+                return;
+            }
+
+            // 4. If we made it here, someone is in the overworld. Proceed with event logic.
+            let eventSucceeded = false;
+            let attempts = 0;
+
+            while (!eventSucceeded && attempts < 10) {
+                attempts++;
+                if (randomEvents[Math.floor(Math.random() * randomEvents.length)]() !== false) {
+                    eventSucceeded = true;
+                }
+            }
+        } catch (error) {
+            console.warn("Event crashed safely: " + error);
+        } finally {
+            // This guarantees the loop keeps ticking for when players return to the Overworld
+            eventDirector();
+        }
+    }, Math.floor(Math.random() * (maxShortEventDelayTicks - minShortEventDelayTicks + 1)) + minShortEventDelayTicks);
+};
+
+const randomShortEvents = [
+    function spawnHerobrine() {
+        const players = world.getAllPlayers();
+        if (players.length > 0) {
+            const player = players[Math.floor(Math.random() * players.length)];
+            const dimension = player.dimension;
+
+            if (dimension.getEntities({ type: "no_png:active_herobrine" }).length > 0) return false;
+
+            for (const entity of dimension.getEntities({ type: "no_png:watching_herobrine" })) {
+                entity.remove();
+            }
+
+            const herobrinePos = {
+                x: player.location.x + (Math.random() * 100 - 50),
+                y: Math.min(MAX_Y, player.location.y + 25),
+                z: player.location.z + (Math.random() * 100 - 50)
+            };
+
+            try {
+                dimension.spawnEntity("no_png:watching_herobrine", herobrinePos);
+                sendTestMessage("HEROBRINE SPAWNED!");
+            } catch (e) { }
+        }
+    },
+    function placeGlitchedBlock() {
+        const players = world.getAllPlayers();
+        if (players.length > 0) {
+            const player = players[Math.floor(Math.random() * players.length)];
+            const blockPos = {
+                x: player.location.x + (Math.random() * 64 - 32),
+                y: Math.floor(player.location.y + (Math.random() * 64 - 32)),
+                z: player.location.z + (Math.random() * 64 - 32)
+            };
+
+            if (!isYValid(blockPos.y) || !isYValid(blockPos.y + 6)) return;
+
+            try {
+                const glitchBlock = player.dimension.getBlock(blockPos);
+                if (!glitchBlock) return;
+
+                if (glitchBlock.typeId !== "minecraft:grass_block") {
+                    if (Math.random() < 0.5) {
+                        glitchBlock.setPermutation(BlockPermutation.resolve("minecraft:oak_sign"));
+                        sendTestMessage("A GLITCHED SIGN HAS APPEARED!");
+                    } else {
+                        glitchBlock.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
+                        sendTestMessage("A GLITCHED BLOCK HAS APPEARED!");
+                    }
+                } else {
+                    for (let trunkY = blockPos.y + 1; trunkY <= blockPos.y + 6; trunkY++) {
+                        player.dimension.getBlock({ x: blockPos.x, y: trunkY, z: blockPos.z })?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
+
+                        if (trunkY === blockPos.y + 6) {
+                            for (let leafX = -2; leafX <= 2; leafX++) {
+                                for (let leafZ = -2; leafZ <= 2; leafZ++) {
+                                    for (let leafY = trunkY - 3; leafY <= trunkY - 2; leafY++) {
+                                        if (!isYValid(leafY)) continue;
+                                        const isCorner = Math.abs(leafX) === 2 && Math.abs(leafZ) === 2;
+
+                                        if (isCorner) {
+                                            if (Math.random() < 0.4) player.dimension.getBlock({ x: blockPos.x + leafX, y: leafY, z: blockPos.z + leafZ })?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
+                                        } else {
+                                            player.dimension.getBlock({ x: blockPos.x + leafX, y: leafY, z: blockPos.z + leafZ })?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
+                                        }
+
+                                        if (leafX === 2 && leafY === trunkY - 2 && leafZ === 2) {
+                                            for (let leafX2 = -1; leafX2 <= 1; leafX2++) {
+                                                for (let leafZ2 = -1; leafZ2 <= 1; leafZ2++) {
+                                                    for (let leafY2 = trunkY - 1; leafY2 <= trunkY; leafY2++) {
+                                                        if (!isYValid(leafY2)) continue;
+                                                        const isTopCorner = Math.abs(leafX2) === 1 && Math.abs(leafZ2) === 1;
+
+                                                        if (isTopCorner) {
+                                                            if (Math.random() < 0.33) player.dimension.getBlock({ x: blockPos.x + leafX2, y: leafY2, z: blockPos.z + leafZ2 })?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
+                                                        } else {
+                                                            player.dimension.getBlock({ x: blockPos.x + leafX2, y: leafY2, z: blockPos.z + leafZ2 })?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
+                                                        }
+
+                                                        if (leafX2 === 1 && leafY2 === trunkY && leafZ2 === 1) {
+                                                            sendTestMessage("GLITCHED TREE SPAWNED!");
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (error) { }
+        }
+    },
+    function playScarySound() {
+        for (const player of world.getAllPlayers()) {
+            player.playSound("mob.dont_look.hit", { location: player.location });
+        }
+        sendTestMessage("SOUND PLAYED!");
+    },
+    function placeCross() {
+        const players = world.getAllPlayers();
+        if (players.length > 0) {
+            const player = players[Math.floor(Math.random() * players.length)];
+            const originBlockPos = {
+                x: player.location.x + (Math.random() * 200 - 100),
+                y: Math.floor(player.location.y + (Math.random() * 100)),
+                z: player.location.z + (Math.random() * 200 - 100)
+            };
+
+            if (!isYValid(originBlockPos.y - 2) || !isYValid(originBlockPos.y + 1)) return;
+
+            try {
+                player.dimension.getBlock(originBlockPos)?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
+                player.dimension.getBlock({ x: originBlockPos.x, y: originBlockPos.y + 1, z: originBlockPos.z })?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
+                player.dimension.getBlock({ x: originBlockPos.x - 1, y: originBlockPos.y, z: originBlockPos.z })?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
+                player.dimension.getBlock({ x: originBlockPos.x + 1, y: originBlockPos.y, z: originBlockPos.z })?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
+                player.dimension.getBlock({ x: originBlockPos.x, y: originBlockPos.y - 1, z: originBlockPos.z })?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
+                player.dimension.getBlock({ x: originBlockPos.x, y: originBlockPos.y - 2, z: originBlockPos.z })?.setPermutation(BlockPermutation.resolve("no_png:missingtexture_block"));
+                sendTestMessage("GLITCHED CROSS SPAWNED!");
+            } catch (e) { }
+        }
+    },
+    function spawnFountainItem() {
+        const players = world.getAllPlayers();
+        if (players.length > 0) {
+            const player = players[Math.floor(Math.random() * players.length)];
+            const totalItems = Math.floor(Math.random() * (64 - 16 + 1)) + 16;
+            let itemsSpawned = 0;
+
+            sendTestMessage("A FOUNTAIN OF ITEMS HAS APPEARED!");
+
+            const fountainInterval = system.runInterval(() => {
+                if (itemsSpawned >= totalItems) {
+                    system.clearRun(fountainInterval);
+                    return;
+                }
+                try {
+                    const spawnPos = { x: player.location.x + (Math.random() * 4 - 2), y: player.location.y + 1.5, z: player.location.z + (Math.random() * 4 - 2) };
+                    player.dimension.spawnItem(new ItemStack("no_png:no_texture_item", 1), spawnPos);
+                    itemsSpawned++;
+                } catch (e) { }
+            }, 1);
+        }
+    },
+    function spawnSingleItem() {
+        const players = world.getAllPlayers();
+        if (players.length > 0) {
+            const player = players[Math.floor(Math.random() * players.length)];
+            const itemChoices = ["no_png:no_texture_item", "no_png:no_texture_disc", "minecraft:music_disc_11", "minecraft:music_disc_13"];
+            const selectedItem = itemChoices[Math.floor(Math.random() * itemChoices.length)];
+
+            sendTestMessage("A SINGLE ITEM HAS BEEN GIVEN!");
+            try {
+                player.dimension.spawnItem(new ItemStack(selectedItem, 1), player.location);
+            } catch (e) { }
+        }
+    },
+    function breakDoor() {
+        const players = world.getAllPlayers();
+        if (players.length > 0) {
+            const player = players[Math.floor(Math.random() * players.length)];
+            const py = Math.floor(player.location.y);
+            const px = Math.floor(player.location.x);
+            const pz = Math.floor(player.location.z);
+            let doorBroken = false;
+
+            for (let chunkY = Math.max(MIN_Y + 1, py - 7); chunkY <= Math.min(MAX_Y, py + 8); chunkY++) {
+                for (let chunkX = -7; chunkX <= 8; chunkX++) {
+                    for (let chunkZ = -7; chunkZ <= 8; chunkZ++) {
+                        try {
+                            const chunk = player.dimension.getBlock({ x: px + chunkX, y: chunkY, z: pz + chunkZ });
+                            if (chunk && chunk.typeId.endsWith("_door")) {
+                                player.dimension.runCommand(`setblock ${chunk.location.x} ${chunk.location.y} ${chunk.location.z} air [] destroy`);
+                                doorBroken = true;
+                            }
+                        } catch (e) { }
+                    }
+                }
+            }
+            if (doorBroken) sendTestMessage("All doors in the chunk have been broken!");
+        }
     },
     function tapSound() {
         const players = world.getAllPlayers();
@@ -958,11 +1002,14 @@ const randomEvents = [
     }
 ];
 
-function eventDirector() {
+function eventShortDirector() {
 
     if (!events) return;
 
-    sendTestMessage("Event started/reset!");
+    sendTestMessage("Short event started/reset!");
+
+    const minShortEventDelayTicks = 1200; // 1 minute
+    const maxShortEventDelayTicks = 6000; // 5 minutes
 
     system.runTimeout(() => {
         try {
@@ -983,18 +1030,19 @@ function eventDirector() {
 
             while (!eventSucceeded && attempts < 10) {
                 attempts++;
-                if (randomEvents[Math.floor(Math.random() * randomEvents.length)]() !== false) {
+                if (randomShortEvents[Math.floor(Math.random() * randomShortEvents.length)]() !== false) {
                     eventSucceeded = true;
                 }
             }
         } catch (error) {
-            console.warn("Event crashed safely: " + error);
+            console.warn("Short event crashed safely: " + error);
         } finally {
             // This guarantees the loop keeps ticking for when players return to the Overworld
-            eventDirector();
+            const nextDelay = Math.floor(Math.random() * (maxShortEventDelayTicks - minShortEventDelayTicks + 1)) + minShortEventDelayTicks;
+            system.runTimeout(() => eventShortDirector(), nextDelay);
         }
-    }, Math.floor(Math.random() * 100) + 100);
-}
+    }, Math.floor(Math.random() * (maxShortEventDelayTicks - minShortEventDelayTicks + 1)) + minShortEventDelayTicks);
+};
 
 const entitySpawnMap = {
     "no_png:chicken_no_texture": "no_png:dont_look_at_me",
