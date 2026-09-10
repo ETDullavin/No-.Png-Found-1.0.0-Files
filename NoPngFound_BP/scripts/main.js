@@ -824,10 +824,14 @@ const randomShortEvents = [
         }
     },
     function playScarySound() {
+        const randomScarySounds = [
+            "mob.dont_look.hit",
+            "mob.corruption.hurt"
+        ]
         for (const player of world.getAllPlayers()) {
-            player.playSound("mob.dont_look.hit", { location: player.location });
+            player.playSound(randomScarySounds[Math.floor(Math.random() * randomScarySounds.length)], { location: player.location });
         }
-        sendTestMessage("SOUND PLAYED!");
+        sendTestMessage(" SCARY SOUND PLAYED!");
     },
     function placeCross() {
         const players = world.getAllPlayers();
@@ -944,6 +948,58 @@ const randomShortEvents = [
                         if (block && block.typeId.endsWith("glass") || block && block.typeId.endsWith("_pane")) {
                             sendTestMessage("Tap sound played!")
                             block.dimension.playSound(KNOCKSOUND, blockPos);
+                            return true;
+                        }
+                    } catch (e) {
+                        // Fails silently if the block is in an unloaded chunk
+                    }
+                }
+            }
+        }
+        return false;
+    },
+    function spawnWatcher() {
+        const players = world.getAllPlayers();
+        if (players.length === 0) return false;
+
+        const player = players[Math.floor(Math.random() * players.length)];
+
+        // Scan a 17x17x17 area around the player
+        for (let knockX = -8; knockX <= 8; knockX++) {
+            for (let knockZ = -8; knockZ <= 8; knockZ++) {
+                for (let knockY = -8; knockY <= 8; knockY++) {
+                    const blockPos = {
+                        x: Math.floor(player.location.x) + knockX,
+                        y: Math.floor(player.location.y) + knockY,
+                        z: Math.floor(player.location.z) + knockZ
+                    };
+
+                    // 1. Prevent out-of-bounds height crashes
+                    if (blockPos.y < -64 || blockPos.y > 320) continue; // Assuming standard world limits
+
+                    // 2. Prevent unloaded chunk crashes
+                    try {
+                        const block = player.dimension.getBlock(blockPos);
+
+                        if (block && (block.typeId.endsWith("glass") || block.typeId.endsWith("_pane"))) {
+
+                            // Calculate direction from player to the glass block
+                            const diffX = blockPos.x - Math.floor(player.location.x);
+                            const diffZ = blockPos.z - Math.floor(player.location.z);
+
+                            // Math.sign returns 1, -1, or 0. This pushes the spawn exactly 1 block behind the glass.
+                            const spawnLocation = {
+                                x: blockPos.x + Math.sign(diffX),
+                                y: blockPos.y,
+                                z: blockPos.z + Math.sign(diffZ)
+                            };
+
+                            // Spawn the entity using a Vector3 object
+                            player.dimension.spawnEntity("no_png:watcher", spawnLocation);
+
+                            // Assuming sendTestMessage is a custom function you have defined elsewhere
+                            // sendTestMessage("Watcher SPAWNED!"); 
+
                             return true;
                         }
                     } catch (e) {
