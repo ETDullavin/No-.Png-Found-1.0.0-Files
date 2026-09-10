@@ -57,7 +57,7 @@
             "no_png:on_seen": {
                 "queue_command": {
                     "command": [
-                        "particle no_png:herobrine_vanish ~ ~1.5 ~"
+                        "particle no_png:missing_particle ~ ~1.5 ~"
                     ]
                 },
                 "add": {
