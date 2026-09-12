@@ -10,13 +10,14 @@
                     "functions": [
                         {
                             "function": "set_book_contents",
-                            "author": "§kM1ke316§r",
-                            "title": "§kSearching for an exit",
+                            "author": "M1ke316",
+                            "title": "2nd Journal",
                             "pages": [
-                                "§kIt found me. Lorem ipsum dolor sit amet consectetur adipiscing elit. Lorem ipsum dolor sit amet consectetur adipiscing elit. Sit amet consectetur adipiscing elit quisque faucibus ex. Adipiscing elit quisque faucibus ex sapien vitae pellentesque. I'm alive?. Lorem ipsum dolor sit amet consectetur adipiscing elit. Dolor sit amet consectetur adipiscing elit quisque faucibus.",
-                                "§kLorem ipsum dolor sit amet consectetur adipiscing elit. Dolor sit amet consectetur adipiscing elit quisque faucibus. As I wandered, Lorem ipsum dolor sit amet consectetur adipiscing elit. I continued to searched for the exit.",
-                                "§kLorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos. Where? Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Maybe there is none.",
-                                "§kLorem ipsum dolor sit amet consectetur adipiscing elit. ??? weeks. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. I can't figure it out. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. I'm hopping off for the day. Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Should I settle down?"
+                                "Day 1: Well, I sadly left my old notebook in my camp. Now I have to start again. I made a base for myself, but I still don't have an idea to escape. I guess I'll continue building and searching. :(",
+                                "Day 2: WOAH! This place has so many rare resources! I found so many ore blocks down here, I had to make myself a storage system. I am running out of food, so I'll stay put and let my crops grow so I don't starve.",
+                                "Day 5: I built a gate infront of the entrance. I don't like this place. Is anything alive in here? I got TP'd here by that glitched monster, so I'm assuming this place isn't happy I'm here. I got to get out of here. I have to eat first though!",
+                                "Day 53: I forgot I had this thing. My friends don't believe that this is real, but I guess I can't blame them. I'm getting closer to finding the exit, I can feel it. I got school in the morning though, so I'm going to hop off for now and sleep. :P",
+                                "Day 72: I crafted a new item. I didn't even know this was here until I checked my crafting recipes. I'm going to try it now, wish me luck!"
                             ]
                         }
                     ]
@@ -26,7 +27,7 @@
         {
             "rolls": {
                 "min": 8,
-                "max": 10
+                "max": 16
             },
             "entries": [
                 {
@@ -41,11 +42,25 @@
                             }
                         }
                     ],
-                    "weight": 20
+                    "weight": 5
                 },
                 {
                     "type": "item",
-                    "name": "minecraft:iron_pickaxe",
+                    "name": "minecraft:diamond_pickaxe",
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                        }
+                    ],
+                    "weight": 15
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:diamond_sword",
                     "functions": [
                         {
                             "function": "set_count",
@@ -59,21 +74,7 @@
                 },
                 {
                     "type": "item",
-                    "name": "minecraft:copper_sword",
-                    "functions": [
-                        {
-                            "function": "set_count",
-                            "count": {
-                                "min": 1,
-                                "max": 1
-                            }
-                        }
-                    ],
-                    "weight": 25
-                },
-                {
-                    "type": "item",
-                    "name": "minecraft:gold_hoe",
+                    "name": "minecraft:diamond_hoe",
                     "functions": [
                         {
                             "function": "set_count",
@@ -83,7 +84,7 @@
                             }
                         }
                     ],
-                    "weight": 50
+                    "weight": 10
                 },
                 {
                     "type": "item",
@@ -97,7 +98,7 @@
                             }
                         }
                     ],
-                    "weight": 15
+                    "weight": 40
                 },
                 {
                     "type": "item",
@@ -111,7 +112,7 @@
                             }
                         }
                     ],
-                    "weight": 50
+                    "weight": 25
                 },
                 {
                     "type": "item",
@@ -125,7 +126,7 @@
                             }
                         }
                     ],
-                    "weight": 50
+                    "weight": 25
                 },
                 {
                     "type": "item",
@@ -139,11 +140,25 @@
                             }
                         }
                     ],
-                    "weight": 50
+                    "weight": 25
                 },
                 {
                     "type": "item",
-                    "name": "no_png:overworld_compass",
+                    "name": "minecraft:compass",
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 12
+                            }
+                        }
+                    ],
+                    "weight": 1
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:music_disc_otherside",
                     "functions": [
                         {
                             "function": "set_count",

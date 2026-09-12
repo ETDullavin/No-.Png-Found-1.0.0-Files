@@ -1,6 +1,6 @@
 // --- CONFIGURATION TOGGLES ---
 const test = true; // Set to true to show debug/test chat messages, false to mute them
-const events = true; // Set to false to disable random events and glitching
+const events = false; // Set to false to disable random events and glitching
 
 const MIN_Y = -64;
 const MAX_Y = 319;
