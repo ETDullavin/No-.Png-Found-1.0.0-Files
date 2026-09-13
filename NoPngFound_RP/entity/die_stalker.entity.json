@@ -1,0 +1,32 @@
+{
+    "format_version": "1.8.0",
+    "minecraft:client_entity": {
+        "description": {
+            "identifier": "no_png:die_stalker",
+            "min_engine_version": "1.8.0",
+            "materials": {
+                "default": "spider",
+                "invisible": "spider_invisible"
+            },
+            "textures": {
+                "default": "textures/entity/die_entity"
+            },
+            "geometry": {
+                "default": "geometry.die_stalker"
+            },
+            "animations": {
+                "default_leg_pose": "animation.die_stalker.default_leg_pose",
+                "look_at_target": "animation.die_stalker.look_at_target",
+                "walk": "animation.die_stalker.walk"
+            },
+            "animation_controllers": [
+                {
+                    "move": "controller.animation.spider.move"
+                }
+            ],
+            "render_controllers": [
+                "controller.render.spider"
+            ]
+        }
+    }
+}

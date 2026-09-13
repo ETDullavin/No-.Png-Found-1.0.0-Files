@@ -16,6 +16,7 @@ entity.no_png:active_herobrine.name=§kHeroBrine§r
 entity.no_png:watching_herobrine.name=Herobrine
 entity.no_png:player_entity.name=§kM1ke316§r
 entity.no_png:die_entity.name=§kDIEDIEDIEDIEDIEDIEDIEDIEDIEDIEDIEDIEDIEDIEDIE!§r
+entity.no_png:die_stalker.name=§kDIEDIEDIEDIEDIEDIEDIEDIEDIEDIEDIEDIEDIEDIEDIE!§r
 entity.no_png:corruption.name=§kCorruption§r
 item.no_png:overworld_compass=Overworld Compass
 tile.no_png:glitch_poppy.name=§kPoppy§r

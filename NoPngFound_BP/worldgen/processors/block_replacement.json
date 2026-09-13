@@ -27,6 +27,16 @@
                         "output_state": {
                             "name": "no_png:glitch_planks"
                         }
+                    },
+                    {
+                        "input_predicate": {
+                            "predicate_type": "minecraft:random_block_match",
+                            "block": "minecraft:torch",
+                            "probability": 0.33
+                        },
+                        "output_state": {
+                            "name": "minecraft:air"
+                        }
                     }
                 ]
             }

@@ -1,0 +1,102 @@
+{
+    "format_version": "1.16.100",
+    "minecraft:entity": {
+        "description": {
+            "identifier": "no_png:die_stalker",
+            "is_spawnable": false,
+            "is_summonable": true,
+            "is_experimental": false
+        },
+        "component_groups": {
+            "no_png:despawn_group": {
+                "minecraft:instant_despawn": {}
+            }
+        },
+        "components": {
+            "minecraft:type_family": {
+                "family": [
+                    "monster",
+                    "mob"
+                ]
+            },
+            "minecraft:collision_box": {
+                "width": 3.0,
+                "height": 2.0
+            },
+            "minecraft:physics": {},
+            "minecraft:health": {
+                "value": 40,
+                "max": 40
+            },
+            "minecraft:follow_range": {
+                "value": 128,
+                "max": 128
+            },
+            "minecraft:movement": {
+                "value": 0.70
+            },
+            "minecraft:movement.basic": {},
+            "minecraft:jump.static": {},
+            "minecraft:navigation.walk": {
+                "can_walk": true,
+                "can_break_doors": true
+            },
+            "minecraft:annotation.break_door": {},
+            "minecraft:attack": {
+                "damage": 18
+            },
+            "minecraft:behavior.melee_attack": {
+                "priority": 1,
+                "speed_multiplier": 1.25,
+                "reach_multiplier": 1.25
+            },
+            "minecraft:behavior.hurt_by_target": {
+                "priority": 2
+            },
+            "minecraft:behavior.nearest_attackable_target": {
+                "priority": 3,
+                "must_see": true,
+                "reselect_targets": true,
+                "within_radius": 128,
+                "entity_types": [
+                    {
+                        "filters": {
+                            "test": "is_family",
+                            "subject": "other",
+                            "value": "player"
+                        },
+                        "max_dist": 128
+                    }
+                ]
+            },
+            "minecraft:behavior.random_stroll": {
+                "priority": 4,
+                "speed_multiplier": 1.0
+            },
+            "minecraft:behavior.look_at_player": {
+                "priority": 5,
+                "look_distance": 6,
+                "probability": 0.02
+            },
+            "minecraft:behavior.random_look_around": {
+                "priority": 6
+            },
+            "minecraft:ageable": {
+                "duration": 120,
+                "grow_up": {
+                    "event": "no_png:despawn_event",
+                    "target": "self"
+                }
+            }
+        },
+        "events": {
+            "no_png:despawn_event": {
+                "add": {
+                    "component_groups": [
+                        "no_png:despawn_group"
+                    ]
+                }
+            }
+        }
+    }
+}
