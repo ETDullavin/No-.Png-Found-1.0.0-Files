@@ -10,13 +10,12 @@
                     "functions": [
                         {
                             "function": "set_book_contents",
-                            "author": "§kM1ke316§r",
-                            "title": "§kJournal",
+                            "author": "M1ke316",
+                            "title": "Journal",
                             "pages": [
-                                "§kIt found me. Lorem ipsum dolor sit amet consectetur adipiscing elit. Lorem ipsum dolor sit amet consectetur adipiscing elit. Sit amet consectetur adipiscing elit quisque faucibus ex. Adipiscing elit quisque faucibus ex sapien vitae pellentesque. I'm alive?. Lorem ipsum dolor sit amet consectetur adipiscing elit. Dolor sit amet consectetur adipiscing elit quisque faucibus.",
-                                "§kLorem ipsum dolor sit amet consectetur adipiscing elit. Dolor sit amet consectetur adipiscing elit quisque faucibus. As I wandered, Lorem ipsum dolor sit amet consectetur adipiscing elit. I continued to searched for the exit.",
-                                "§kLorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos. Where? Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Maybe there is none.",
-                                "§kLorem ipsum dolor sit amet consectetur adipiscing elit. ??? weeks. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. I can't figure it out. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. I'm hopping off for the day. Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Should I settle down?"
+                                "Day 9: I went mining for some andisite for my kitchen today. I want to keep a lookout for weird glitches, but I don't know what caused them, so I'll keep building my base. Maybe I'll find something while I'm playing again.",
+                                "Day §k10§r :§kWas something tapping on the glass? Something is wrong in my world. I want to keep looking, but I'm also kinda scared. Maybe a few more days in this world before I reset my game files.§r",
+                                "§kIT'S OUTSIDE! WHAT DO I DO? IT'S BLOCKED OFF, BUT I HEAR IT UPSTAIRS...DO I HEAR SOMETHING BREAKING? OH SHO-§r"
                             ]
                         }
                     ]
@@ -26,7 +25,7 @@
         {
             "rolls": {
                 "min": 8,
-                "max": 10
+                "max": 16
             },
             "entries": [
                 {
@@ -41,11 +40,39 @@
                             }
                         }
                     ],
-                    "weight": 20
+                    "weight": 60
                 },
                 {
                     "type": "item",
-                    "name": "minecraft:iron_pickaxe",
+                    "name": "minecraft:andesite",
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 32
+                            }
+                        }
+                    ],
+                    "weight": 10
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:stone",
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 32
+                            }
+                        }
+                    ],
+                    "weight": 10
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:diamond_sword",
                     "functions": [
                         {
                             "function": "set_count",
@@ -55,35 +82,7 @@
                             }
                         }
                     ],
-                    "weight": 25
-                },
-                {
-                    "type": "item",
-                    "name": "minecraft:copper_sword",
-                    "functions": [
-                        {
-                            "function": "set_count",
-                            "count": {
-                                "min": 1,
-                                "max": 1
-                            }
-                        }
-                    ],
-                    "weight": 25
-                },
-                {
-                    "type": "item",
-                    "name": "minecraft:gold_hoe",
-                    "functions": [
-                        {
-                            "function": "set_count",
-                            "count": {
-                                "min": 1,
-                                "max": 10
-                            }
-                        }
-                    ],
-                    "weight": 50
+                    "weight": 10
                 },
                 {
                     "type": "item",
@@ -93,7 +92,7 @@
                             "function": "set_count",
                             "count": {
                                 "min": 1,
-                                "max": 10
+                                "max": 16
                             }
                         }
                     ],
@@ -101,55 +100,69 @@
                 },
                 {
                     "type": "item",
-                    "name": "minecraft:iron_nugget",
+                    "name": "minecraft:iron_ingot",
                     "functions": [
                         {
                             "function": "set_count",
                             "count": {
                                 "min": 1,
-                                "max": 12
+                                "max": 16
                             }
                         }
                     ],
-                    "weight": 50
+                    "weight": 15
                 },
                 {
                     "type": "item",
-                    "name": "minecraft:gold_nugget",
+                    "name": "minecraft:coal",
                     "functions": [
                         {
                             "function": "set_count",
                             "count": {
                                 "min": 1,
-                                "max": 12
+                                "max": 32
                             }
                         }
                     ],
-                    "weight": 50
+                    "weight": 15
                 },
                 {
                     "type": "item",
-                    "name": "minecraft:copper_nugget",
+                    "name": "minecraft:redstone_dust",
                     "functions": [
                         {
                             "function": "set_count",
                             "count": {
                                 "min": 1,
-                                "max": 12
+                                "max": 48
                             }
                         }
                     ],
-                    "weight": 50
+                    "weight": 8
                 },
                 {
                     "type": "item",
-                    "name": "no_png:overworld_compass",
+                    "name": "minecraft:dirt",
                     "functions": [
                         {
                             "function": "set_count",
                             "count": {
                                 "min": 1,
-                                "max": 12
+                                "max": 32
+                            }
+                        }
+                    ],
+                    "weight": 3
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:music_disc_otherside",
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 1
                             }
                         }
                     ],

@@ -1,0 +1,148 @@
+{
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "item",
+                    "name": "minecraft:written_book",
+                    "weight": 1,
+                    "functions": [
+                        {
+                            "function": "set_book_contents",
+                            "author": "M1ke316",
+                            "title": "Journal",
+                            "pages": [
+                                "Day 1: I heard something, I swear. I'm going to start this journal to keep track of my findings. Something's wrong with my Minecraft game. It's getting dark though, I better make a hut and cook some food.",
+                                "Day 2: Went mining, but nothing unusual.",
+                                "Day 3: More mining, however I did find a corrupted block. I don't know what it is, but it didn't drop anything when I mined it. Something is wrong...",
+                                "Day 4-6: I found a village and looted it. I also found a pretty cool place for a base. I'll be staying in my hut while I build it, hopefully I can move in soon.",
+                                "Day 7-8: As I was building, I heard the noise again. It sounded glitchy. I'm sitting inside my base right now, so I feel a little better. I'll grab all my stuff from my hut tomorrow. I'm really scared right now, but I have to find out what's wrong with my game before I reset it..."
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "rolls": {
+                "min": 8,
+                "max": 16
+            },
+            "entries": [
+                {
+                    "type": "item",
+                    "name": "no_png:no_texture_item",
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                        }
+                    ],
+                    "weight": 60
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:diamond_sword",
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                        }
+                    ],
+                    "weight": 15
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:diamond",
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 16
+                            }
+                        }
+                    ],
+                    "weight": 5
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:iron_ingot",
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 16
+                            }
+                        }
+                    ],
+                    "weight": 10
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:coal",
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 32
+                            }
+                        }
+                    ],
+                    "weight": 10
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:redstone_dust",
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 48
+                            }
+                        }
+                    ],
+                    "weight": 8
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:dirt",
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 32
+                            }
+                        }
+                    ],
+                    "weight": 10
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:music_disc_otherside",
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                        }
+                    ],
+                    "weight": 1
+                }
+            ]
+        }
+    ]
+}

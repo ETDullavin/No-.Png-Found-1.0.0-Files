@@ -5,18 +5,38 @@
             "entries": [
                 {
                     "type": "item",
+                    "name": "no_png:no_texture_disc",
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                        }
+                    ],
+                    "weight": 1
+                }
+            ]
+        },
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "item",
                     "name": "minecraft:written_book",
                     "weight": 1,
                     "functions": [
                         {
                             "function": "set_book_contents",
                             "author": "§kM1ke316§r",
-                            "title": "§kJournal",
+                            "title": "§k2nd Journal§r",
                             "pages": [
-                                "§kIt found me. Lorem ipsum dolor sit amet consectetur adipiscing elit. Lorem ipsum dolor sit amet consectetur adipiscing elit. Sit amet consectetur adipiscing elit quisque faucibus ex. Adipiscing elit quisque faucibus ex sapien vitae pellentesque. I'm alive?. Lorem ipsum dolor sit amet consectetur adipiscing elit. Dolor sit amet consectetur adipiscing elit quisque faucibus.",
-                                "§kLorem ipsum dolor sit amet consectetur adipiscing elit. Dolor sit amet consectetur adipiscing elit quisque faucibus. As I wandered, Lorem ipsum dolor sit amet consectetur adipiscing elit. I continued to searched for the exit.",
-                                "§kLorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos. Where? Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Maybe there is none.",
-                                "§kLorem ipsum dolor sit amet consectetur adipiscing elit. ??? weeks. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. I can't figure it out. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. I'm hopping off for the day. Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Should I settle down?"
+                                "Day 72: I'm out. It worked! The §aOverworld Compass§r worked! I can't leave until I figure out what this glitch is. It definitly doesn't like me...is it alive? I'm going to build a watch tower though, I'll update the journal once I'm done.",
+                                "Day 96: I think I'm seeing things or hearing things. Goodness, my head hurts so much. I think I'm on this VR headset too long. It's just that I need to figure this out, then I can stop. I'm the only one who can find §kME§r.",
+                                "Day §k98§r: WHY SLEEP WHEN I CAN §kfindme§r. §kheshe§r DOESN'T KNOW ANYTHING, IF ANYTHING THE SONG HELPS. §kme§r GAVE IT TO ME. §kme§r WANTS ME TO §kfindme§r.",
+                                "Day 99: I'm going to sleep. My head h§ku§rrts. I'm g§ko§rin§kg§r to §kfig§rure t§khi§rs out t§kom§ror§kro§rw. I §kput§r too m§ku§rc§kh§r into t§khis§r. School, §kt§ri§kme§r, §kmoney§r, friends, e§kver§ry§kt§rhi§kng§r...",
+                                "I §kpu§rt everything in§kto§r §kYOU§r...§kI§r just need to figure §kME§r out! Owwwwwwwwwwwwww..."
                             ]
                         }
                     ]
@@ -26,7 +46,7 @@
         {
             "rolls": {
                 "min": 8,
-                "max": 10
+                "max": 16
             },
             "entries": [
                 {
@@ -41,11 +61,11 @@
                             }
                         }
                     ],
-                    "weight": 20
+                    "weight": 60
                 },
                 {
                     "type": "item",
-                    "name": "minecraft:iron_pickaxe",
+                    "name": "minecraft:compass",
                     "functions": [
                         {
                             "function": "set_count",
@@ -55,11 +75,25 @@
                             }
                         }
                     ],
-                    "weight": 25
+                    "weight": 3
                 },
                 {
                     "type": "item",
-                    "name": "minecraft:copper_sword",
+                    "name": "minecraft:grass_block",
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 32
+                            }
+                        }
+                    ],
+                    "weight": 10
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:diamond_sword",
                     "functions": [
                         {
                             "function": "set_count",
@@ -69,21 +103,7 @@
                             }
                         }
                     ],
-                    "weight": 25
-                },
-                {
-                    "type": "item",
-                    "name": "minecraft:gold_hoe",
-                    "functions": [
-                        {
-                            "function": "set_count",
-                            "count": {
-                                "min": 1,
-                                "max": 10
-                            }
-                        }
-                    ],
-                    "weight": 50
+                    "weight": 15
                 },
                 {
                     "type": "item",
@@ -93,67 +113,67 @@
                             "function": "set_count",
                             "count": {
                                 "min": 1,
-                                "max": 10
+                                "max": 16
                             }
                         }
                     ],
-                    "weight": 15
+                    "weight": 5
                 },
                 {
                     "type": "item",
-                    "name": "minecraft:iron_nugget",
+                    "name": "minecraft:iron_ingot",
                     "functions": [
                         {
                             "function": "set_count",
                             "count": {
                                 "min": 1,
-                                "max": 12
+                                "max": 16
                             }
                         }
                     ],
-                    "weight": 50
+                    "weight": 10
                 },
                 {
                     "type": "item",
-                    "name": "minecraft:gold_nugget",
+                    "name": "minecraft:coal",
                     "functions": [
                         {
                             "function": "set_count",
                             "count": {
                                 "min": 1,
-                                "max": 12
+                                "max": 32
                             }
                         }
                     ],
-                    "weight": 50
+                    "weight": 10
                 },
                 {
                     "type": "item",
-                    "name": "minecraft:copper_nugget",
+                    "name": "minecraft:redstone_dust",
                     "functions": [
                         {
                             "function": "set_count",
                             "count": {
                                 "min": 1,
-                                "max": 12
+                                "max": 48
                             }
                         }
                     ],
-                    "weight": 50
+                    "weight": 8
                 },
                 {
                     "type": "item",
-                    "name": "no_png:overworld_compass",
+                    "name": "minecraft:dirt",
                     "functions": [
                         {
                             "function": "set_count",
                             "count": {
                                 "min": 1,
-                                "max": 12
+                                "max": 32
                             }
                         }
                     ],
-                    "weight": 1
+                    "weight": 10
                 }
             ]
         }
