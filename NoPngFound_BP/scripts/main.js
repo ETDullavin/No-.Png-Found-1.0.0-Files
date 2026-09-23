@@ -1,6 +1,6 @@
 // --- CONFIGURATION TOGGLES ---
-const test = true; // Set to true to show debug/test chat messages, false to mute them
-const events = false; // Set to false to disable random events and glitching
+const test = false; // Set to true to show debug/test chat messages, false to mute them
+const events = true; // Set to false to disable random events and glitching
 
 const MIN_Y = -64;
 const MAX_Y = 319;
@@ -708,7 +708,11 @@ function eventDirector() {
             const allPlayers = world.getAllPlayers();
 
             // 2. Filter to see if any player is actually in the Overworld
-            const overworldPlayers = allPlayers.filter(p => p.dimension.id === "minecraft:overworld");
+            const overworldPlayers = allPlayers.filter(p =>
+                p.dimension.id === "minecraft:overworld" ||
+                p.dimension.id === "minecraft:nether" ||
+                p.dimension.id === "minecraft:the_end"
+            );
 
             // 3. If nobody is in the Overworld, stop here and let 'finally' queue the next check
             if (overworldPlayers.length === 0) {
@@ -1079,7 +1083,11 @@ function eventShortDirector() {
             const allPlayers = world.getAllPlayers();
 
             // 2. Filter to see if any player is actually in the Overworld
-            const overworldPlayers = allPlayers.filter(p => p.dimension.id === "minecraft:overworld");
+            const overworldPlayers = allPlayers.filter(p =>
+                p.dimension.id === "minecraft:overworld" ||
+                p.dimension.id === "minecraft:nether" ||
+                p.dimension.id === "minecraft:the_end"
+            );
 
             // 3. If nobody is in the Overworld, stop here and let 'finally' queue the next check
             if (overworldPlayers.length === 0) {
